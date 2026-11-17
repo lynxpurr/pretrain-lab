@@ -1,0 +1,30 @@
+# 模型与训练产物（脚本可再生，PLAN §6-5）
+models/
+checkpoints/
+runs/
+wandb/
+*.safetensors
+*.bin
+*.pt
+*.ckpt
+*.gguf
+
+# 语料与数据产物（指纹录 data/PROVENANCE.md，大文件不入库）
+data/raw/
+data/shards/
+data/*.bin
+data/*.idx
+data/tokenizer/**
+
+# venv（D-07：uv 托管解释器）
+.venv*/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 其他
+.DS_Store
+*.log
+reports/**/*.tmp
