@@ -78,6 +78,7 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 | **50M 吞吐锚**（Day 3） | 50,292,288 @ bs16×accum4×T1024 = 65,536 tok/step → **120,517 tok/s**（36.4 TFLOPS 6N 口径）· 215.7M token / 30m01s · val **3.6377** · peak 10.72GB | `reports/2026-11-18-day3-50m-30min.md` |
 | **140M 吞吐锚**（Day 3） | 137,847,552 @ bs8×accum8×T1024 = 65,536 tok/step → **52,250 tok/s**（43.2 TFLOPS）· 40 步 peak 10.51GB · 3B 单程 **15.9h** | `reports/2026-11-18-day3-140m-probe.md` |
 | **主训练定档**（Day 3） | bs8×accum8 · **65,536 tok/step · 45,777 步 · 1.25s/步** · lr 6e-4 / warmup 500 / cosine→6e-5 / wd0.1 / clip1.0 · ckpt 每 1000 步 **46 件 ≈76GB** · 命令见报告 §6 | `reports/2026-11-18-day3-140m-probe.md` §6 |
+| **主训练 val 锚**（Day 4~5 实测，门② 定标用） | @4k **3.3932** · @8k 3.2052 · @12k 3.1104 · @16k 3.0459 · @20k **2.9936** · @24k 2.9424 · @28k 2.8996 · @32k 2.8576 · @34k **2.8384**；最近 500 步降幅 −0.0050（4.5k 时为 −0.046，9× 变平）· train 窗口 2.75 · **0 尖峰**（1711 窗口） | `logs/main140m-*.log` · `logs/main140m-loss_curve.csv` |
 | micro-bs 边界（Day 3） | 50M = **16**（bs24 OOM）· 140M = **8**（bs10 需 `expandable_segments`，bs12 OOM；bs16+grad-ckpt 仅 40,449 tok/s）· `torch.compile` 4,077 tok/s（弃用） | `reports/2026-11-18-day3-{memsweep,framework}.log/md` |
 | 参考实现 | minimind @ `233d00f` · nanoGPT @ `3adf61e`（`~/projects/`；minimind 数据现行名 = `pretrain_t2t(_mini)/sft_t2t(_mini)`） | Day 0 clone |
 | 数据指纹 | raw 层 17 条 = `data/raw/SHA256SUMS` · 字符级 3 条 = `data/day1-char20m/SHA256SUMS` · tokenizer 3 条 = `data/tokenizer-32k/SHA256SUMS` · 分片 7 条 = `data/shards/SHA256SUMS`（全部入库）· Day 1 checkpoint `last.pt` = `5d97b5f73852a2e9` · **Day 3：50M `out/day3-50m/last.pt` = `71fc274be289c3c2`（603.6MB）· 140M 探针 `out/day3-140m-probe/last.pt` = `df8fc7ac351415db`（1.65GB）** | `data/PROVENANCE.md` |
@@ -128,3 +129,5 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 **Day 4 决策点**：①主训练 loss 尖峰（窗口均值 >2× 基线）→ 从最近 ckpt 降 LR 重启（`--resume auto --base-lr 3e-4`）；②SFT chat 模板 = `<|im_start|>{role}\n{content}<|im_end|>\n`（对齐 minimind 原格式，specials 1/2），已定；③SFT 序列长度 = 1024（与预训练一致），长会话截断 0.11%。
 
 **主训练收官后（Day 5 开局三件事）**：①`--resume auto` 不适用——直接读 `out/main140m/last.pt` 作为 SFT 底座；②先跑 GPU 冒烟（`tools/sft.py --init-from out/main140m/last.pt --max-steps 50 --batch-size 4`）验证显存/loss/mask，再决定正式 SFT 的 bs；③SFT v1 预注册：lr 1e-4 / warmup 100 / 1 epoch over 250M（≈3,815 步 ≈ 1.3h @ 52k tok/s）。
+
+**门② 的混杂与辅助诊断（Day 5 备忘，不改预注册门）**：口径"最后 10% 步的 val 降幅 >0.02~0.03"落在 cosine 把 lr 从 7.3e-5 压到 6e-5 的区间，降幅变平会同时来自"lr→0"与"数据饱和"。**辅助诊断（不改门）**：主训练收官后，从 ~90% 的 `ckpt-0041000.pt` 起做一次**恒定 lr 探针**（新跑 300 步 @ lr 6e-5、warmup≈0，读 val 是否还能降 >0.01）——需要给 `tools/train.py` 加 `--init-from`（只载 model、优化器重开、step 从 0 起算，约 10 行），Day 6 判定时把探针读数与"最后 10% 降幅"并列呈现。
