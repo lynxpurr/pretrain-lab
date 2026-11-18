@@ -1,0 +1,6 @@
+[100,000] train=47.1M val=0.34M (0.7 min)
+[200,000] train=106.1M val=0.79M (1.6 min)
+[300,000] train=175.4M val=1.30M (2.7 min)
+[400,000] train=244.4M val=1.81M (3.7 min)
+[done] {"train": {"tokens": 250001408, "blocks": 244142, "supervised_tokens": 195371224, "supervised_ratio": 0.7815, "conversations": 404210}, "val_tokens": 2001920}
+[done] 落位 data/sft-mix/（SHA256SUMS 4 条）· 4.0 min
