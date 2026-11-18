@@ -74,7 +74,7 @@
 3. **逐日记账**：`LAB_NOTEBOOK.md` 每天记决策与现象——10 天几十个小决策，不记就忘。
 4. **每晚三道概念检验题**（学习者模式）：自答为主，答案卡落 `notes/qa-day-N.md`；理解空洞回 `notes/lessons.md` 补课（追加制、带出处）。
 5. **git 惯例**：develop 主干直提为主（提交信息带 `day-N` 标签）；大改动（训练框架重构等）用 `feature/day-N-<slug>` → `--no-ff` 合入；模型/checkpoint/语料 gitignore（纪律见 .gitignore）。
-6. **数据指纹**：`data/PROVENANCE.md` + SHA256SUMS 从 Day 2（数据流水线）起立——语料分片、tokenizer、SFT 数据全部录指纹（finetune-lab 最值钱的惯例平移）。
+6. **数据指纹**：`data/PROVENANCE.md` + SHA256SUMS 从 Day 2（数据流水线）起立——语料分片、tokenizer、SFT 数据全部录指纹（finetune-lab 最值钱的惯例平移）。**补记（2026-11-18 Day 0~1 实测）**：纪律实为"每份数据落位即录"——raw 层 17 件（37.9GB）Day 0 已录 `data/raw/SHA256SUMS`，Day 1 字符级切片已录 `data/day1-char20m/SHA256SUMS`；Day 2 起续录分片/tokenizer/SFT。
 
 ## 7. 边界（与热身仓的关系）
 
@@ -94,6 +94,7 @@
 - `.venv-pre`：✅ 2026-11-18 建立（D-07：uv 托管 CPython 3.12.13，`~/.local/share/uv/python`，不链 /usr/bin）· torch 2.11.0+cu128 · transformers 5.23.0 · tokenizers 0.23.3 · datasets 5.2.0 · tensorboard/wandb/matplotlib/numpy 在位；验证 = CUDA True + sm_120 在 arch list + bf16 矩阵过（证据 = [reports/2026-11-18-day0-env-snapshot.md](reports/2026-11-18-day0-env-snapshot.md)，装法平移 nl2fem runbook §3 / finetune-lab PLAN §9）
 - 参考实现：✅ minimind @ `233d00f`、nanoGPT @ `3adf61e`，落 `~/projects/`（D-08；注意 minimind 数据文件现行名 = `pretrain_t2t(_mini)/sft_t2t(_mini)`，旧名 pretrain_hq/sft_512 已弃）
 - 数据集：✅ Day 0 预下载落位（D-06）：FineWeb-Edu sample-10BT 27.85GB（英，ODC-BY）+ minimind pretrain_t2t 8.275GB（中，Apache-2.0）+ sft_t2t_mini 1.739GB + dpo 0.054GB；**ModelScope 无 minimind_dataset（"record not found"）→ 回落 hf-mirror 渠道**；指纹 = `data/raw/SHA256SUMS`（17 条）+ `data/PROVENANCE.md` 前缀表；token 数待 Day 2 自训 tokenizer 实测回填
+- 训练运行基线（2026-11-18 Day 1 实测）：22.2M 字符级模型 @ bs64×512 → **187,480 字符/秒** · GPU 占用峰值 ~15GB（含常驻 1.8G）· 温度 56~57°C @ 98-100% util（无降频）· 96.1 min 单程无中断。**主模型外推（Day 4 用）：140M 约为 22.2M 的 6.3 倍参数，注意力/FFN 计算量近似线性，粗估 3~4 万 token/s 量级——决策门①的 3.5 万/s 门槛据此预判可达，实际以 50M 冒烟实测为准**
 
 ## 变更记录
 

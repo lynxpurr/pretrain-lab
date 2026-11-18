@@ -9,10 +9,14 @@ wandb/
 *.ckpt
 *.gguf
 
-# 语料与数据产物（指纹录 data/PROVENANCE.md，大文件不入库）
-data/raw/
-data/shards/
-data/day1-char20m/
+# 语料与数据产物（大文件不入库；指纹文件例外——跨机对账需要）
+# 注意：目录整体忽略会让 ! 例外失效，必须用 dir/* 形式
+data/raw/*
+!data/raw/SHA256SUMS
+data/shards/*
+!data/shards/SHA256SUMS
+data/day1-char20m/*
+!data/day1-char20m/SHA256SUMS
 data/*.bin
 data/*.idx
 data/tokenizer/**

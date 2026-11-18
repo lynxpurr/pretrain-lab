@@ -1,10 +1,10 @@
 # HANDOFF — 新会话交接
 
-> 更新：2026-11-18（**用户晨间拍板"现在开工"提前起跑：Day 1 = 2026-11-18（周三）~ Day 10 = 2026-11-27（周四）**，Day 9 缓冲 = 11-26；D-10 = A 手写为主 B 兜底；Day 0 环境预铺同日早完成，Day 1 收波中）· 本件是新会话的**唯一启动入口**：开工序 + 状态一段话 + 复现检查 + Day 0 清单（已留档）+ **Day 2 清单（§7，次日开工看这里）**。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、风险、纪律、边界），本件只指路不复述。
+> 更新：2026-11-18（**提前起跑：Day 1 = 2026-11-18（周三）~ Day 10 = 2026-11-27（周四）**，Day 9 缓冲 = 11-26；D-10 = A 手写为主 B 兜底；Day 0 环境预铺 + Day 1 字符级 20M 闭环均已收官）· 本件是新会话的**唯一启动入口**：开工序 + 状态一段话 + 复现检查 + Day 0 清单（已留档）+ **Day 2 清单（§7，次日开工看这里）**。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、风险、纪律、边界），本件只指路不复述；仓内操作规程 = [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)。
 
 ## 0. 新会话开工序（持本件开工——按序执行，不跳步）
 
-1. **先读本件 + PLAN 三节**：§3（决策 D-01~D-10，特别是 D-07 venv 纪律与 D-10 待拍板项）· §4（逐日方案 + 决策门①②原文）· §6（纪律与边界）。不复述，缺细节回 PLAN。
+1. **先读本件 + PLAN 三节**：§3（决策 D-01~D-10，特别是 D-07 venv 纪律与 D-10 待拍板项）· §4（逐日方案 + 决策门①②原文）· §6（纪律与边界）。不复述，缺细节回 PLAN。**仓内操作规程（训练跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)**——本仓开工优先加载。
 2. **跑 §2 复现检查**（约 1 分钟）——红了先修再开工（50 系环境坑全部压到 Day 0 解决，PLAN §5 风险表）。
 3. **与用户确认启动时机**：10 天连续窗口的起止日期（唯一日程性 gate，Day 9 缓冲为硬保险）。拍板后：起止日期写进本件 §1 与 §5 波次队列（换算实际日期）、PLAN 变更记录补一行。
 4. **执行 Day 0 环境预铺（§3 六项清单）**——可在 Day 1 前任意时点完成，不占 10 天窗口；其中 `.venv-pre` 必须遵守 D-07（uv 托管解释器，不链 `/usr/bin/python*`——nl2fem 2026-11-18 双 venv 断链教训）。
@@ -13,7 +13,7 @@
 
 ## 1. 状态一段话
 
-**pretrain-lab 已立项（2026-11-18），文档就绪，尚未开工**——小模型从零训练 10 天行动（~140M 手写预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`（2026-09-22 定稿）。热身两仓（nl2fem + finetune-lab，均 2026-09-27 收官）已把 SFT 半场预付完毕（素材按 Day 编目，PLAN §7 素材索引）；本仓主战场 = 从零预训练三件套（手写 model.py / BPE tokenizer / memmap 数据流水线）+ 部署链 + 训练报告。**窗口已拍板（2026-11-18 晨两道拍板：提前起跑）：Day 1 = 2026-11-18（周三）~ Day 10 = 2026-11-27（周四），Day 0 = 同日早（不占窗口）；Day 9 缓冲日 = 11-26 硬保险。D-10 已拍板 = A 手写为主、B ms-swift 兜底（PLAN §3）。Day 1（11-18）✅ 收官：手写 model.py（22.2M 参数）+ 字符级 20M 闭环（96.1min / 187,480 字符/s / val 1.5599），证据 reports/2026-11-18-day1-char20m.md；下一步 = Day 2 BPE tokenizer + memmap 流水线（§7 清单）。**
+**pretrain-lab 已开工（2026-11-18），Day 0 + Day 1 已收官**——小模型从零训练 10 天行动（~140M 手写预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`（2026-09-22 定稿）。热身两仓（nl2fem + finetune-lab，均 2026-09-27 收官）已把 SFT 半场预付完毕（素材按 Day 编目，PLAN §7 素材索引）；本仓主战场 = 从零预训练三件套（手写 model.py ✓ / BPE tokenizer / memmap 数据流水线）+ 部署链 + 训练报告。**窗口已拍板（2026-11-18 晨两道拍板：提前起跑）：Day 1 = 2026-11-18（周三）~ Day 10 = 2026-11-27（周四），Day 0 = 同日早（不占窗口）；Day 9 缓冲日 = 11-26 硬保险。D-10 已拍板 = A 手写为主、B ms-swift 兜底（PLAN §3）。Day 1（11-18）✅ 收官：手写 model.py（22.2M 参数）+ 字符级 20M 闭环（96.1min / 187,480 字符/s / val 1.5599），证据 reports/2026-11-18-day1-char20m.md；下一步 = Day 2 BPE tokenizer + memmap 流水线（§7 清单）。**
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -28,6 +28,8 @@ which tmux || echo tmux-missing                                # Day 0 前应装
                                                                # 应含 cu128 + True + RTX 5070 Ti
 ls ~/projects/minimind ~/projects/nanoGPT >/dev/null 2>&1 && echo ref-repos-ok || echo ref-repos-missing
 ls data/raw/ >/dev/null 2>&1 && ls data/raw | head -3          # 数据集预下载落位
+ls data/day1-char20m/train.bin data/day1-char20m/meta.json     # Day 1 字符级数据在位
+ls -la out/day1-char20m/last.pt                                # Day 1 终版 checkpoint（267MB）
 ```
 
 - **venv 断链检查内嵌**：`.venv-pre/bin/python` 若报 `bad interpreter` = 底层 python 消失（nl2fem 2026-11-18 教训，PLAN 风险表）——D-07 规定 uv 托管解释器免疫此坑，出现即说明建 venv 时违反 D-07。

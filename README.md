@@ -21,9 +21,10 @@
 | 训练/评测/数据脚本（Day 1~7 逐步生长） | `tools/` |
 | run 证据（只增不改） | `reports/` |
 | 学习者 lessons（追加制）+ 概念检验题答案卡 | `notes/` |
+| 仓内操作规程（训练跑批/故障速查/红线，agent 优先加载） | [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md) |
 | 数据集落位 + 出处指纹 | `data/`（PROVENANCE.md + SHA256SUMS） |
 | 模型/checkpoint/语料（gitignore，脚本可再生） | `models/` · `checkpoints/` |
 
 ## 工作方式
 
-develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；数据指纹从 Day 2 起立。决策门①（Day 3 吞吐）/②（Day 6 loss）预注册于 PLAN §4，跑前不改。
+develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 Day 0 已立、字符级切片 Day 1 已立、分片/tokenizer 随 Day 2 流水线续录）。决策门①（Day 3 吞吐）/②（Day 6 loss）预注册于 PLAN §4，跑前不改。仓内操作规程见 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)。

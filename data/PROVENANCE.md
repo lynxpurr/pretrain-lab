@@ -8,8 +8,15 @@
 |---|---|---|---|---|---|
 | FineWeb-Edu sample-10BT（英文主力） | HF `HuggingFaceFW/fineweb-edu` @ main，经 hf-mirror（2026-11-18 Day 0 下载，14 个 parquet 分片） | ODC-BY v1.0（另受 CommonCrawl ToU 约束） | 27.85GB（≈10B tokens；实测 token 数待 Day 2 自训 tokenizer 计数回填） | 14 片各自前缀见 `data/raw/SHA256SUMS`（首片 `b1ba7b2ce4cb5ea6`，末片 `b393f51fefab26cd`） | `data/raw/fineweb-edu/sample/10BT/` |
 | minimind pretrain_t2t（中文主力） | HF `jingyaogong/minimind_dataset` @ main，经 hf-mirror（ModelScope 无此库，回落渠道）；现行文件名对照 minimind 仓 README L122-423 | Apache-2.0 | 8.275GB（中英混合、中文为主；token 数 Day 2 实测回填） | `31efc9a6fa743076` | `data/raw/minimind_dataset/pretrain_t2t.jsonl` |
+| Day 1 字符级切片（字符级闭环专用，可再生产物） | 从 pretrain_t2t 流式切片：train 301,469,872 / val 3,010,935 字符，词表 11,765（覆盖 99.9968%），文档级切分 | 继承上游 Apache-2.0 | train.bin 575.0MB + val.bin 5.7MB | train `00ad3d6eda6fe4ed` · val `2820a2563965c0e8` · meta `b6ce2b1a9068eee9`（全量见 `data/day1-char20m/SHA256SUMS`） | `data/day1-char20m/`（重跑 `tools/prepare_char20m.py` 可再生） |
 
-> 原始下载层全量指纹 = `data/raw/SHA256SUMS`（17 条，Day 0 记账）；Day 2 产出的 memmap 分片 / tokenizer 指纹另起文件录入（PLAN §6-6）。
+> 原始下载层全量指纹 = `data/raw/SHA256SUMS`（17 条，Day 0 记账）；Day 1 字符级切片 = `data/day1-char20m/SHA256SUMS`（3 条）；Day 2 产出的 memmap 分片 / tokenizer 指纹另起文件录入（PLAN §6-6）。
+
+## 模型 checkpoint（本地产物，gitignore；指纹用于对账/续训）
+
+| 件 | 来源 | 规模 | 指纹（sha256 前缀） | 落位 |
+|---|---|---|---|---|
+| day1-char20m last.pt | Day 1 字符级 20M 终版（step 33000，val 1.5599，含 optimizer 态） | 266.7MB | `5d97b5f73852a2e9` | `out/day1-char20m/last.pt`（`reports/2026-11-18-day1-char20m.md` 有完整配置与复现命令） |
 
 ## Tokenizer（Day 2 产出）
 
