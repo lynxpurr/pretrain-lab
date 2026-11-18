@@ -32,3 +32,10 @@
 - **`decode()` 默认 `skip_special_tokens=True`——往返自检必须显式 False**（Day 2 首次跑挂）：探针里混入 `<|endoftext|>` 字面量时，编码被识别成 special id，解码默认把它吞掉，往返断言莫名失败。修法 = 探针拆两段：①普通文本（含 emoji/生僻字/零宽字符）验 byte-level 无损；②specials 单独 `decode(..., skip_special_tokens=False)` 验编号与解码。出处：tools/train_tokenizer.py 自检段。
 - **混配比按 token 级缺口调度，不按字节/文档估算**（Day 2）：压缩率随语言/内容变化（同语料 zh 1.84 / en 4.23 chars/token），先估 chars 再换算引入误差；`build_shards.py` 每编码一篇文档就按"目标比例×(总量+1)−已累计"选语言，3B 实际落成 en 60.0% / zh 40.0%（偏差 <0.01%）。val 用 `hash % 500` 做**文档级**划分：随机、可复现、不依赖读取顺序，且与 train 天然不共享文档；预算满后多余候选**丢弃**而非塞回 train——否则"留出集"名存实亡。出处：tools/build_shards.py 注释段 + reports/2026-11-18-day2-shards.md §3。
 - **分片大小的决定因素是"指纹/校验/增量重建成本"，不是"能否全进内存"**（Day 2 拍板）：3B token 全量才 6GB，96GB 内存显然装得下，但仍选 1GB/片——单文件 6GB 会让每次校验/重建都要动整块；1GB×6 片 + val 共 7 条 SHA256，`sha256sum -c` 3.5s 全量对账，坏一片只重跑一片。**"内存放得下"回答的是能不能，分片回答的是坏了以后赔多少。**出处：HANDOFF §7 Day 2 决策点③ + reports/2026-11-18-day2-shards.md §2。
+
+## 2026-11-18 · Day 2 盘点校准批 · 跑批观测与 spec 写作
+
+- **长任务轮询先清 stale exit 标记，判活看 PID/CPU/产物增长**（Day 2 实测）：第一次 tokenizer 跑挂在自检上、留下 `logs/day2-tokenizer.exit=EXIT:1`；第二次启动后我直接读到旧标记，误判"又失败了"。另外 `tee` 管道下 tqdm 进度不落盘、日志 mtime 也不动，**"日志没更新"同样不能作为死亡判据**。正确姿势 = 启动前 `rm -f <exit marker>`；判活看 `ps -o pid,etime,%cpu,rss` + 输出文件/目录是否增长。出处：logs/day2-tokenizer-* + LAB_NOTEBOOK Day 2 补记。
+- **证据 log 会被 `*.log` 静默吞掉——收波必须 `git add -n` 核对三件套**（Day 2 盘点发现）：Day 1 报告白纸黑字引用 `reports/2026-11-18-day1-char20m-train.log`，但 `.gitignore` 的 `*.log` 让它从未入库——跨机复现时"证据链"直接断。修法 = `.gitignore` 加 `!reports/*.log`；**收波检查从"文件在磁盘上"升级为"文件在 `git add -n` 列表里"**。出处：.gitignore · commit `79ae2fe`。
+- **建库前先算"token 库存/需求比"，再拍 token 预算**（Day 2 校准）：用 tokenizer 留出集的 `bytes/token` × 语料磁盘字节数估全库 token——本次 zh ≈1.66B、en ≈6.54B；3B 的 6:4 要 zh 1.2B = **72% 库存**，门②再加 1.5B 就告急。**先算库存/需求比、把"某语言见底"的风险前置**，否则跑到 90% 才发现只能改配比/补数据。出处：reports/2026-11-18-day2-tokenizer.md §3 · PLAN §5 风险表。
+- **50M 的 tok/s 不是 140M 的 tok/s——决策门必须写清"在哪个模型上测"**（Day 2 校准，spec 写作教训）：吞吐 ∝ 1/(FLOPs/token)，140M 是 50M 的 2.74×。Day 1 实测有效算力 ~25 TFLOPS → 140M 理论仅 ~30k tok/s；若把 50M 的 35k 当门限放行，3B 实际要 ~64h。**门限要么直接在主模型上测（20~30 步探针仅 1~2 min），要么显式写折算系数**；指标不注明测量对象 = 没定义。出处：PLAN §4.1 · HANDOFF §4 门①口径行。

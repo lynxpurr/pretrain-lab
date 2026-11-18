@@ -4,7 +4,7 @@
 
 ## 0. 新会话开工序（按序执行，不跳步）
 
-1. **加载 skill + 读本件 + PLAN 三节**：`.zcode/skills/pretrain-lab/SKILL.md` → 本件 §1（状态）§5（波次）§7（当日清单）→ PLAN §3（D-01~D-10）§4（逐日 + 决策门①②原文）§6（纪律）。缺细节回 PLAN，不臆造。
+1. **加载 skill + 读本件 + PLAN 三节**：`.zcode/skills/pretrain-lab/SKILL.md` → 本件 §1（状态）§5（波次）§7（当日清单）→ PLAN §3（D-01~D-10）§4（逐日 + 决策门①②原文）§4.1（门①口径校准）§6（纪律）。缺细节回 PLAN，不臆造。
 2. **跑 §2 复现检查**（约 1 分钟）——红项先修再开工，不盲目重装（50 系环境坑已全部压到 Day 0 解决，PLAN §5 风险表）。
 3. **读前情**：`LAB_NOTEBOOK.md` 最近一日段 + `notes/qa-day-(N-1).md`（昨晚自答暴露的疑问 = 今日选题池）+ `notes/lessons.md`（可复用教训）。
 4. **执行当日清单**：按 §5 波次队列当日行 + §7 模式化的当日清单；决策门判定**跑前不改**（PLAN §4 预注册）。若用户要求提前/延后开工，先改 §5 实际日期再执行。
@@ -15,7 +15,7 @@
 
 ## 1. 状态一段话
 
-**pretrain-lab 进行中：Day 0~2 已收官，当前无在跑任务，下一动作 = Day 3（§7）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 晨提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2 为 11-18 当日续跑（Day 3 起日期不变，机制上多出一天缓冲）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1 结果**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（33,000 步 / 96.1 min / **187,480 字符/秒** / **val 1.5599**）。**Day 2 结果**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh = 6:4，6×1GB 分片 + val 4M，指纹入库）+ 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735。主战场剩余 = 训练框架 + **决策门①**（Day 3）→ 140M 主训练（Day 4 起）。
+**pretrain-lab 进行中：Day 0~2 已收官，当前无在跑任务，下一动作 = Day 3（§7）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 晨提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2 为 11-18 当日续跑（Day 3 起日期不变，机制上多出一天缓冲）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1 结果**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（33,000 步 / 96.1 min / **187,480 字符/秒** / **val 1.5599**）。**Day 2 结果**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh = 6:4，6×1GB 分片 + val 4M，指纹入库）+ 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735。主战场剩余 = 训练框架 + **决策门①**（Day 3；口径 = 140M 等效 ≥35k tok/s，见 PLAN §4.1）→ 140M 主训练（Day 4 起）。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -61,10 +61,12 @@ tmux ls | grep -E "day|train" || echo no-running-training       # 无在跑任�
 | **32k BPE tokenizer**（Day 2） | 词表 32,000 · specials 0/1/2 · 留出压缩率 zh **1.841** / en **4.226** chars/token（minimind-6400 的 0.721×/0.696×）· sha `05e9ef17…` | `reports/2026-11-18-day2-tokenizer.md` |
 | **3B 训练集**（Day 2） | 3,000,000,000 token · en 60.0%/zh 40.0% · 6×1GB 片（536,870,912 tok/片）+ val 4M · uint16 max_id 31999 · 构建 2.42M tok/s | `reports/2026-11-18-day2-shards.md` · `data/shards/SHA256SUMS` |
 | **BPE 冒烟锚**（Day 2） | 29.99M 参数 · 首步 **10.4542** vs ln(32000)=**10.3735**（+0.081）· 60 步 10.45→7.75 / val 7.77 | `reports/2026-11-18-day2-smoke.md` |
+| **主模型配置**（Day 2 校准） | 140M = d768/L16/H12 **137,847,552** 参数 · 50M 探针 = d576/L8/H9 **50,292,288** · 100M 兜底 = d640/L16/H10 **99,799,680** | PLAN §4.1 |
+| **门①口径**（Day 2 校准） | **140M 等效 ≥35k tok/s**（50M 需 ≥96k 折算；直接跑 140M 20~30 步探针）· 3B 单程 35k→~23.8h / 40k→~20.8h | PLAN §4.1 |
 | 参考实现 | minimind @ `233d00f` · nanoGPT @ `3adf61e`（`~/projects/`；minimind 数据现行名 = `pretrain_t2t(_mini)/sft_t2t(_mini)`） | Day 0 clone |
 | 数据指纹 | raw 层 17 条 = `data/raw/SHA256SUMS` · 字符级 3 条 = `data/day1-char20m/SHA256SUMS` · tokenizer 3 条 = `data/tokenizer-32k/SHA256SUMS` · 分片 7 条 = `data/shards/SHA256SUMS`（全部入库）· Day 1 checkpoint `last.pt` = `5d97b5f73852a2e9` | `data/PROVENANCE.md` |
 | 热身收官 | nl2fem develop @ `1ea5401` · finetune-lab develop @ `cc5201c` | 两仓 git log |
-| 待回填 | 50M 吞吐（Day 3）· 140M 总时长（Day 4~6）· 各版评测读数（Day 5~10） | — |
+| 待回填 | 50M/140M 实测吞吐与主训练总时长（Day 3~4）· 各版评测读数（Day 5~10） | — |
 
 ## 5. 波次队列（逐日回填；**实际窗口 = 11-18 ~ 11-27**）
 
@@ -82,6 +84,8 @@ tmux ls | grep -E "day|train" || echo no-running-training       # 无在跑任�
 | Day 9（11-26） | 硬缓冲日 | 未开工 |
 | Day 10（11-27） | 收尾：最终对比 + repo 整理 + 报告 | 未开工 |
 
+**关键路径与缓冲（Day 2 盘点校准）**：Day 3 框架 + 门① → Day 4 140M 启动 → Day 5/6 主训练收官 → Day 6 SFT v2 → Day 7 部署 → Day 10 报告。**主训练须在 Day 6（11-23）中午前完成**，否则砍 Day 7/8 深化项；缓冲 = **11-19 空档** + Day 9（11-26）硬缓冲。门①口径 = **140M 等效 ≥35k tok/s**（见 PLAN §4.1，50M 需 ≥96k 折算或直接跑 140M 探针）；门②加训 1.5B 的 zh 供给预案见 PLAN §5。Day 4 起主训练占 GPU，白天 SFT 数据/评测框架工作以 CPU 为主，避免争抢。
+
 ## 6. 惯例与红线
 
 - **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（本件不重复）。
@@ -98,9 +102,10 @@ tmux ls | grep -E "day|train" || echo no-running-training       # 无在跑任�
 |---|---|---|
 | 1 | `tools/train.py`：完整训练框架（多分片 memmap 随机窗口、warmup+cosine、grad clip、bf16、AdamW、`--max-minutes`、eval/采样/checkpoint、csv+log） | 直接从 `data/shards/` 训练（无需拼单文件）；首步 loss ≈ ln(32000)=**10.37** |
 | 2 | 续训闭环：中断 → 从 `last.pt` 恢复（模型/优化器/step 全量） | 续训前后 loss 连续、step 对齐（kill 一次验证） |
-| 3 | 50M 配置定档（d/L/H + seq 1024 + bs/梯度累积），扫显存边界 | 参数量 ≈50M；bs 上限与峰值显存读数落档 |
-| 4 | 50M 吞吐基准跑 **30 min**（真实分片、正式配置） | 读数 = token/s（非字符/s）+ GPU 温度/显存；曲线落 reports/ 三分 |
-| 5 | **决策门①判定**（PLAN §4 预注册，跑前不改）：≥3.5 万 token/s → Day 4 全量 140M；否则缩 **100M / 20 亿 token** | 判定 + 依据入 reports/ + LAB_NOTEBOOK；140M 总时长预估回填 §4 锚点 |
+| 3 | 50M 配置定档：**推荐 d576/L8/H9（50,292,288 参数）** + seq 1024 + bs/梯度累积，扫显存边界 | 参数量落位；bs 上限与峰值显存读数落档 |
+| 4 | **50M 吞吐 30 min（预注册动作）+ 140M 探针 20~30 步**（同框架、正式 bs/T，约 1~2 min） | 两组 tok/s 都落档；50M 按 FLOPs 比 2.74× 折算交叉校验（需 ≥96k 才等价 35k） |
+| 5 | **决策门①判定：口径 = 140M 探针 ≥35k tok/s**；否则缩 **100M（d640/L16/H10 = 99,799,680）/ 20 亿 token** | 判定 + 依据入 reports/ + LAB_NOTEBOOK；140M 总时长与 ckpt 预算回填 §4 |
 | 6 | 采样可读性：BPE tokenizer 解码固定 prompt（含中英），每 N 步写入 log | 采样不是乱码/复读（`decode(skip_special_tokens=False)`） |
+| 7 | 140M 配置写死（d768/L16/H12 = **137,847,552**）+ ckpt 策略（每 1000 步，≈1.65GB/个，预算 ≤160GB） | Day 4 可直接启动；`df -h` 核对余量 |
 
-**Day 3 决策点**：①50M 配置的层数/宽度取舍（吞吐 vs 表征，head_dim 保持 64）；②bs 与梯度累积组合（16GB 显存下的吞吐最优）；③140M 配置是否当天写死（建议写死，Day 4 直接启动）。
+**Day 3 决策点**：①50M 配置宽度/深度（推荐 d576/L8/H9；OOM 则退 d512/L10/H8 = 48,507,392）；②bs 与梯度累积组合（16GB 显存下的吞吐最优）；③140M 配置当天写死（建议写死，Day 4 直接启动）。

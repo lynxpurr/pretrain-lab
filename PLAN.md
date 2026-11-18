@@ -19,16 +19,27 @@
 | G5 | 评测框架 + 最终对比 | held-out 困惑度 + 自设计测试集；底座 vs SFT vs LoRA 三版对比 |
 | G6 | 训练报告 + repo 整理 | loss 曲线、数据决策记录、评测对比、成本核算；README + 模型卡 + 复现步骤 |
 
+**进度对照（2026-11-18 Day 2 盘点）**：
+
+| 门 | 状态 | 依据 / 缺口 |
+|---|---|---|
+| G1 最小闭环 + 决策门① | **未开始（Day 3）** | 模型/数据/脚本已就绪；缺完整训练框架（多分片读取、续训、采样） |
+| G2 140M 底座 | **数据就绪，训练未开始** | 3B token + val 4M + 32k tokenizer 全部落位；主训练 Day 4 启动 |
+| G3 SFT + LoRA | **数据就绪，载具已拍板** | sft_t2t_mini 1.739GB 在位；D-10 = A 主 / B 兜底 |
+| G4 本地 demo | 未开始（Day 7） | 依赖 G3，超期可砍（PLAN §4 预算与裁法） |
+| G5 评测框架 + 对比 | 未开始（Day 5 起） | val.bin 4M 已备；评测维度与评分标准 Day 5 定义 |
+| G6 报告 + repo 整理 | 证据链按日积累中 | Day 0~2 三份日证据 + 指纹全部入库 |
+
 预期管理（底稿 §一原文）：30 亿 token 训出的 140M ≈ GPT-2 124M 水平（中英文通顺、能简单对话、知识贫乏）——**不是** Qwen3-0.6B（36 万亿 token，本方案的 1 万倍）。项目产出是经验、模型、报告与 demo，非对标开源质量。
 
 ## 3. 决策记录（追加制；D-01~D-08 源 = 底稿 §四，2026-11-18 立项落位）
 
 | 编号 | 决策 | 理由 | 何时重开 |
 |---|---|---|---|
-| D-01 | 主目标模型 **~140M**：d_model=768、16 层、12 头 | 比 50M 有说服力；比 350M 稳（40h 训练窗口一旦出事没有重跑余量） | 决策门①触发缩配（→100M/20 亿） |
+| D-01 | 主目标模型 **~140M**：d_model=768、16 层、12 头（**Day 2 盘点核准：137,847,552 参数**，vocab 32k / tied） | 比 50M 有说服力；比 350M 稳（40h 训练窗口一旦出事没有重跑余量） | 决策门①触发缩配（→100M/20 亿） |
 | D-02 | 架构 decoder-only：RoPE + RMSNorm + SwiGLU + 词嵌入共享（tied embeddings） | 现代小模型标准配置 | — |
 | D-03 | 词表 32k，中英双语 BPE | 兼顾压缩率与参数量 | tokenizer 消融（Day 8 任选） |
-| D-04 | 训练量 ~30 亿 token（≈Chinchilla 最优 20×） | 12~24h 可承受 | 决策门②加训 15 亿（吃 Day 9 缓冲） |
+| D-04 | 训练量 ~30 亿 token（= **21.8×** 137.85M 参数，Chinchilla 20× 附近） | 12~25h 可承受（35k 含预留 ~25h；40k ~21h；见 §4.1） | 决策门②加训 15 亿（吃 Day 9 缓冲；zh 供给预案见 §5） |
 | D-05 | 序列长度 1024（RoPE 支持外推） | 该规模注意力开销占比小 | — |
 | D-06 | 数据：英文 FineWeb-Edu sample 子集；中文 SkyPile 抽样或 minimind pretrain_hq（已清洗，省一天苦工）；SFT = minimind sft / Belle | 质量 > 数量；下载走 `HF_ENDPOINT=https://hf-mirror.com` 或 ModelScope | 数据返工（Day 9 缓冲） |
 | D-07 | 预训练栈：PyTorch 2.7+（**cu128，50 系硬性要求**）+ HF tokenizers + tensorboard/W&B + tmux；venv 用 **uv 托管解释器**（`.venv-pre`） | 前半 = 底稿 §四；后半 = 2026-11-18 新教训（nl2fem 双 venv 因系统 python 升级断链——venv 不链 `/usr/bin/python*`，uv 托管 3.x 免疫） | — |
@@ -43,7 +54,7 @@
 | **0（假期前一晚）** | 环境预铺 | 驱动/CUDA 12.8+/PyTorch cu128 验证（`torch.cuda.is_available()` + 小矩阵运算）、tmux、数据集提前下载（`HF_ENDPOINT=https://hf-mirror.com`）、clone minimind + nanoGPT。**这步不做，第一天必废** |
 | **1** | 手写模型 + 最小闭环 | 上午：agent 陪写从零 `model.py`（全套现代组件）；下午：字符级 20M 小模型在小语料上训 1~2 小时，亲眼看 loss 下降、生成样本。产出：跑通的模型代码 |
 | **2** | Tokenizer + 数据流水线 | 上午：训练 32k 中英 BPE tokenizer，理解压缩率；下午：下载清洗语料、去重、分词、打包成 memmap 分片（96GB 内存优势兑现）。产出：30~50 亿 token 训练集 |
-| **3** | 训练框架 + 冒烟测试 | 完整训练循环（warmup+cosine、grad clip、bf16、checkpoint 续训、采样监控）；50M 配置跑 30 分钟测吞吐。**决策门①：实测 ≥3.5 万 token/s → 明天全量启动；否则缩到 100M / 20 亿 token** |
+| **3** | 训练框架 + 冒烟测试 | 完整训练循环（warmup+cosine、grad clip、bf16、checkpoint 续训、采样监控）；50M 配置跑 30 分钟测吞吐 + 140M 探针。**决策门①：实测 ≥3.5 万 token/s（口径 = 140M 等效，见 §4.1）→ 明天全量启动；否则缩到 100M / 20 亿 token** |
 | **4** | 启动主训练 + SFT 准备 | 早上启动 140M 全量训练（预计当晚~次日中午完成），挂 tmux 后台；白天构建 SFT 数据集（chat 模板）+ 写 SFT 脚本。产出：训练中的模型 + SFT 就绪 |
 | **5** | 中期 SFT + 评测框架 | 取中间 checkpoint 做一次全参 SFT，观察指令跟随雏形；搭建评测：held-out 困惑度 + 自设计小测试集（定义评测维度和评分标准——PM 强项） |
 | **6** | 主训练收官 + SFT v2 | 分析完整 loss 曲线、对比各 checkpoint 生成质量；对最终底座做正式 SFT v2（融入第 5 天发现的数据问题）。**决策门②：loss 仍在陡降且质量差 → 加训 15 亿 token（吃掉第 9 天缓冲）** |
@@ -54,13 +65,50 @@
 
 **预算与裁法**：10 天整块窗口 + Day 9 硬缓冲；进度超期 → Day 7~8 可整体砍（G3/G4 部分降级），G1/G2/G5 不裁（底线 = 从零预训练闭环 + 评测对比 + 报告）。
 
+### 4.1 关键路径与门①口径校准（2026-11-18 Day 2 盘点批，**跑前**校准）
+
+**模型配置候选**（`tools/model.py` 实测，vocab 32,000 / tied / seq 1024）：
+
+| 用途 | d | L | H | 参数量 | non-emb | 备注 |
+|---|---|---|---|---|---|---|
+| **50M 冒烟（推荐）** | 576 | 8 | 9 | **50,292,288** | 31,860,288 | head_dim 64；名义 50M，d/L=72（比 140M 的 48 更宽浅，仅作管线/吞吐对照） |
+| 50M 备选 | 512 | 10 | 8 | 48,507,392 | 32,123,392 | d/L=51.2，最接近 140M 的 48；OOM/对照用 |
+| 100M 缩配（门①兜底） | 640 | 16 | 10 | 99,799,680 | 79,319,680 | 2B token |
+| **140M 主模型** | 768 | 16 | 12 | **137,847,552** | 113,271,552 | D-01 |
+
+**吞吐→单程时长**（按 6N FLOPs/token；3B 含 eval/ckpt 预留 +5~10%）：
+
+| 140M 实测 tok/s | 3B 单程 | 2B 单程（100M 缩配） | 判定 |
+|---|---|---|---|
+| 35k | ~23.8h（+预留 ~25h） | ~15.9h（+预留 ~16.7h） | 门①下限 |
+| 40k | ~20.8h | ~13.9h | 推荐区间 |
+| 50k | ~16.7h | ~11.1h | 宽裕 |
+
+**门①口径（原文"实测 ≥3.5 万 token/s"未指明模型，校准为 140M 等效）**：
+
+- 预注册动作保留：50M 配置跑 30 min 测吞吐（同时验证管线/显存/稳定性）。
+- **加一步 140M 探针**：同框架、正式 bs/T 跑 20~30 步（约 1~2 min），直接读 140M tok/s，不靠外推。
+- **判定 = 140M 探针 ≥ 35k tok/s**；50M 读数按 FLOPs 比 2.74× 交叉校验（50M 需 ≥96k 才等价 35k）。
+- 理由：若把 50M 的 35k 当门限，140M 实际可能仅 ~13k tok/s（3B 要 64h），与"明天全量启动"的意图直接矛盾。140M 探针成本 1~2 min，是最便宜的真值。
+
+**门②口径（Day 5 用中期曲线定标，Day 6 判定前不改）**："loss 仍陡降"是定性表述，需在 Day 5 拿到中期 val 曲线后量化阈值（候选：**最后 10% 步数 val 降幅 >0.02~0.03 且采样质量明显不足**）；同时受 zh 供给约束（见 §5），加训方案须先定配比再启动。
+
+**检查点/磁盘预算**：140M ckpt ≈1.65GB（fp32 权重 + Adam 态）；bs64×1024 → 45.8k 步，每 1000 步存 46 个 ≈76GB；bs32 → 92 个 ≈152GB。磁盘余 2.3TB 充足，但 Day 3 定 bs 时把 ckpt 体积写进配置（G2 要求每 1000 步谱系）。
+
+**关键路径与缓冲**：
+
+- 关键路径 = Day 3 框架 + 门① → Day 4 140M 启动 → Day 5/6 主训练收官 → Day 6 SFT v2 → Day 7 部署 → Day 10 报告。
+- 缓冲 = **11-19 空档**（Day 2 提前完成置换）+ Day 9（11-26）硬缓冲。主训练须在 Day 6 中午前完成，否则砍 Day 7/8 深化项。
+- 门②（Day 6）若触发加训 1.5B：zh 供给不足（见 §5 风险表），优先 en-heavy 扩展或 Day 6 下载 SkyPile，Day 9 兜底。
+
 ## 5. 风险与预案（底稿 §六 + 2026-11-18 新增一条）
 
 | 风险 | 概率 | 预案 |
 |---|---|---|
 | 50 系环境坑（`no kernel image is available` 等，源于 CUDA <12.8 或旧版 PyTorch/flash-attn/bitsandbytes） | 高 | 全部压到 Day 0 解决；报错直接贴给 agent。**栈差经验现成**：finetune-lab PLAN §9（cu128/sm_120 已验证）+ 阿里云双镜像 + `UV_TORCH_BACKEND=cu128` 缺一不可 |
 | **venv 解释器断链**（系统 python 升级致 `/usr/bin/pythonX.Y` 消失——2026-11-18 在 nl2fem 双 venv 实证） | 中 | D-07：venv 一律 uv 托管解释器（`uv venv --python=3.x` 落 `~/.local/share/uv/python`），venv 内 `python` 永不指向 `/usr/bin`；HANDOFF 复现检查含 venv 断链项 |
-| 吞吐低于预期 | 中 | Day 3 决策门①：缩模型或缩 token 量，不硬扛 |
+| 吞吐低于预期 | 中 | Day 3 决策门①按 **140M 探针**判定（见 §4.1）：缩模型或缩 token 量，不硬扛 |
+| **zh 语料供给不足（门②加训 1.5B）** | 中 | Day 2 实测 pretrain_t2t ≈1.66B token，3B 已用掉 1.2B（~72%）。若门②加训 1.5B：优先 en-heavy 扩展（如 en:zh=8:2，zh 再耗 ~0.3B）+ 或 Day 6 立即下载 SkyPile 抽样补 zh（下载+tokenize ~2h，Day 9 兜底）；不建议单纯重复 zh 语料超 1 epoch |
 | 训练中 loss 尖峰/发散 | 中 | 每 1000 步存档 + 梯度裁剪 + 降学习率从最近 checkpoint 重启 |
 | SFT 后小模型幻觉加重 | 高（正常现象） | SFT 数据混 20~30% 预训练语料；限制 epoch 数 |
 | 进度超期 | 中 | Day 7~8 可整体砍；Day 9 是硬缓冲 |
@@ -94,7 +142,7 @@
 - `.venv-pre`：✅ 2026-11-18 建立（D-07：uv 托管 CPython 3.12.13，`~/.local/share/uv/python`，不链 /usr/bin）· torch 2.11.0+cu128 · transformers 5.23.0 · tokenizers 0.23.3 · datasets 5.2.0 · tensorboard/wandb/matplotlib/numpy 在位；验证 = CUDA True + sm_120 在 arch list + bf16 矩阵过（证据 = [reports/2026-11-18-day0-env-snapshot.md](reports/2026-11-18-day0-env-snapshot.md)，装法平移 nl2fem runbook §3 / finetune-lab PLAN §9）
 - 参考实现：✅ minimind @ `233d00f`、nanoGPT @ `3adf61e`，落 `~/projects/`（D-08；注意 minimind 数据文件现行名 = `pretrain_t2t(_mini)/sft_t2t(_mini)`，旧名 pretrain_hq/sft_512 已弃）
 - 数据集：✅ Day 0 预下载落位（D-06）：FineWeb-Edu sample-10BT 27.85GB（英，ODC-BY）+ minimind pretrain_t2t 8.275GB（中，Apache-2.0）+ sft_t2t_mini 1.739GB + dpo 0.054GB；**ModelScope 无 minimind_dataset（"record not found"）→ 回落 hf-mirror 渠道**；指纹 = `data/raw/SHA256SUMS`（17 条）+ `data/PROVENANCE.md` 前缀表；**Day 2 已用自训 32k tokenizer 实测回填：fineweb ≈6.5B token（4.259 bytes/token）· pretrain_t2t ≈1.66B token（4.974 bytes/token）**
-- 训练运行基线（2026-11-18 Day 1 实测）：22.2M 字符级模型 @ bs64×512 → **187,480 字符/秒** · GPU 占用峰值 ~15GB（含常驻 1.8G）· 温度 56~57°C @ 98-100% util（无降频）· 96.1 min 单程无中断。**主模型外推（Day 4 用）：140M 约为 22.2M 的 6.3 倍参数，注意力/FFN 计算量近似线性，粗估 3~4 万 token/s 量级——决策门①的 3.5 万/s 门槛据此预判可达，实际以 50M 冒烟实测为准**
+- 训练运行基线（2026-11-18 Day 1 实测）：22.2M 字符级模型 @ bs64×512 → **187,480 字符/秒** · GPU 占用峰值 ~15GB（含常驻 1.8G）· 温度 56~57°C @ 98-100% util（无降频）· 96.1 min 单程无中断。**主模型外推（Day 2 校准）：Day 1 有效算力 ≈25 TFLOPS（22.2M×6×187k tok/s）；140M 每 token ≈0.83 GFLOPs → 同 MFU 仅 ~30k tok/s，门① 35k 需 MFU 再高 ~17%。结论：50M 读数必须按 FLOPs 比 2.74× 折算，或直接跑 140M 探针——不能拿 50M 的 35k 当 140M 的 35k（口径见 §4.1）。**
 - 数据流水线基线（2026-11-18 Day 2 实测）：tokenizer 32k BPE（zh 1.841 / en 4.226 chars/token 留出）· 训练集 3,000,000,000 token（en 60.0%/zh 40.0%，6×1GB 片 + val 4M，uint16 max_id 31999）· 单进程构建吞吐 **2.42M token/s**（20.7 min）· BPE 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735（+0.081）· 29.99M 冒烟 @ bs32×512 ~148k tok/s（非基准）
 
 ## 变更记录
@@ -103,3 +151,4 @@
 - 2026-11-18（晚，Day 0）：**启动时机拍板 = Day 1 = 2026-11-19（周四）~ Day 10 = 2026-11-28（周五）**，Day 9 硬缓冲 = 11-27；HANDOFF §5 波次队列已换算实际日期。**D-10 提前拍板 = A 手写 SFT 为主、B ms-swift 对照/兜底**。§2 复现检查同日全绿（GPU 空闲 13998 MiB 与锚点一致 · 磁盘余 2.3T · tmux 在位 · develop 干净同步）。
 - 2026-11-18（Day 1）：**用户改判"现在开工"→ 窗口整体前移一日：Day 1 = 2026-11-18（周三）~ Day 10 = 2026-11-27（周四），Day 9 硬缓冲 = 11-26**（原 11-19 起算作废）。Day 1 收官：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 最小闭环（33,000 步 / 96.1 min / 187,480 字符/秒 / val 1.5599，锚定 ln(V)=9.3727 复现）——证据 [reports/2026-11-18-day1-char20m.md](reports/2026-11-18-day1-char20m.md)。脚本目录定 `tools/`（对齐 README 预注册地图）。经验 5 条入 `notes/lessons.md`（首条 = 查表编码表外字符穿透 + 值域断言前置纪律）。
 - 2026-11-18（Day 2，当日续跑）：**32k 中英 BPE + 3B memmap 数据流水线收官**。①tokenizer = `data/tokenizer-32k/`（32,000 词表，ByteLevel BPE，specials endoftext/im_start/im_end；留出压缩率 zh 1.841 / en 4.226 chars/token，对 minimind-6400 同文 token 数 0.721×/0.696×）；②**D-06 补充拍板 = en:zh 6:4、token 级、3,000,000,000 token**（实际落成 en 60.0%/zh 40.0%，偏差 <0.01%）；③清洗轻量版 = 长度 100~50k + blake2b-64 精确去重（去重率 en 0.68% / zh 0.00%；MinHash 留 Day 9）；④训练集 = `data/shards/shard-000…005.bin`（1GB/片 × 6）+ `val.bin` 4M（hash%500 文档级留出），全部 sha256 入库、max_id=31999；⑤换轨冒烟首步 loss **10.4542** vs ln(32000)=10.3735（+0.081 ✓），同款 `train_char20m.py` 零代码改动。证据 = [reports/2026-11-18-day2-tokenizer.md](reports/2026-11-18-day2-tokenizer.md) · [reports/2026-11-18-day2-shards.md](reports/2026-11-18-day2-shards.md) · [reports/2026-11-18-day2-smoke.md](reports/2026-11-18-day2-smoke.md)。**Day 2 记为 11-18 当日续跑，Day 3 起日期不变（窗口 11-18~11-27，机制上多出一天缓冲）。**
+- 2026-11-18（Day 2 盘点校准批，**跑前**）：①**门①口径校准 = 140M 等效 ≥35k tok/s**（50M 30min 预注册动作保留 + 140M 20~30 步探针；50M 按 FLOPs 比 2.74× 交叉校验，需 ≥96k 才等价），避免"50M 35k 放行、140M 实际 ~13k"的误判（原文未指明测量模型，见 §4.1）；②配置核准 = 140M d768/L16/H12 **137,847,552** 参数；50M 推荐 d576/L8/H9 **50,292,288**（d/L=72，宽浅对照；备选 d512/L10/H8 **48,507,392**，d/L=51.2 更接近 140M 的 48）；100M 兜底 d640/L16/H10 **99,799,680**；③3B 单程时长表（35k→~23.8h / 40k→~20.8h / 50k→~16.7h）与 ckpt 预算（1.65GB×46≈76GB @bs64）落档；④新增风险「zh 语料供给不足（门②加训 1.5B）」及预案（en-heavy 扩展 / SkyPile / 不超 1 epoch）；⑤**门②量化口径待 Day 5 中期曲线定标**（最后 10% val 降幅候选 >0.02~0.03）；⑥进度对照 G1~G6 落 PLAN §2；证据链复核：分片+tokenizer 指纹复算全过、14 份文档 0 断链、`.gitignore` 补 `reports/*.log` 例外（Day 1 日志漏入库已修）。
