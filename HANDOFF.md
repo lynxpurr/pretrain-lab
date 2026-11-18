@@ -1,6 +1,6 @@
 # HANDOFF — 新会话交接
 
-> 更新：2026-11-18（Day 2 收官）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 当日清单 + 锚点。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、决策门、风险、纪律、边界），本件只指路不复述；**仓内操作规程（跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)，新会话优先加载**。
+> 更新：2026-11-18（Day 2 收官 + 盘点校准批 @ `0366874`）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 当日清单 + 锚点。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、决策门、风险、纪律、边界），本件只指路不复述；**仓内操作规程（跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)，新会话优先加载**。
 
 ## 0. 新会话开工序（按序执行，不跳步）
 
@@ -13,9 +13,13 @@
 
 **首次回复向用户汇报四件事**：窗口剩余天数 · 上一日结果 · 今日计划 · 待拍板项（如有）。
 
+**新会话首条消息（可直接粘贴，日期/前情按实际改）**：
+
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` 最近日 + `notes/qa-day-2.md`）→ 执行 §7 Day 3 清单（完整训练框架 + 50M 冒烟 + 140M 探针 + 决策门①），全程按 §6 惯例与 skill §6 校准清单收波。
+
 ## 1. 状态一段话
 
-**pretrain-lab 进行中：Day 0~2 已收官，当前无在跑任务，下一动作 = Day 3（§7）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 晨提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2 为 11-18 当日续跑（Day 3 起日期不变，机制上多出一天缓冲）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1 结果**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（33,000 步 / 96.1 min / **187,480 字符/秒** / **val 1.5599**）。**Day 2 结果**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh = 6:4，6×1GB 分片 + val 4M，指纹入库）+ 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735。主战场剩余 = 训练框架 + **决策门①**（Day 3；口径 = 140M 等效 ≥35k tok/s，见 PLAN §4.1）→ 140M 主训练（Day 4 起）。
+**pretrain-lab 进行中：Day 0~2 已收官，当前无在跑任务，下一动作 = Day 3（§7）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 晨提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2 为 11-18 当日续跑（Day 3 起日期不变，机制上多出一天缓冲）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1 结果**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（33,000 步 / 96.1 min / **187,480 字符/秒** / **val 1.5599**）。**Day 2 结果**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh = 6:4，6×1GB 分片 + val 4M，指纹入库）+ 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735。**Day 2 盘点校准批已收官**（commit `0366874`）：门①口径、50M/140M/100M 配置、3B 单程时长、ckpt 预算、zh 供给预案、G1~G6 进度均入 PLAN §2/§4.1/§5。主战场剩余 = 训练框架 + **决策门①**（Day 3；口径 = 140M 等效 ≥35k tok/s，见 PLAN §4.1）→ 140M 主训练（Day 4 起）。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -50,6 +54,7 @@ tmux ls | grep -E "day|train" || echo no-running-training       # 无在跑任�
 | 1（11-18） | 手写模型 + 字符级 20M 闭环：`tools/{model,prepare_char20m,train_char20m}.py` | 22.2M 参数；loss 9.4316→val 1.5599；187,480 字符/s；96.1 min；证据 `reports/2026-11-18-day1-char20m.{md,csv,log}` |
 | 1 收波校准 | 仓内 skill 建立 · 文档漂移 4 处 + gitignore 指纹漏洞修复 · lessons 8 条 | `31ee2e4` |
 | 2（11-18 续跑） | 32k BPE tokenizer + 3B memmap 流水线：`tools/{train_tokenizer,build_shards}.py` | 32k（zh 1.841 / en 4.226 chars/token）· 3,000,000,000 token（en 60%/zh 40%，6×1GB + val 4M，指纹入库）· 构建 20.7 min · 冒烟首步 10.4542；证据 `reports/2026-11-18-day2-{tokenizer,shards,smoke}.{md,csv,log}` |
+| 2 盘点校准 | 门①口径（140M 等效 ≥35k）+ 配置/时长/ckpt 预算 + G1~G6 进度 + zh 供给预案 + lessons 4 条 + skill §3.1/§6 | `0366874` |
 
 ## 4. 锚点速查（对账用已知答案）
 
@@ -75,7 +80,7 @@ tmux ls | grep -E "day|train" || echo no-running-training       # 无在跑任�
 | Day 0（11-18 早） | 环境预铺 | ✅ 完成 |
 | Day 1（11-18） | 手写 model.py + 字符级 20M 最小闭环 | ✅ 完成（22.2M / 96.1min / 187,480 字符/s / val 1.5599） |
 | Day 2（11-18 当日续跑） | 32k BPE tokenizer + memmap 数据流水线 | ✅ 完成（32k / zh 1.841 · en 4.226 chars/token；3B token 6 片 + val 4M；构建 20.7min；冒烟 10.4542） |
-| Day 3（11-20） | 训练框架 + 50M 冒烟 + **决策门①**（≥3.5 万 token/s 否则缩 100M/20 亿） | **未开工（下一动作，清单 §7；11-19 为提前续跑留出的空档）** |
+| Day 3（11-20） | 训练框架 + 50M 冒烟 + **决策门①**（**140M 等效 ≥35k tok/s**，否则缩 100M/20 亿；见 PLAN §4.1） | **未开工（下一动作，清单 §7；11-19 为提前续跑留出的空档）** |
 | Day 4（11-21） | 140M 主训练启动 + SFT 准备（D-10 = A 主 B 兜底） | 未开工 |
 | Day 5（11-22） | 中期 SFT + 评测框架 | 未开工 |
 | Day 6（11-23） | 主训练收官 + SFT v2 + **决策门②**（loss 仍陡降 → 加训 15 亿） | 未开工 |
@@ -88,7 +93,7 @@ tmux ls | grep -E "day|train" || echo no-running-training       # 无在跑任�
 
 ## 6. 惯例与红线
 
-- **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（本件不重复）。
+- **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（本件不重复；含 §3.1 数据管线标准动作、§6 收波校准清单）。
 - **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。
 - **证据纪律**：`reports/` 只增不改（改错走勘误追加）；每次 run 证据三分 = 摘要 md + 曲线 csv + 原始 log。
 - **指纹纪律**：每份数据落位即录（`SHA256SUMS` 例外入库；数据本体 gitignore）。
