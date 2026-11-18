@@ -45,6 +45,15 @@
 
 > SFT 构建纪律（PLAN 风险表）：正式 SFT 集须混 20~30% 预训练语料防幻觉加重；Belle 备选未下载，需要时再按本表格式补录。
 
+### SFT 训练集 `data/sft-mix/`（Day 4 构建，`tools/build_sft.py`）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `train.bin` + `train.labels.bin` | minimind `sft_t2t_mini` 404,210 条对话（模板 `<\|im_start\|>{role}\n{content}<\|im_end\|>\n`，assistant-only mask）+ **25% 预训练块**（`data/shards` 随机窗口，全 mask） | **250,001,408 token**（244,142 块 × 1024；监督 token 195,371,224 = 78.15%） | `f60b3b5cdba43cfd` / `ca1e50d4e108650e` |
+| `val.bin` + `val.labels.bin` | 同分布的文档级留出（`blake2b64(line) % 100 == 0`，4,281 条对话） | 2,001,920 token（监督占比 71.05%） | `8287b49028dd2f58` / `1a5184449637176b` |
+
+> 构建 4.0 min · `block_size` 1024 · 长会话截断 1,012 条（0.11%）· 分段编码 vs 整段编码抽样自检 30 例全过 · 全量 `data/sft-mix/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft.py --max-tokens 250e6 --val-tokens 2e6 --pretrain-ratio 0.25`。
+
 ## 下载渠道备忘
 
 - HuggingFace：`HF_ENDPOINT=https://hf-mirror.com`（国内受阻预案，PLAN 风险表）

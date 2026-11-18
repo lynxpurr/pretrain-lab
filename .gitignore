@@ -19,6 +19,8 @@ data/day1-char20m/*
 !data/day1-char20m/SHA256SUMS
 data/tokenizer-32k/*
 !data/tokenizer-32k/SHA256SUMS
+data/sft-mix/*
+!data/sft-mix/SHA256SUMS
 data/bpe-smoke/
 data/*.bin
 data/*.idx

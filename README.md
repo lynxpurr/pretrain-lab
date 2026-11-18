@@ -10,7 +10,8 @@
 - **Day 1（11-18）**：手写 `tools/model.py`（RoPE+RMSNorm+SwiGLU+tied，22,220,544 参数）+ 字符级 20M 闭环（30 万/3 万字符切片、词表 11,765）：**33,000 步 / 96.1 分钟 / 187,480 字符/秒 / val loss 1.5599**，采样从字符汤收敛到结构化段落 + 押韵短诗——证据 [reports/2026-11-18-day1-char20m.md](reports/2026-11-18-day1-char20m.md)。
 - **Day 2（11-18 续跑）**：32k 中英 BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** memmap 训练集（en:zh = 60:40，6×1GB 片 + val 4M，全部 sha256 入库）+ 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735——证据 [reports/2026-11-18-day2-shards.md](reports/2026-11-18-day2-shards.md)（另 tokenizer/smoke 两件同目录）。
 - **Day 3（11-18 续跑）**：`tools/train.py` 完整框架（多分片加权取片 / 梯度累积 / 三路 RNG 续训 / 固定 val / 双语采样 / EXIT 标记）+ **50M 30min 预注册跑 120,517 tok/s**（val 3.6377）+ **140M 探针 52,250 tok/s → 决策门① PASS**（3B 单程 **15.9h**）——证据 [reports/2026-11-18-day3-framework.md](reports/2026-11-18-day3-framework.md) · [50m-30min](reports/2026-11-18-day3-50m-30min.md) · [140m-probe](reports/2026-11-18-day3-140m-probe.md)。
-- **下一步（Day 4，待定 11-19）**：140M 主训练起跑（bs8×accum8 · 65,536 tok/step · 45,777 步 · 46 ckpt ≈76GB，命令见 140M 探针报告 §6）+ SFT 数据/脚本——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) · 概念题 [notes/qa-day-3.md](notes/qa-day-3.md)。
+- **Day 4（11-18 晚起跑，进行中）**：**140M 主训练 `main140m` 运行中**（bs8×accum8 · 52.8k tok/s · 1.25s/步 · ETA 11-19 ~10:30；val@500 4.9742）+ **SFT 数据 `data/sft-mix/` 250M token**（404,210 条对话 + 25% 预训练混合，assistant-only mask）+ `tools/sft.py`（CPU 自检过，GPU 冒烟待主训练让出显存）。
+- **下一步（Day 5）**：主训练收官后 → SFT GPU 冒烟 → 正式 SFT v1（lr 1e-4 / 1 epoch / ≈1.3h）→ 中期评测框架——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) · 概念题 [notes/qa-day-3.md](notes/qa-day-3.md)。
 - **路线**：Day 3 框架+门① ✅ → Day 4 140M 主训练起跑 → Day 5/6 收官 + SFT v2 → Day 7 LoRA/部署 → Day 8 深化 + 报告 → Day 9 缓冲 → Day 10 收尾。
 - 预期管理：140M/30 亿 token ≈ GPT-2 124M 水平（通顺、贫乏）——产出 = 经验 + 亲手训的模型 + 报告 + demo，非对标开源质量
 

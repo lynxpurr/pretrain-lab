@@ -40,6 +40,13 @@
 - 读数：50M 30min 预注册跑 = **3,292 步 / 215.7M token / 120,517 tok/s / val 3.6377**（峰值 10.72GB · 58°C · 98% util · 无降频）；140M 探针 40 步 = **52,250 tok/s / val 8.9169**（峰值 10.51GB）；50M 冒烟首步锚 **10.4756**（+0.102），100 步 val 6.9161；续训 kill→restore：step 40 val 前后均 **7.6893**，step/tokens 精确对齐，`EXIT:0`。证据 = [reports/2026-11-18-day3-framework.md](reports/2026-11-18-day3-framework.md) · [reports/2026-11-18-day3-50m-30min.md](reports/2026-11-18-day3-50m-30min.md) · [reports/2026-11-18-day3-140m-probe.md](reports/2026-11-18-day3-140m-probe.md)（各附 csv+log）。
 - 疑问：①为什么 micro-bs 8 比 10/16 都快（不是越大越快）？②首步锚偏差随规模单调上升（+0.059 → +0.081 → +0.170），是残差流累积还是初始化尺度？③50M 按 2.74× 折算 44k、140M 实测 52k——6N 口径漏掉了什么？——已并入 [notes/qa-day-3.md](notes/qa-day-3.md) 题目池。
 
+## Day 4 · 2026-11-18（晚起跑，进行中）· 140M 主训练 + SFT 数据/脚本
+
+- 决策：①用户拍板"现在起跑"→ 主训练 18:46 启动（Day 4 记为 11-18 晚，收官预计 11-19 ~10:30）；②起跑前加 1 分钟预检（同命令 + eval bs16）确认 eval 峰值 10.51GB 不 OOM——避免跑到 step 500 第一次 eval 才炸；③SFT 模板定档 `<|im_start|>{role}\n{content}<|im_end|>\n`（对齐 minimind 原格式，specials 1/2，不二次翻译）；④SFT 打包**会话不跨块**（装不下补 EOS 收块），代价 ~13% 填充换语义完整；⑤SFT 数据 = **250M token**（404,210 会话 + 25% 预训练块防幻觉）、val 2M 文档级留出（`blake2b64(line)%100`）；⑥`tools/sft.py` 与 `train.py` 同源（复用 lr_at/make_optimizer/fmt_dur），只换数据/损失/初始化三处。
+- 现象：①预检时我用 `| head -6` 截断管道，SIGPIPE 把预检进程打成 EXIT:1（第二次犯同一错，已入 lessons）；②`build_sft.py` 第一版把会话截断到块边界（段被切断），改为"会话不跨块 + EOS 填充"后段级自检 0 违规；③`pkill -f "run-name _preflight"` 又把自己的 shell 杀了（pattern 自匹配，第三次）——安全姿势 = 按 `/proc/<pid>/comm` 过滤只杀 python。
+- 读数：主训练起跑 `[anchor] 10.5431 (+0.170)`（与探针完全同值）· **52.8k tok/s** · 1.25s/步 · peak 10.51GB · 58°C / 97~99% util / SM 2797MHz；**val@500 = 4.9742**（我预判 8.5~9.0 严重偏高——500 步已是 32.8M token，是探针 40 步的 12.5 倍，早期 loss 下降远快于线性外推）；ckpt@1000 起每 1000 步滚动。SFT 数据构建 **4.0 min**：250,001,408 token / 244,142 块 / 监督占比 78.15% / 长会话截断 1,012 条（0.11%）/ 分段编码自检 30 例过；`tools/sft.py` CPU 3 步自检 `EXIT:0`（随机小模型 anchor 10.3615 ≈ ln(32000)）。
+- 疑问：①SFT 的 `ignore_index=-100` 在 bf16 下与 fp32 的数值差异会不会影响收敛（Day 5 对照）？②25% 预训练混入是"按块"的，块内没有混合——这种粗粒度混配对比按样本混合差多少？③eval loss 在 SFT 阶段应看"监督 token 的 CE"还是全 token CE（我们把二者混在一个数里）？——留 Day 5 概念题。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）

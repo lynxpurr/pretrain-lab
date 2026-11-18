@@ -33,6 +33,15 @@
 - **混配比按 token 级缺口调度，不按字节/文档估算**（Day 2）：压缩率随语言/内容变化（同语料 zh 1.84 / en 4.23 chars/token），先估 chars 再换算引入误差；`build_shards.py` 每编码一篇文档就按"目标比例×(总量+1)−已累计"选语言，3B 实际落成 en 60.0% / zh 40.0%（偏差 <0.01%）。val 用 `hash % 500` 做**文档级**划分：随机、可复现、不依赖读取顺序，且与 train 天然不共享文档；预算满后多余候选**丢弃**而非塞回 train——否则"留出集"名存实亡。出处：tools/build_shards.py 注释段 + reports/2026-11-18-day2-shards.md §3。
 - **分片大小的决定因素是"指纹/校验/增量重建成本"，不是"能否全进内存"**（Day 2 拍板）：3B token 全量才 6GB，96GB 内存显然装得下，但仍选 1GB/片——单文件 6GB 会让每次校验/重建都要动整块；1GB×6 片 + val 共 7 条 SHA256，`sha256sum -c` 3.5s 全量对账，坏一片只重跑一片。**"内存放得下"回答的是能不能，分片回答的是坏了以后赔多少。**出处：HANDOFF §7 Day 2 决策点③ + reports/2026-11-18-day2-shards.md §2。
 
+## 2026-11-18 · Day 4 · SFT 数据/脚本 + 主训练起跑
+
+- **`pkill -f <pattern>` 会匹配到"包含该 pattern 的自己的 shell"**（Day 4 第三次自伤）：`pkill -9 -f "run-name _preflight"` 把执行这条命令的 bash 一起杀了（bash 的 cmdline 里正含着这段字符串），表现为"命令无输出、后台任务莫名其妙结束"。安全姿势 = 先 `pgrep -f` 拿 PID，再用 `/proc/<pid>/comm` 过滤出真正的解释器进程（`comm == python`）后按 PID kill；或者直接用会话管理器（`tmux kill-session`）。**杀进程前先问：我的过滤条件会不会命中我自己？**出处：Day 4 预检清理现场 · logs/_preflight（EXIT:1）。
+- **SFT 打包必须"会话不跨块"**（Day 4 第一版实现缺陷）：把 token 流按 1024 硬切，会把一条对话切成两半——后半段没有 `<|im_start|>` 头，模型在缺失上下文的 fragment 上算 loss，语义被污染且无法用段级断言校验。修法 = 当前块装不下整条会话就补 EOS 收块、下块重开（本例 ~13% 填充）。**"打包提效"的正确姿势是提高块利用率，不是牺牲样本完整性**。出处：tools/build_sft.py `BlockWriter.add_conversation`。
+- **SFT mask 必须用"段级断言"验证，不能只看监督比例**（Day 4 自检）：比例 0.78 看起来合理，但比例对不代表语义对。可执行的断言 = 枚举每个 `<|im_start|>`…`<|im_end|>` 段：user 段内 label 全 -100；assistant 段内 `label[i] == token[i+1]`；assistant 段末位置 `label == <|im_end|>`(=2)；块尾 label 全 -100。本例 150 段 0 违规才算过。**掩码类数据的验收标准是"逐段可枚举的恒等式"，不是"均值像那么回事"。**出处：Day 4 验证脚本输出（150 段 / 75 assistant / 0 违规）。
+- **val 留出率直接决定构建时要读多少盘**（Day 4 踩坑）：`val-mod=100` 意味着每 100 条留 1 条，要凑 2M val token（约 7.5k 条）就得读 ~75 万行（全库 905,718 行的 83%）。第一版测试用 `val-mod=500` + `val-tokens=4e5`，要读 75 万行才凑够，看起来像"脚本卡死"（100% CPU 两分钟）。**设计 val 预算先算：需要 val token ÷ 平均每会话 token × val-mod ≈ 必读行数**；测试时用 `val-mod=100 + 小 val-tokens` 才跑得快。出处：logs/day4-sft-build.log（100k 行/0.7 min 的线性进度）。
+- **eval 的 batch size 要单独预检，不能从训练峰值外推**（Day 4）：训练 bs8 峰值 10.51GB 不代表 eval bs16 也安全（forward-only 无梯度，但 CE 的 fp32 副本仍按 positions×vocab 增长）。起跑前用同命令 + `--max-steps 2 --eval-batch-size 16` 预检，peak 仍是 10.51GB 才放心。**"训练能跑"不等于"eval 能跑"，第一次 eval 往往在几十分钟后，炸掉的代价是重跑。**出处：Day 4 预检（`[val] loss 10.5203 | peak 9.49 GB`）。
+- **早期 loss 不能用短探针线性外推**（Day 4 预判失误）：探针 40 步 val 8.92 → 我按"每步固定降幅"预估 500 步在 8.5~9.0，实测 **4.9742**。原因：40 步只有 2.6M token，loss 在 warmup 早期下降最快（学习率还在爬升、模型在拟合高频统计），外推必须按"token 数"而非"步数"，且要承认曲线是凸的。**给预测区间时必须写明"基于多少 token / 哪一段曲线"，否则区间是装饰品。**出处：logs/main140m-*.log step 500。
+
 ## 2026-11-18 · Day 3 · 训练框架 / 显存账 / 续训
 
 - **`map_location` 会把"非权重张量"也搬上 GPU——续训的 RNG 状态必须显式 `.cpu()`**（Day 3 实测）：`last.pt` 里存了 `torch.get_rng_state()`（CPU ByteTensor），`torch.load(..., map_location="cuda")` 按"所有张量"统一搬运 → `torch.set_rng_state` 抛 `TypeError: RNG state must be a torch.ByteTensor`。修法 = `ckpt["torch_rng"].cpu()`（cuda RNG 状态同理）。通用化：**checkpoint 里的"控制类张量"（RNG/计数器/掩码）与"计算类张量"（权重/优化器态）设备语义不同，加载时要分开处理**。而这条只有在"kill 一次验证续训"时才会暴露——清单里的验证步骤不是仪式。出处：tools/train.py 续训段 · reports/2026-11-18-day3-framework.md §4。

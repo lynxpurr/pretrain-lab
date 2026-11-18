@@ -161,8 +161,12 @@ class GPT(nn.Module):
         elif isinstance(m, nn.Embedding):
             nn.init.normal_(m.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
-        """idx (B,T) → logits；给 targets 时（数据侧已右移一位）返回 CE loss。"""
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None,
+                ignore_index: int = -100):
+        """idx (B,T) → logits；给 targets 时返回 CE loss。
+
+        SFT 用 ignore_index=-100 屏蔽非 assistant token（预训练标签不含 -100，行为不变）。
+        """
         B, T = idx.shape
         assert T <= self.cfg.block_size, f"序列长 {T} 超过 block_size {self.cfg.block_size}"
         x = self.wte(idx)
@@ -171,7 +175,8 @@ class GPT(nn.Module):
         x = self.norm_f(x)
         if targets is not None:
             logits = self.lm_head(x)
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.reshape(-1))
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.reshape(-1),
+                                   ignore_index=ignore_index)
         else:
             logits = self.lm_head(x[:, -1:, :])  # 无 targets 时只需最后一位（generate 用）
             loss = None

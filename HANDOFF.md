@@ -19,7 +19,9 @@
 
 ## 1. 状态一段话
 
-**pretrain-lab 进行中：Day 0~3 已收官，决策门① PASS，下一动作 = 启动 140M 主训练（命令已定档，见 §7）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2/Day 3 均为 11-18 当日续跑（**Day 4 起日期不变，机制上已多出两天缓冲**）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（val 1.5599 / 187,480 字符/秒 / 96.1 min）。**Day 2**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh=6:4，6×1GB 分片 + val 4M，指纹入库）。**Day 3**：`tools/train.py` 完整框架（多分片 / 梯度累积 / 三路 RNG 续训 / 固定 val / 双语固定 prompt 采样 / EXIT 标记）· 50M 定档 50,292,288 @bs16 封顶 · **50M 30min 预注册跑 120,517 tok/s（val 3.6377）** · **140M 探针 52,250 tok/s ≥ 35k → 门① PASS（超 49%）** · **3B 单程 15.9h** · **140M 主训练定档 bs8×accum8（65,536 tok/step · 45,777 步 · 1.25s/步 · ckpt 46 件 ≈76GB）**。主战场剩余 = 主训练起跑（Day 4）+ SFT 数据/脚本。
+**pretrain-lab 进行中：Day 0~3 已收官，决策门① PASS，140M 主训练已于 2026-11-18 18:46 起跑（进行中）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2/Day 3 均为 11-18 当日续跑（**Day 4 起日期不变，机制上已多出两天缓冲**）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（val 1.5599 / 187,480 字符/秒）。**Day 2**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh=6:4，6×1GB 分片 + val 4M）。**Day 3**：`tools/train.py` 完整框架 · **50M 30min 120,517 tok/s** · **140M 探针 52,250 tok/s ≥ 35k → 门① PASS** · 3B 单程 15.9h · 主训练定档 bs8×accum8（65,536 tok/step · 45,777 步 · ckpt 46 件 ≈76GB）。
+
+**Day 4（11-18 晚起跑，进行中）**：**主训练 `main140m` 运行中**（tmux 会话 `main140m`，日志 `logs/main140m-*.log`，`out/main140m/last.pt` 每 1000 步滚动）——起跑读数 `[anchor] 10.5431 (+0.170)` · **52.8k tok/s** · 1.25s/步 · val@500 **4.9742** · ETA **11-19 ~10:30**（16h 单程）。同时已完成 **SFT 数据 `data/sft-mix/`**（250,001,408 token = 404,210 条对话 + 25% 预训练块，assistant-only mask，val 2M，指纹入库）与 **`tools/sft.py`**（底座载入 + `ignore_index=-100`；CPU 3 步自检 `EXIT:0`，GPU 冒烟待主训练让出显存）。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -90,7 +92,7 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 | Day 1（11-18） | 手写 model.py + 字符级 20M 最小闭环 | ✅ 完成（22.2M / 96.1min / 187,480 字符/s / val 1.5599） |
 | Day 2（11-18 当日续跑） | 32k BPE tokenizer + memmap 数据流水线 | ✅ 完成（32k / zh 1.841 · en 4.226 chars/token；3B token 6 片 + val 4M；构建 20.7min；冒烟 10.4542） |
 | Day 3（11-18 当日续跑） | 训练框架 + 50M 冒烟/30min + 140M 探针 + **决策门①** | ✅ 完成（门① **PASS**：140M 52,250 tok/s；50M 120,517；3B 单程 15.9h） |
-| Day 4（**待定：11-19 或用户指定**） | **140M 主训练起跑** + SFT 数据/脚本（D-10 = A 主 B 兜底） | **未开工（下一动作，清单 §7；起跑命令已定档 = `2026-11-18-day3-140m-probe.md` §6）** |
+| Day 4（11-18 晚起跑） | **140M 主训练起跑** + SFT 数据/脚本（D-10 = A 主 B 兜底） | **进行中**：主训练 18:46 起跑（52.8k tok/s，ETA 11-19 ~10:30）· SFT 数据 250M + `tools/sft.py` 已完成（CPU 自检过）· GPU 冒烟待让出显存 |
 | Day 5（11-22） | 中期 SFT + 评测框架 | 未开工 |
 | Day 6（11-23） | 主训练收官 + SFT v2 + **决策门②**（loss 仍陡降 → 加训 15 亿） | 未开工 |
 | Day 7（11-24） | LoRA 对比 + GGUF/Ollama/Gradio 部署 | 未开工（超期可砍） |
@@ -110,17 +112,19 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 - **决策门预注册**：门①（Day 3 吞吐）/门②（Day 6 loss）跑前不改。
 - **上游知识指针**：finetune-lab `notes/lessons.md`（四杠杆×四失败轴 + OOD 三层）· `ms-swift-finetune` skill（D-10 选 B 时）· nl2fem `notes/ref-*-concepts.md`。
 
-## 7. Day 4 开工清单（140M 主训练起跑 + SFT 数据/脚本）
+## 7. Day 4 清单（140M 主训练起跑 + SFT 数据/脚本）——进度
 
-> Day 3 清单已全部收官（框架/续训/50M 定档/30min 预注册跑/140M 探针/门①/采样/配置写死），证据见 §3 与 `reports/2026-11-18-day3-*.md`。
+> Day 3 清单已全部收官，证据见 §3 与 `reports/2026-11-18-day3-*.md`。**Day 4 状态：1/2/3/4 已完成或进行中，5 进行中，6 待主训练收官后做。**
 
-| # | 事项 | 判据 |
-|---|---|---|
-| 1 | **启动 140M 主训练**（命令 = `reports/2026-11-18-day3-140m-probe.md` §6，tmux 后台） | 首 10 分钟：`[anchor]` 10.37~10.62（140M 允许 +0.25）· 窗口 tok/s **≥48k** · peak ≤11GB · 无 OOM |
-| 2 | 起跑后 30 分钟对账 | 窗口 tok/s ≥50k · 每步 ≈1.25s · val@500 落在 8.5~9.0 · GPU ≤70°C / 98% util · `logs/main140m.exit` 不应出现 EXIT:1 |
-| 3 | **SFT 数据构建**（CPU）：`data/raw/minimind_dataset/sft_t2t_mini.jsonl` → chat 模板（`<|im_start|>`/`<|im_end|>`，specials 0/1/2 已在 tokenizer）→ tokenize 打包 memmap；**混 20~30% 预训练语料**（PLAN 风险表：防 SFT 后幻觉加重） | 抽检 20 条模板原文；token 总量/长度分布落档；`SHA256SUMS` + PROVENANCE 补录 |
-| 4 | **`tools/sft.py`**（与 `train.py` 同源：同模型/同分片读取/同续训/同 EXIT 标记），loss **只算 assistant token** | 50 步冒烟：loss 从 ~ln(32000) 起降；打印一条样本的 mask 覆盖（prompt 段全 -100）自检通过 |
-| 5 | 主训练监控（每 30~60 min）+ 采样检查 | val 单调下行无尖峰；采样从英文噪声逐步出现中文词；ckpt 谱系按时生成（每 1000 步） |
-| 6 | 收波：证据三分 + 指纹 + 笔记本 | 同 §6 校准清单五面 |
+| # | 事项 | 判据 | 状态 |
+|---|---|---|---|
+| 1 | **启动 140M 主训练**（命令 = `reports/2026-11-18-day3-140m-probe.md` §6，tmux 后台） | 首 10 分钟：`[anchor]` 10.37~10.62 · tok/s ≥48k · peak ≤11GB | ✅ 18:46 起跑：anchor **10.5431** · **52.8k tok/s** · peak 10.51GB |
+| 2 | 起跑后 30 分钟对账 | tok/s ≥50k · 1.25s/步 · val@500 · ≤70°C · 无 EXIT:1 | ✅ val@500 **4.9742**（比预估 8.5~9.0 低得多，属正常——500 步=32.8M token，比探针多 12.5×）· 58°C · SM 2797MHz |
+| 3 | **SFT 数据构建**（CPU）：chat 模板 + 混 20~30% 预训练语料 | 抽检/mask 正确；`SHA256SUMS` + PROVENANCE | ✅ `data/sft-mix/` **250,001,408 token**（404,210 会话 + 25% 预训练块，监督 78.15%）+ val 2M · 段级 mask 自检 0 违规 · 指纹入库 |
+| 4 | **`tools/sft.py`**（与 `train.py` 同源，loss 只算 assistant token） | 冒烟：loss 从 ln(V) 起降；mask 覆盖正确 | ⚠️ **CPU 3 步自检过**（`EXIT:0`，anchor 10.3615）；**GPU 冒烟待主训练完成后做**（现仅余 ~2.8GB 显存） |
+| 5 | 主训练监控（每 30~60 min）+ 采样检查 | val 单调下行无尖峰；ckpt 谱系按时生成 | 进行中（ckpt@1000 起每 1000 步） |
+| 6 | 收波：证据三分 + 指纹 + 笔记本 | 同 §6 校准清单五面 | 待主训练收官后 |
 
-**Day 4 决策点**：①主训练 loss 尖峰（窗口均值 >2× 基线）→ 从最近 ckpt 降 LR 重启（`--resume auto --base-lr 3e-4`）；②SFT chat 模板以 `sft_t2t_mini` **原始格式**为准（不二次翻译，避免模板漂移）；③SFT 序列长度先跟预训练一致 = 1024，长样本截断策略在 sft.py 里写明。
+**Day 4 决策点**：①主训练 loss 尖峰（窗口均值 >2× 基线）→ 从最近 ckpt 降 LR 重启（`--resume auto --base-lr 3e-4`）；②SFT chat 模板 = `<|im_start|>{role}\n{content}<|im_end|>\n`（对齐 minimind 原格式，specials 1/2），已定；③SFT 序列长度 = 1024（与预训练一致），长会话截断 0.11%。
+
+**主训练收官后（Day 5 开局三件事）**：①`--resume auto` 不适用——直接读 `out/main140m/last.pt` 作为 SFT 底座；②先跑 GPU 冒烟（`tools/sft.py --init-from out/main140m/last.pt --max-steps 50 --batch-size 4`）验证显存/loss/mask，再决定正式 SFT 的 bs；③SFT v1 预注册：lr 1e-4 / warmup 100 / 1 epoch over 250M（≈3,815 步 ≈ 1.3h @ 52k tok/s）。
