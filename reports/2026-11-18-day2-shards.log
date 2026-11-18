@@ -1,0 +1,78 @@
+[cfg] vocab=32000 eos=0 target=3,000,000,000 tokens en:zh=0.6:0.4 shard=1.0GB val=4,000,000
+[build] 0.053B/3.00B (1.8%) | en 0.032B zh 0.021B | val 0.09M | dup en 0.01% zh 0.00% | 2602k tok/s | ETA 18.9 min
+[build] 0.107B/3.00B (3.6%) | en 0.064B zh 0.043B | val 0.19M | dup en 0.01% zh 0.00% | 2644k tok/s | ETA 18.2 min
+[build] 0.159B/3.00B (5.3%) | en 0.095B zh 0.064B | val 0.30M | dup en 0.01% zh 0.00% | 2634k tok/s | ETA 18.0 min
+[build] 0.209B/3.00B (7.0%) | en 0.125B zh 0.083B | val 0.40M | dup en 0.02% zh 0.00% | 2590k tok/s | ETA 18.0 min
+[build] 0.260B/3.00B (8.7%) | en 0.156B zh 0.104B | val 0.49M | dup en 0.03% zh 0.00% | 2576k tok/s | ETA 17.7 min
+[build] 0.315B/3.00B (10.5%) | en 0.189B zh 0.126B | val 0.59M | dup en 0.03% zh 0.00% | 2607k tok/s | ETA 17.2 min
+[build] 0.366B/3.00B (12.2%) | en 0.220B zh 0.146B | val 0.67M | dup en 0.03% zh 0.00% | 2594k tok/s | ETA 16.9 min
+[build] 0.416B/3.00B (13.9%) | en 0.249B zh 0.166B | val 0.77M | dup en 0.03% zh 0.00% | 2576k tok/s | ETA 16.7 min
+[build] 0.467B/3.00B (15.6%) | en 0.280B zh 0.187B | val 0.85M | dup en 0.04% zh 0.00% | 2569k tok/s | ETA 16.4 min
+[build] 0.521B/3.00B (17.4%) | en 0.312B zh 0.208B | val 0.99M | dup en 0.04% zh 0.00% | 2579k tok/s | ETA 16.0 min
+[build] 0.570B/3.00B (19.0%) | en 0.342B zh 0.228B | val 1.08M | dup en 0.05% zh 0.00% | 2566k tok/s | ETA 15.8 min
+[build] 0.624B/3.00B (20.8%) | en 0.374B zh 0.249B | val 1.17M | dup en 0.07% zh 0.00% | 2576k tok/s | ETA 15.4 min
+[build] 0.672B/3.00B (22.4%) | en 0.403B zh 0.269B | val 1.24M | dup en 0.08% zh 0.00% | 2563k tok/s | ETA 15.1 min
+[build] 0.723B/3.00B (24.1%) | en 0.434B zh 0.289B | val 1.35M | dup en 0.09% zh 0.00% | 2561k tok/s | ETA 14.8 min
+[build] 0.778B/3.00B (25.9%) | en 0.467B zh 0.311B | val 1.44M | dup en 0.10% zh 0.00% | 2571k tok/s | ETA 14.4 min
+[build] 0.832B/3.00B (27.7%) | en 0.499B zh 0.333B | val 1.54M | dup en 0.11% zh 0.00% | 2577k tok/s | ETA 14.0 min
+[build] 0.880B/3.00B (29.3%) | en 0.528B zh 0.352B | val 1.65M | dup en 0.12% zh 0.00% | 2564k tok/s | ETA 13.8 min
+[build] 0.928B/3.00B (30.9%) | en 0.557B zh 0.371B | val 1.76M | dup en 0.13% zh 0.00% | 2553k tok/s | ETA 13.5 min
+[build] 0.980B/3.00B (32.7%) | en 0.588B zh 0.392B | val 1.87M | dup en 0.14% zh 0.00% | 2555k tok/s | ETA 13.2 min
+[build] 1.030B/3.00B (34.3%) | en 0.618B zh 0.412B | val 1.97M | dup en 0.15% zh 0.00% | 2551k tok/s | ETA 12.9 min
+[build] 1.078B/3.00B (35.9%) | en 0.647B zh 0.431B | val 2.08M | dup en 0.16% zh 0.00% | 2542k tok/s | ETA 12.6 min
+[build] 1.125B/3.00B (37.5%) | en 0.675B zh 0.450B | val 2.17M | dup en 0.17% zh 0.00% | 2534k tok/s | ETA 12.3 min
+[build] 1.174B/3.00B (39.1%) | en 0.704B zh 0.469B | val 2.27M | dup en 0.19% zh 0.00% | 2529k tok/s | ETA 12.0 min
+[build] 1.224B/3.00B (40.8%) | en 0.734B zh 0.490B | val 2.36M | dup en 0.20% zh 0.00% | 2528k tok/s | ETA 11.7 min
+[build] 1.276B/3.00B (42.5%) | en 0.766B zh 0.510B | val 2.45M | dup en 0.22% zh 0.00% | 2529k tok/s | ETA 11.4 min
+[build] 1.318B/3.00B (43.9%) | en 0.791B zh 0.527B | val 2.52M | dup en 0.24% zh 0.00% | 2511k tok/s | ETA 11.2 min
+[build] 1.344B/3.00B (44.8%) | en 0.806B zh 0.538B | val 2.56M | dup en 0.24% zh 0.00% | 2467k tok/s | ETA 11.2 min
+[build] 1.367B/3.00B (45.6%) | en 0.820B zh 0.547B | val 2.60M | dup en 0.25% zh 0.00% | 2420k tok/s | ETA 11.2 min
+[build] 1.416B/3.00B (47.2%) | en 0.850B zh 0.567B | val 2.69M | dup en 0.27% zh 0.00% | 2422k tok/s | ETA 10.9 min
+[build] 1.454B/3.00B (48.5%) | en 0.872B zh 0.581B | val 2.75M | dup en 0.28% zh 0.00% | 2402k tok/s | ETA 10.7 min
+[build] 1.491B/3.00B (49.7%) | en 0.894B zh 0.596B | val 2.82M | dup en 0.29% zh 0.00% | 2383k tok/s | ETA 10.6 min
+[build] 1.526B/3.00B (50.9%) | en 0.915B zh 0.610B | val 2.89M | dup en 0.30% zh 0.00% | 2363k tok/s | ETA 10.4 min
+[build] 1.569B/3.00B (52.3%) | en 0.941B zh 0.628B | val 2.98M | dup en 0.31% zh 0.00% | 2356k tok/s | ETA 10.1 min
+[build] 1.619B/3.00B (54.0%) | en 0.971B zh 0.647B | val 3.11M | dup en 0.32% zh 0.00% | 2359k tok/s | ETA 9.8 min
+[build] 1.668B/3.00B (55.6%) | en 1.001B zh 0.667B | val 3.20M | dup en 0.33% zh 0.00% | 2362k tok/s | ETA 9.4 min
+[build] 1.719B/3.00B (57.3%) | en 1.031B zh 0.688B | val 3.33M | dup en 0.35% zh 0.00% | 2367k tok/s | ETA 9.0 min
+[build] 1.770B/3.00B (59.0%) | en 1.062B zh 0.708B | val 3.41M | dup en 0.36% zh 0.00% | 2371k tok/s | ETA 8.6 min
+[build] 1.819B/3.00B (60.6%) | en 1.092B zh 0.728B | val 3.52M | dup en 0.37% zh 0.00% | 2373k tok/s | ETA 8.3 min
+[build] 1.869B/3.00B (62.3%) | en 1.121B zh 0.747B | val 3.60M | dup en 0.39% zh 0.00% | 2374k tok/s | ETA 7.9 min
+[build] 1.920B/3.00B (64.0%) | en 1.152B zh 0.768B | val 3.71M | dup en 0.40% zh 0.00% | 2379k tok/s | ETA 7.6 min
+[build] 1.969B/3.00B (65.6%) | en 1.181B zh 0.788B | val 3.82M | dup en 0.41% zh 0.00% | 2381k tok/s | ETA 7.2 min
+[build] 2.019B/3.00B (67.3%) | en 1.212B zh 0.808B | val 3.92M | dup en 0.43% zh 0.00% | 2382k tok/s | ETA 6.9 min
+[build] 2.070B/3.00B (69.0%) | en 1.242B zh 0.828B | val 3.99M | dup en 0.44% zh 0.00% | 2385k tok/s | ETA 6.5 min
+[build] 2.120B/3.00B (70.7%) | en 1.272B zh 0.848B | val 4.00M | dup en 0.45% zh 0.00% | 2388k tok/s | ETA 6.1 min
+[build] 2.169B/3.00B (72.3%) | en 1.302B zh 0.868B | val 4.00M | dup en 0.47% zh 0.00% | 2389k tok/s | ETA 5.8 min
+[build] 2.219B/3.00B (74.0%) | en 1.331B zh 0.887B | val 4.00M | dup en 0.48% zh 0.00% | 2390k tok/s | ETA 5.4 min
+[build] 2.270B/3.00B (75.7%) | en 1.362B zh 0.908B | val 4.00M | dup en 0.49% zh 0.00% | 2393k tok/s | ETA 5.1 min
+[build] 2.319B/3.00B (77.3%) | en 1.391B zh 0.928B | val 4.00M | dup en 0.50% zh 0.00% | 2395k tok/s | ETA 4.7 min
+[build] 2.369B/3.00B (79.0%) | en 1.422B zh 0.948B | val 4.00M | dup en 0.51% zh 0.00% | 2397k tok/s | ETA 4.4 min
+[build] 2.420B/3.00B (80.7%) | en 1.452B zh 0.968B | val 4.00M | dup en 0.53% zh 0.00% | 2400k tok/s | ETA 4.0 min
+[build] 2.471B/3.00B (82.4%) | en 1.483B zh 0.989B | val 4.00M | dup en 0.54% zh 0.00% | 2403k tok/s | ETA 3.7 min
+[build] 2.521B/3.00B (84.0%) | en 1.512B zh 1.008B | val 4.00M | dup en 0.56% zh 0.00% | 2403k tok/s | ETA 3.3 min
+[build] 2.570B/3.00B (85.7%) | en 1.542B zh 1.028B | val 4.00M | dup en 0.57% zh 0.00% | 2404k tok/s | ETA 3.0 min
+[build] 2.619B/3.00B (87.3%) | en 1.571B zh 1.048B | val 4.00M | dup en 0.58% zh 0.00% | 2404k tok/s | ETA 2.6 min
+[build] 2.666B/3.00B (88.9%) | en 1.600B zh 1.067B | val 4.00M | dup en 0.59% zh 0.00% | 2403k tok/s | ETA 2.3 min
+[build] 2.712B/3.00B (90.4%) | en 1.627B zh 1.085B | val 4.00M | dup en 0.61% zh 0.00% | 2401k tok/s | ETA 2.0 min
+[build] 2.765B/3.00B (92.2%) | en 1.659B zh 1.106B | val 4.00M | dup en 0.62% zh 0.00% | 2406k tok/s | ETA 1.6 min
+[build] 2.815B/3.00B (93.8%) | en 1.689B zh 1.126B | val 4.00M | dup en 0.63% zh 0.00% | 2407k tok/s | ETA 1.3 min
+[build] 2.867B/3.00B (95.6%) | en 1.720B zh 1.147B | val 4.00M | dup en 0.65% zh 0.00% | 2410k tok/s | ETA 0.9 min
+[build] 2.918B/3.00B (97.3%) | en 1.751B zh 1.167B | val 4.00M | dup en 0.66% zh 0.00% | 2411k tok/s | ETA 0.6 min
+[build] 2.971B/3.00B (99.0%) | en 1.783B zh 1.189B | val 4.00M | dup en 0.67% zh 0.00% | 2415k tok/s | ETA 0.2 min
+[build] 3.000B/3.00B (100.0%) | en 1.800B zh 1.200B | val 4.00M | dup en 0.68% zh 0.00% | 2416k tok/s | ETA 0.0 min
+[smoke] 切片 data/bpe-smoke: train 50,000,000 tok / val 2,000,000 tok
+
+[result] 分片清单
+  name                     tokens       MB  sha256
+  shard-000.bin       536,870,912   1024.0  f60bfe171958edcf…
+  shard-001.bin       536,870,912   1024.0  3fcba79b3f112725…
+  shard-002.bin       536,870,912   1024.0  00cea4c747d2e0a0…
+  shard-003.bin       536,870,912   1024.0  72a601f6c73323dc…
+  shard-004.bin       536,870,912   1024.0  b8bb157781ec485e…
+  shard-005.bin       315,645,440    602.0  ffe7068af2cdf035…
+  val.bin               4,000,000      7.6  a549752d206705fc…
+[result] 总计 3,000,000,000 train tokens（en 60.0% / zh 40.0%） + val 4,000,000（100.0%）
+[result] en: read 1,797,744 docs → short 0 / long 8,767 / dup 12,217（0.68%）/ val_drop 0 → train 1,773,226 docs · 1,800,000,265 tokens · 4.29 chars/token
+[result] zh: read 7,093,958 docs → short 844,240 / long 0 / dup 0（0.00%）/ val_drop 0 → train 6,237,376 docs · 1,199,999,735 tokens · 1.78 chars/token
+[done] data/shards/meta.json · SHA256SUMS · 用时 20.7 min · 2,415,868 tok/s

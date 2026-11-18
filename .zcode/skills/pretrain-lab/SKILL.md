@@ -18,8 +18,10 @@
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · train_* 训练；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · train_* 训练 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
+| Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
+| 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
 | 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS` |
 | 产物 | `out/<run>/last.pt`（gitignore）· `logs/`（gitignore，证据快照拷 reports/） |
 | 环境 | `.venv-pre/`（D-07 uv 托管 3.12.13 + torch 2.11.0+cu128；重建命令见 reports/2026-11-18-day0-env-snapshot.md） |
@@ -52,11 +54,13 @@
 | 下载漏件/404 | `--include` 多 pattern；数据集改版 | PROVENANCE 下载渠道备忘（逐文件位置参数 / curl API 核对清单） |
 | loss 尖峰/发散 | grad clip、LR、数据坏样本 | 从最近 checkpoint 降 LR 重启（PLAN §5） |
 | 吞吐明显低于锚点 | GPU 被占/降频/bs 变化 | `nvidia-smi` 对账；参照 PLAN §8 训练运行基线（Day 1：22.2M @ bs64×512 = 187,480 字符/s） |
+| 分片 `sha256sum -c` 失败 | 数据被动过/写坏 | **先查再训**，勿在坏分片上跑批；对应分片用 `tools/build_shards.py` 重建 |
+| BPE 数据 token 数异常 / 解码乱码 | tokenizer 配置（ByteLevel / specials / decode） | 跑往返自检（普通文本 + specials 两段，`skip_special_tokens=False`）；同文对拍 minimind 压缩率 |
 
 ## §5 红线
 
 - `reports/` 只增不改；改错走勘误追加。
-- 每份数据落位即录指纹（raw 层 Day 0 已立、切片 Day 1 已立；分片/tokenizer 随 Day 2 续录）。
+- 每份数据落位即录指纹（raw 层 17 条 Day 0 已立、字符级 3 条 Day 1 已立、tokenizer 3 条 + 分片 7 条 Day 2 已立；SFT 数据 Day 4 续录）。
 - 决策门①（Day 3 吞吐 ≥3.5 万 token/s）/②（Day 6 loss 仍陡降→加训）预注册于 PLAN §4，跑前不改。
 - 模型/checkpoint/语料/日志不入库（.gitignore）；证据快照入 `reports/`。
 - 边界：nl2fem / finetune-lab 是知识上游非资产上游（PLAN §7），只引用知识不改其档案。

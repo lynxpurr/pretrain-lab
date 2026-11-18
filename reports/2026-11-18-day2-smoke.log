@@ -1,0 +1,14 @@
+[cfg] {"vocab_size": 32000, "n_embd": 384, "n_layer": 10, "n_head": 6, "block_size": 512, "rope_base": 10000.0, "multiple_of": 64}
+[model] params=29,990,784 (non-emb 17,702,784) vocab=32000 train_chars=50,000,000
+[data] train.bin 95.4MB / val.bin 3.8MB
+step      1 | loss 10.4542 | lr 2.00e-04 | 30,627 tok/s | 0.0 min
+step     10 | loss 9.3784 | lr 2.00e-03 | 119,501 tok/s | 0.0 min
+step     20 | loss 8.5532 | lr 1.86e-03 | 142,466 tok/s | 0.0 min
+step     30 | loss 8.2811 | lr 1.43e-03 | 152,150 tok/s | 0.1 min
+step     30 | [val] loss 8.1438
+step     40 | loss 8.0111 | lr 8.76e-04 | 137,711 tok/s | 0.1 min
+step     50 | loss 7.8361 | lr 4.07e-04 | 144,021 tok/s | 0.1 min
+step     60 | loss 7.7536 | lr 2.02e-04 | 148,507 tok/s | 0.1 min
+step     60 | [val] loss 7.7817
+[final] step 60 | val loss 7.7716 | 总用时 0.1 min | 均值吞吐 121,400 tok/s（字符/秒）
+[final] checkpoint → out/last.pt

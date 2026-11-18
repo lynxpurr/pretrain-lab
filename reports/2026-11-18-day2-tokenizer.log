@@ -1,0 +1,20 @@
+[sample] zh ← data/raw/minimind_dataset/pretrain_t2t.jsonl（300.0MB + 留出 5.0MB）
+[sample] zh: train 415,045 docs / 300.0MB · heldout 6,976 docs / 5.0MB
+[sample] en ← data/raw/fineweb-edu/sample/10BT（300.0MB + 留出 5.0MB）
+[sample] en: train 61,842 docs / 300.0MB · heldout 1,049 docs / 5.0MB
+[train] BPE vocab=32000（ByteLevel, 256 字节兜底，specials=['<|endoftext|>', '<|im_start|>', '<|im_end|>']）
+
+
+
+[train] 完成：32,000 tokens（271.4s）
+[check] 往返自检通过；probe → 35 tokens；specials → [0, 1, 2]
+
+[result] 留出集压缩率（chars/token 越高越好）
+  tokenizer        lang  chars/token  bytes/token       tokens
+  ours-32000       zh          1.841        4.974    1,005,383
+  minimind-6400    zh          1.328        3.588    1,393,731
+  ours-32000       en          4.226        4.259    1,174,915
+  minimind-6400    en          2.939        2.962    1,689,068
+  [对拍] zh: 同文 token 数 ours/ref = 0.721（32k vs 6.4k 词表，预期 < 1；若 > 1.3 或 < 0.5 查配置）
+  [对拍] en: 同文 token 数 ours/ref = 0.696（32k vs 6.4k 词表，预期 < 1；若 > 1.3 或 < 0.5 查配置）
+[done] 落位 data/tokenizer-32k/（tokenizer.json sha256=05e9ef17eda551bf…）· csv reports/2026-11-18-day2-tokenizer.csv
