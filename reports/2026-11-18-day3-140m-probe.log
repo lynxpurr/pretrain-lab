@@ -1,0 +1,23 @@
+[cfg] {"vocab_size": 32000, "n_embd": 768, "n_layer": 16, "n_head": 12, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=8×accum8×T1024 = 65,536 tok/step · total_steps=40 · target_tokens=3,000,000,000
+[model] params=137,847,552 (non-emb 113,271,552) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=6.0e-04 warmup=500 cosine→10% wd=0.1 clip=1.0 bf16 · max_minutes=∞ · notes=门① 140M 探针：正式 bs8×accum8×T1024
+[anchor] micro-step 1 loss 10.5431 vs ln(V)=10.3735 (+0.170)
+step      1 | loss 10.5327 | lr 1.20e-06 | 40,313 tok/s (纯训练 40,313) | 0h00m01s | ETA 0h01m03s
+step     20 | loss 9.9441 | lr 2.40e-05 | 52,691 tok/s (纯训练 51,894) | 0h00m25s | ETA 0h00m24s
+step     20 | [val] loss 9.4686 | peak 10.51 GB | 0h00m26s
+step     20 | [sample] ----------------------------------------
+  人工智能是，，，，，，，，。，，，，.。，，，。，，，？“，，，，，，，，，，，，，.，，，，，，，。。，，，，
+  中国的首都是，。，，，，，，，，，，，，，，，，，， mistaken，。，，，，，，。，。，，。，， pap，，，+，，，，，。。，
+  The capital of France is难,在水 threatened the以避免 the the the the在水 the and the the the..\n  and of the the,,ok.birth exit, the a the occasomething,..\n  of在水. the the theve..,.
+  Once upon a time,？“arettes. Arm.。.. and. the......,肤 the..\n 碧。.., the. the改成. machine。.. the.现象 and,, and.. the.御.
+  ----------------------------------------------
+step     40 | loss 9.2321 | lr 4.80e-05 | 48,059 tok/s (纯训练 52,250) | 0h00m52s | ETA 0h00m00s
+step     40 | [val] loss 8.9169 | peak 10.51 GB | 0h00m53s
+step     40 | [sample] ----------------------------------------
+  人工智能是并提供不，，，。。：，，。，，，，，。，，，。，，。。。。。，。，，。。。。，。，，， predomin。，， predomin，。。。
+  中国的首都是,,,, of the. The,.\n , and, and,, and.\n .\n ,.\n  bottle 20,,.\n . ve,.\n .\n 相关信息.\n 材料 public and,.\n ,.
+  The capital of France is the the the the the the.\n  “ to a.\n  would,ized, the the. 越 the small the significant,T. The “.\n  to. .\n , UC, the the the.\n , the the,
+  Once upon a time, the the the the the.\n  of the, and the pap.\n .\n , the and and theam.\n .\n .\n .\n  .\n ig.\n .\n , the of the,许多.\n , and and
+  ----------------------------------------------
+step     40 | [ckpt] ckpt-0000040.pt（≈1.54 GB：fp32 权重+Adam 态）
+[final] step 40/40 | val 8.9169 | 用时 0h00m56s (开销 0h00m06s) | 纯训练吞吐 52,250 tok/s | 总 token 2,621,440 | peak 10.51 GB | stop=completed

@@ -33,6 +33,13 @@
 - 疑问：①BPE 词表大 5 倍、token 只省 ~30%，边际收益为什么递减（qa-day-2 题 1）？②3B token 里 zh 用掉全库 ~72%，若决策门②加训 1.5B 从哪补（SkyPile / 复用 / 降 zh 比例）？③首步 loss 比 ln(32000) 高 0.081——差值来自初始化 logits 方差还是数据分布（qa-day-2 题 2）？——已并入 [notes/qa-day-2.md](notes/qa-day-2.md) 题目池。
 - 补记（2026-11-18 盘点校准批）：**门①口径校准为 140M 等效 ≥35k tok/s**——原文"50M 跑 30min 测吞吐"未指明测量模型；按 Day 1 有效算力 25 TFLOPS 外推，50M 的 35k ≈ 140M 的 ~13k（3B 要 64h），直接放行会误判。Day 3 加 140M 20~30 步探针，50M 按 FLOPs 比 2.74× 交叉校验。配置核准：140M = 137,847,552；50M 推荐 d576/L8/H9 = 50,292,288；100M 兜底 d640/L16/H10 = 99,799,680。3B 单程 35k≈23.8h / 40k≈20.8h；ckpt ≈1.65GB/个（bs64 → 46 个 ≈76GB）。新增风险：zh 供给（门②加训 1.5B 需 en-heavy 或 SkyPile）。证据链复核：tokenizer/分片指纹复算全过、14 份文档 0 断链、`reports/*.log` 例外已补。
 
+## Day 3 · 2026-11-18（当日续跑）· 完整训练框架 + 50M/140M 探针 + 决策门①
+
+- 决策：①`tools/train.py` 六件 = 多分片加权取片（不拼单文件）/ **token 预算定 total_steps**（LR 与墙钟解耦）/ 续训含 torch+cuda+data 三路 RNG / 固定块 val 窗口（跨 step、跨 resume 可比）/ 双语固定 prompt 采样（`skip_special_tokens=False`）/ `logs/<run>.exit` 标记（stale exit 机制化）；②50M 定档 d576/L8/H9 = 50,292,288，micro-bs **16**（封顶），bs16×accum4 = 65,536 tok/step；③**140M 主训练定档 bs8×accum8**（三个变体实测最快：52,250 vs bs10 51,230 vs bs16+grad-ckpt 40,449），lr 6e-4 / warmup 500 / cosine→6e-5 / wd 0.1 / clip 1.0，ckpt 每 1000 步 46 件 ≈76GB（G2 谱系）；④**决策门① PASS**：140M 探针 52,250 tok/s ≥ 35k（超 49%），**不启用 100M/2B 兜底**；3B 单程 **15.9h**（比 PLAN §4.1 预估的 23.8h 省 ~8h）；⑤Day 3 记为 11-18（用户要求提前开工），主训练启动时点未拍板 → 默认按 DAY 4 = 11-19 起跑，命令已在报告 §6 备好。
+- 现象：①**续训坑**：`torch.load(map_location="cuda")` 把 RNG 字节张量也搬上 GPU，`set_rng_state` 要 CPU ByteTensor → `TypeError`；修 = `.cpu()`（清单第 2 项"kill 一次验证"直接兜住了这个坑）；②`torch.compile` 在 sm_120 上反而慢 13 倍（4,077 tok/s），弃用并记录；③**CE 三份副本卡显存**：autocast 下 logits bf16 + fp32 升档 + log_softmax 保留，bs16×1024×32k 时 ≈5.25GB，梯度累积摊不薄（逐 token 独立）；④两次自伤：`head -13` 截断管道把训练打成 BrokenPipe → `EXIT:1`（非训练问题）；探索跑的 log 被我 `rm` 过，按证据纪律补跑留存后才写报告。
+- 读数：50M 30min 预注册跑 = **3,292 步 / 215.7M token / 120,517 tok/s / val 3.6377**（峰值 10.72GB · 58°C · 98% util · 无降频）；140M 探针 40 步 = **52,250 tok/s / val 8.9169**（峰值 10.51GB）；50M 冒烟首步锚 **10.4756**（+0.102），100 步 val 6.9161；续训 kill→restore：step 40 val 前后均 **7.6893**，step/tokens 精确对齐，`EXIT:0`。证据 = [reports/2026-11-18-day3-framework.md](reports/2026-11-18-day3-framework.md) · [reports/2026-11-18-day3-50m-30min.md](reports/2026-11-18-day3-50m-30min.md) · [reports/2026-11-18-day3-140m-probe.md](reports/2026-11-18-day3-140m-probe.md)（各附 csv+log）。
+- 疑问：①为什么 micro-bs 8 比 10/16 都快（不是越大越快）？②首步锚偏差随规模单调上升（+0.059 → +0.081 → +0.170），是残差流累积还是初始化尺度？③50M 按 2.74× 折算 44k、140M 实测 52k——6N 口径漏掉了什么？——已并入 [notes/qa-day-3.md](notes/qa-day-3.md) 题目池。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）

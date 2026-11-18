@@ -1,0 +1,11 @@
+[opt] 激活检查点开启（每块重算 forward）
+[cfg] {"vocab_size": 32000, "n_embd": 768, "n_layer": 16, "n_head": 12, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=16×accum4×T1024 = 65,536 tok/step · total_steps=40 · target_tokens=3,000,000,000
+[model] params=137,847,552 (non-emb 113,271,552) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=6.0e-04 warmup=500 cosine→10% wd=0.1 clip=1.0 bf16 · max_minutes=∞ · notes=-
+[anchor] micro-step 1 loss 10.5198 vs ln(V)=10.3735 (+0.146)
+step      1 | loss 10.5278 | lr 1.20e-06 | 33,080 tok/s (纯训练 33,080) | 0h00m01s | ETA 0h01m17s
+step     20 | loss 9.9385 | lr 2.40e-05 | 40,673 tok/s (纯训练 40,212) | 0h00m32s | ETA 0h00m32s
+step     40 | loss 9.2431 | lr 4.80e-05 | 40,690 tok/s (纯训练 40,450) | 0h01m04s | ETA 0h00m00s
+step     40 | [val] loss 8.9656 | peak 8.84 GB | 0h01m04s
+step     40 | [ckpt] ckpt-0000040.pt（≈1.54 GB：fp32 权重+Adam 态）
+[final] step 40/40 | val 8.9656 | 用时 0h01m06s (开销 0h00m01s) | 纯训练吞吐 40,449 tok/s | 总 token 2,621,440 | peak 8.84 GB | stop=completed

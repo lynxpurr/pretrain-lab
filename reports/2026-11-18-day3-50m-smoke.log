@@ -1,0 +1,26 @@
+[cfg] {"vocab_size": 32000, "n_embd": 576, "n_layer": 8, "n_head": 9, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=16×accum4×T1024 = 65,536 tok/step · total_steps=100 · target_tokens=6,553,600
+[model] params=50,292,288 (non-emb 31,860,288) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=6.0e-04 warmup=50 cosine→10% wd=0.1 clip=1.0 bf16 · max_minutes=∞ · notes=Day3 50M 冒烟 100 步：首步锚 + 采样可读性
+[anchor] micro-step 1 loss 10.4756 vs ln(V)=10.3735 (+0.102)
+step      1 | loss 10.4731 | lr 1.20e-05 | 70,064 tok/s (纯训练 70,064) | 0h00m00s | ETA 0h01m32s
+step     20 | loss 9.5432 | lr 2.40e-04 | 118,148 tok/s (纯训练 114,228) | 0h00m11s | ETA 0h00m44s
+step     40 | loss 8.1604 | lr 4.80e-04 | 117,405 tok/s (纯训练 115,795) | 0h00m22s | ETA 0h00m33s
+step     50 | [val] loss 7.4547 | peak 10.72 GB | 0h00m29s
+step     50 | [sample] ----------------------------------------
+  人工智能是 this C\n - The--)ing (pd, that. These-.\n In\n 1, which.\n -the-HB may, bodyir.\n w 5. The( In-1.You- This, which is youra.\n - 5,
+  中国的首都是 and these is the D.\n -Ts or their more be a also when of a it.\n C.\n - as in the in good, and it.\n The your K.\n -\n -)\n ol-H, the be l is C. When than my
+  The capital of France is of the use, more there.\n -The l and the “ as its be in research of the next.\n -\n The the be can the b.\n -This ban and been a your new was F\n In the N of there on not be some- We to the one
+  Once upon a time, the long is we to time and the be the United, in and that a time or we you and childers.\n To the be you the Fm of the but and new of a only the the first.\n - to the other of the only’s and a than how. It
+  ----------------------------------------------
+step     60 | loss 7.4761 | lr 5.58e-04 | 99,078 tok/s (纯训练 115,923) | 0h00m35s | ETA 0h00m26s
+step     80 | loss 7.1160 | lr 2.63e-04 | 116,096 tok/s (纯训练 115,966) | 0h00m47s | ETA 0h00m11s
+step    100 | loss 6.9312 | lr 6.05e-05 | 117,525 tok/s (纯训练 116,275) | 0h00m58s | ETA 0h00m00s
+step    100 | [val] loss 6.9161 | peak 10.72 GB | 0h00m59s
+step    100 | [sample] ----------------------------------------
+  人工智能是�人。希望这些，他们影响将可以描述的，你好，我需要不同为：学习，请一些一些、需要减少上和是确保你分析、用户、重、购买、新的环境、等。2. 有更一些提供新：我们中？1. 
+  中国的首都是。<|endoftext|>1. 多出： 当：1. 控制，但是的学习大。<|endoftext|>为了我由中国：T. 根据由有：1. 健康：将为了一、、如如何““、该、2. 年，以学生、
+  The capital of France is the most years.\n -4)\n -wus).\n - The past American, the 1)\n - The U. It is "b of the next more so that is the fu, the air and (R or how a be is one of the other is not under the
+  Once upon a time, as the problem, the world of our study, as it is into life.\n S., including the plant of ting for our blood, and is over the Taria was the best in the original years.\n - The S, the main idea of the a body, is a water
+  ----------------------------------------------
+step    100 | [ckpt] ckpt-0000100.pt（≈0.56 GB：fp32 权重+Adam 态）
+[final] step 100/100 | val 6.9161 | 用时 0h01m00s (开销 0h00m04s) | 纯训练吞吐 116,274 tok/s | 总 token 6,553,600 | peak 10.72 GB | stop=completed

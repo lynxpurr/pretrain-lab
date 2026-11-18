@@ -1,0 +1,194 @@
+[cfg] {"vocab_size": 32000, "n_embd": 576, "n_layer": 8, "n_head": 9, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=16×accum4×T1024 = 65,536 tok/step · total_steps=45,777 · target_tokens=3,000,000,000
+[model] params=50,292,288 (non-emb 31,860,288) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=6.0e-04 warmup=500 cosine→10% wd=0.1 clip=1.0 bf16 · max_minutes=30.0 · notes=Day3 50M 30min 吞吐（预注册动作）
+[anchor] micro-step 1 loss 10.4756 vs ln(V)=10.3735 (+0.102)
+step      1 | loss 10.4731 | lr 1.20e-06 | 73,834 tok/s (纯训练 73,834) | 0h00m00s | ETA 11h17m11s
+step     20 | loss 10.1216 | lr 2.40e-05 | 123,949 tok/s (纯训练 119,881) | 0h00m10s | ETA 6h43m13s
+step     40 | loss 9.5332 | lr 4.80e-05 | 123,863 tok/s (纯训练 121,840) | 0h00m21s | ETA 6h43m19s
+step     60 | loss 8.9901 | lr 7.20e-05 | 123,822 tok/s (纯训练 122,493) | 0h00m32s | ETA 6h43m16s
+step     80 | loss 8.4216 | lr 9.60e-05 | 123,853 tok/s (纯训练 122,830) | 0h00m42s | ETA 6h43m00s
+step    100 | loss 7.9083 | lr 1.20e-04 | 123,841 tok/s (纯训练 123,031) | 0h00m53s | ETA 6h42m52s
+step    120 | loss 7.5092 | lr 1.44e-04 | 123,853 tok/s (纯训练 123,167) | 0h01m03s | ETA 6h42m39s
+step    140 | loss 7.2461 | lr 1.68e-04 | 123,818 tok/s (纯训练 123,260) | 0h01m14s | ETA 6h42m35s
+step    160 | loss 7.0199 | lr 1.92e-04 | 123,832 tok/s (纯训练 123,331) | 0h01m25s | ETA 6h42m21s
+step    180 | loss 6.8288 | lr 2.16e-04 | 123,820 tok/s (纯训练 123,385) | 0h01m35s | ETA 6h42m13s
+step    200 | loss 6.7044 | lr 2.40e-04 | 123,791 tok/s (纯训练 123,426) | 0h01m46s | ETA 6h42m08s
+step    220 | loss 6.5375 | lr 2.64e-04 | 123,829 tok/s (纯训练 123,462) | 0h01m56s | ETA 6h41m50s
+step    240 | loss 6.4106 | lr 2.88e-04 | 123,842 tok/s (纯训练 123,494) | 0h02m07s | ETA 6h41m37s
+step    260 | loss 6.2852 | lr 3.12e-04 | 123,831 tok/s (纯训练 123,520) | 0h02m17s | ETA 6h41m29s
+step    280 | loss 6.1748 | lr 3.36e-04 | 123,834 tok/s (纯训练 123,542) | 0h02m28s | ETA 6h41m18s
+step    300 | loss 6.0496 | lr 3.60e-04 | 123,843 tok/s (纯训练 123,562) | 0h02m39s | ETA 6h41m05s
+step    320 | loss 5.9273 | lr 3.84e-04 | 123,817 tok/s (纯训练 123,578) | 0h02m49s | ETA 6h41m00s
+step    340 | loss 5.8330 | lr 4.08e-04 | 123,845 tok/s (纯训练 123,594) | 0h03m00s | ETA 6h40m44s
+step    360 | loss 5.7534 | lr 4.32e-04 | 123,826 tok/s (纯训练 123,606) | 0h03m10s | ETA 6h40m37s
+step    380 | loss 5.6460 | lr 4.56e-04 | 123,844 tok/s (纯训练 123,619) | 0h03m21s | ETA 6h40m23s
+step    400 | loss 5.5591 | lr 4.80e-04 | 123,838 tok/s (纯训练 123,630) | 0h03m32s | ETA 6h40m13s
+step    420 | loss 5.4796 | lr 5.04e-04 | 117,470 tok/s (纯训练 123,322) | 0h03m43s | ETA 7h01m44s
+step    440 | loss 5.4222 | lr 5.28e-04 | 117,208 tok/s (纯训练 123,030) | 0h03m54s | ETA 7h02m29s
+step    460 | loss 5.3444 | lr 5.52e-04 | 117,745 tok/s (纯训练 122,791) | 0h04m05s | ETA 7h00m23s
+step    480 | loss 5.2686 | lr 5.76e-04 | 118,460 tok/s (纯训练 122,604) | 0h04m16s | ETA 6h57m39s
+step    500 | loss 5.2020 | lr 6.00e-04 | 119,360 tok/s (纯训练 122,471) | 0h04m27s | ETA 6h54m19s
+step    500 | [val] loss 5.2162 | peak 10.72 GB | 0h04m28s
+step    520 | loss 5.1332 | lr 6.00e-04 | 111,567 tok/s (纯训练 122,380) | 0h04m39s | ETA 7h23m04s
+step    540 | loss 5.0858 | lr 6.00e-04 | 118,775 tok/s (纯训练 122,243) | 0h04m50s | ETA 6h56m00s
+step    560 | loss 5.0196 | lr 6.00e-04 | 119,268 tok/s (纯训练 122,134) | 0h05m01s | ETA 6h54m06s
+step    580 | loss 4.9418 | lr 6.00e-04 | 118,374 tok/s (纯训练 122,001) | 0h05m12s | ETA 6h57m02s
+step    600 | loss 4.9123 | lr 6.00e-04 | 119,767 tok/s (纯训练 121,925) | 0h05m23s | ETA 6h52m00s
+step    620 | loss 4.8500 | lr 6.00e-04 | 119,618 tok/s (纯训练 121,849) | 0h05m34s | ETA 6h52m20s
+step    640 | loss 4.8030 | lr 6.00e-04 | 117,611 tok/s (纯训练 121,712) | 0h05m45s | ETA 6h59m11s
+step    660 | loss 4.7571 | lr 6.00e-04 | 117,387 tok/s (纯训练 121,576) | 0h05m56s | ETA 6h59m48s
+step    680 | loss 4.6934 | lr 6.00e-04 | 117,969 tok/s (纯训练 121,467) | 0h06m07s | ETA 6h57m33s
+step    700 | loss 4.6304 | lr 6.00e-04 | 118,809 tok/s (纯训练 121,389) | 0h06m18s | ETA 6h54m24s
+step    720 | loss 4.6088 | lr 6.00e-04 | 120,489 tok/s (纯训练 121,364) | 0h06m29s | ETA 6h48m27s
+step    740 | loss 4.5708 | lr 6.00e-04 | 118,558 tok/s (纯训练 121,286) | 0h06m40s | ETA 6h54m55s
+step    760 | loss 4.5208 | lr 6.00e-04 | 118,023 tok/s (纯训练 121,198) | 0h06m51s | ETA 6h56m37s
+step    780 | loss 4.4786 | lr 6.00e-04 | 118,036 tok/s (纯训练 121,115) | 0h07m02s | ETA 6h56m23s
+step    800 | loss 4.4392 | lr 6.00e-04 | 118,839 tok/s (纯训练 121,057) | 0h07m13s | ETA 6h53m23s
+step    820 | loss 4.4159 | lr 6.00e-04 | 119,597 tok/s (纯训练 121,021) | 0h07m24s | ETA 6h50m35s
+step    840 | loss 4.3819 | lr 6.00e-04 | 120,318 tok/s (纯训练 121,004) | 0h07m35s | ETA 6h47m56s
+step    860 | loss 4.3703 | lr 6.00e-04 | 119,016 tok/s (纯训练 120,957) | 0h07m46s | ETA 6h52m13s
+step    880 | loss 4.3329 | lr 6.00e-04 | 118,925 tok/s (纯训练 120,910) | 0h07m57s | ETA 6h52m21s
+step    900 | loss 4.3033 | lr 6.00e-04 | 118,340 tok/s (纯训练 120,852) | 0h08m08s | ETA 6h54m12s
+step    920 | loss 4.2842 | lr 6.00e-04 | 120,058 tok/s (纯训练 120,835) | 0h08m19s | ETA 6h48m06s
+step    940 | loss 4.2611 | lr 6.00e-04 | 119,772 tok/s (纯训练 120,812) | 0h08m30s | ETA 6h48m53s
+step    960 | loss 4.2173 | lr 6.00e-04 | 118,971 tok/s (纯训练 120,773) | 0h08m41s | ETA 6h51m27s
+step    980 | loss 4.2288 | lr 6.00e-04 | 118,647 tok/s (纯训练 120,729) | 0h08m52s | ETA 6h52m24s
+step   1000 | loss 4.2097 | lr 6.00e-04 | 118,466 tok/s (纯训练 120,683) | 0h09m03s | ETA 6h52m50s
+step   1000 | [val] loss 4.2556 | peak 10.72 GB | 0h09m04s
+step   1000 | [ckpt] ckpt-0001000.pt（≈0.56 GB：fp32 权重+Adam 态）
+step   1020 | loss 4.1888 | lr 6.00e-04 | 102,371 tok/s (纯训练 120,648) | 0h09m16s | ETA 7h57m32s
+step   1040 | loss 4.1544 | lr 6.00e-04 | 119,986 tok/s (纯训练 120,635) | 0h09m27s | ETA 6h47m15s
+step   1060 | loss 4.1418 | lr 6.00e-04 | 119,521 tok/s (纯训练 120,614) | 0h09m38s | ETA 6h48m39s
+step   1080 | loss 4.1362 | lr 6.00e-04 | 118,591 tok/s (纯训练 120,576) | 0h09m49s | ETA 6h51m40s
+step   1100 | loss 4.1191 | lr 6.00e-04 | 118,300 tok/s (纯训练 120,534) | 0h10m00s | ETA 6h52m30s
+step   1120 | loss 4.1063 | lr 6.00e-04 | 118,682 tok/s (纯训练 120,500) | 0h10m11s | ETA 6h50m59s
+step   1140 | loss 4.1013 | lr 6.00e-04 | 120,669 tok/s (纯训练 120,503) | 0h10m22s | ETA 6h44m02s
+step   1160 | loss 4.0687 | lr 6.00e-04 | 119,623 tok/s (纯训练 120,488) | 0h10m33s | ETA 6h47m23s
+step   1180 | loss 4.0539 | lr 6.00e-04 | 118,384 tok/s (纯训练 120,451) | 0h10m44s | ETA 6h51m28s
+step   1200 | loss 4.0548 | lr 6.00e-04 | 118,302 tok/s (纯训练 120,415) | 0h10m55s | ETA 6h51m34s
+step   1220 | loss 4.0433 | lr 6.00e-04 | 118,918 tok/s (纯训练 120,390) | 0h11m06s | ETA 6h49m15s
+step   1240 | loss 4.0208 | lr 6.00e-04 | 119,774 tok/s (纯训练 120,380) | 0h11m17s | ETA 6h46m09s
+step   1260 | loss 4.0108 | lr 6.00e-04 | 120,384 tok/s (纯训练 120,380) | 0h11m28s | ETA 6h43m54s
+step   1280 | loss 4.0253 | lr 6.00e-04 | 119,667 tok/s (纯训练 120,369) | 0h11m39s | ETA 6h46m08s
+step   1300 | loss 3.9971 | lr 6.00e-04 | 118,284 tok/s (纯训练 120,336) | 0h11m50s | ETA 6h50m42s
+step   1320 | loss 3.9962 | lr 6.00e-04 | 119,572 tok/s (纯训练 120,325) | 0h12m01s | ETA 6h46m06s
+step   1340 | loss 3.9793 | lr 6.00e-04 | 118,945 tok/s (纯训练 120,304) | 0h12m12s | ETA 6h48m03s
+step   1360 | loss 3.9736 | lr 6.00e-04 | 120,066 tok/s (纯训练 120,300) | 0h12m23s | ETA 6h44m04s
+step   1380 | loss 3.9771 | lr 5.99e-04 | 121,207 tok/s (纯训练 120,313) | 0h12m34s | ETA 6h40m05s
+step   1400 | loss 3.9652 | lr 5.99e-04 | 119,741 tok/s (纯训练 120,305) | 0h12m45s | ETA 6h44m48s
+step   1420 | loss 3.9483 | lr 5.99e-04 | 118,491 tok/s (纯训练 120,279) | 0h12m56s | ETA 6h48m53s
+step   1440 | loss 3.9390 | lr 5.99e-04 | 119,269 tok/s (纯训练 120,265) | 0h13m07s | ETA 6h46m02s
+step   1460 | loss 3.9620 | lr 5.99e-04 | 120,614 tok/s (纯训练 120,270) | 0h13m18s | ETA 6h41m19s
+step   1480 | loss 3.9210 | lr 5.99e-04 | 120,500 tok/s (纯训练 120,273) | 0h13m29s | ETA 6h41m31s
+step   1500 | loss 3.9160 | lr 5.99e-04 | 119,554 tok/s (纯训练 120,263) | 0h13m40s | ETA 6h44m31s
+step   1500 | [val] loss 3.9737 | peak 10.72 GB | 0h13m40s
+step   1500 | [sample] ----------------------------------------
+  人工智能是“人工智能和机器学习”等学科领域的技术。在这篇文章中，我将探讨人工智能技术在人工智能、机器学习、大数据等技术的应用问题。提取出这篇文章的关键信息。人工智能技术在计算机视觉、机器学习、自然语言处理等领域的应用，包括语音识别、图像、语音识别、计算机视觉、语音识别、自然语言处理等。这些技术将为各行各业的发展和应用，让
+  中国的首都是哈里斯在哪里。以下是5个关于哈里斯的具体事实。1. 乔治·奥威尔2. 乔治·奥威尔3. 巴哈德马·克伯格4. 尼西亚·波希普5. 威廉·奥斯汀6. 乔治·奥
+  The capital of France is one of the most popular and most popular in the history and occupation years as its first inland of classical history.\n On Sunday, August 18th, 1721, from the title “Krone of England was probably the first” in the American Revolution on March 14, 1724, from
+  Once upon a time, the third party party is on a bus. If it came in and off, the party is running and having to leave. It was opened again. The party is on its own. The party was finally the first party in a bill.\n In fact, the party is a “poly”
+  ----------------------------------------------
+step   1520 | loss 3.8976 | lr 5.99e-04 | 100,406 tok/s (纯训练 120,243) | 0h13m53s | ETA 8h01m27s
+step   1540 | loss 3.8953 | lr 5.99e-04 | 119,226 tok/s (纯训练 120,230) | 0h14m04s | ETA 6h45m16s
+step   1560 | loss 3.8799 | lr 5.99e-04 | 119,499 tok/s (纯训练 120,220) | 0h14m15s | ETA 6h44m09s
+step   1580 | loss 3.8699 | lr 5.99e-04 | 121,229 tok/s (纯训练 120,233) | 0h14m25s | ETA 6h38m12s
+step   1600 | loss 3.9135 | lr 5.99e-04 | 119,947 tok/s (纯训练 120,229) | 0h14m36s | ETA 6h42m17s
+step   1620 | loss 3.8800 | lr 5.99e-04 | 118,287 tok/s (纯训练 120,205) | 0h14m47s | ETA 6h47m44s
+step   1640 | loss 3.8929 | lr 5.99e-04 | 119,164 tok/s (纯训练 120,192) | 0h14m58s | ETA 6h44m33s
+step   1660 | loss 3.8711 | lr 5.99e-04 | 119,482 tok/s (纯训练 120,184) | 0h15m09s | ETA 6h43m18s
+step   1680 | loss 3.8620 | lr 5.99e-04 | 120,546 tok/s (纯训练 120,188) | 0h15m20s | ETA 6h39m33s
+step   1700 | loss 3.8613 | lr 5.99e-04 | 120,477 tok/s (纯训练 120,191) | 0h15m31s | ETA 6h39m36s
+step   1720 | loss 3.8424 | lr 5.99e-04 | 119,565 tok/s (纯训练 120,184) | 0h15m42s | ETA 6h42m28s
+step   1740 | loss 3.8197 | lr 5.99e-04 | 117,437 tok/s (纯训练 120,152) | 0h15m53s | ETA 6h49m34s
+step   1760 | loss 3.8349 | lr 5.99e-04 | 118,813 tok/s (纯训练 120,136) | 0h16m04s | ETA 6h44m39s
+step   1780 | loss 3.8257 | lr 5.99e-04 | 119,811 tok/s (纯训练 120,133) | 0h16m15s | ETA 6h41m06s
+step   1800 | loss 3.8122 | lr 5.99e-04 | 120,782 tok/s (纯训练 120,140) | 0h16m26s | ETA 6h37m41s
+step   1820 | loss 3.8334 | lr 5.99e-04 | 121,042 tok/s (纯训练 120,150) | 0h16m37s | ETA 6h36m39s
+step   1840 | loss 3.8050 | lr 5.99e-04 | 119,261 tok/s (纯训练 120,140) | 0h16m48s | ETA 6h42m24s
+step   1860 | loss 3.8256 | lr 5.99e-04 | 119,258 tok/s (纯训练 120,130) | 0h16m59s | ETA 6h42m13s
+step   1880 | loss 3.8025 | lr 5.99e-04 | 119,214 tok/s (纯训练 120,120) | 0h17m10s | ETA 6h42m11s
+step   1900 | loss 3.8072 | lr 5.99e-04 | 120,937 tok/s (纯训练 120,129) | 0h17m21s | ETA 6h36m17s
+step   1920 | loss 3.7938 | lr 5.99e-04 | 120,559 tok/s (纯训练 120,133) | 0h17m32s | ETA 6h37m20s
+step   1940 | loss 3.7976 | lr 5.99e-04 | 122,027 tok/s (纯训练 120,153) | 0h17m42s | ETA 6h32m23s
+step   1960 | loss 3.7926 | lr 5.99e-04 | 122,959 tok/s (纯训练 120,181) | 0h17m53s | ETA 6h29m13s
+step   1980 | loss 3.7842 | lr 5.99e-04 | 122,702 tok/s (纯训练 120,206) | 0h18m04s | ETA 6h29m52s
+step   2000 | loss 3.7854 | lr 5.99e-04 | 122,749 tok/s (纯训练 120,231) | 0h18m14s | ETA 6h29m32s
+step   2000 | [val] loss 3.8304 | peak 10.72 GB | 0h18m15s
+step   2000 | [ckpt] ckpt-0002000.pt（≈0.56 GB：fp32 权重+Adam 态）
+step   2020 | loss 3.7696 | lr 5.99e-04 | 103,733 tok/s (纯训练 120,238) | 0h18m27s | ETA 7h40m44s
+step   2040 | loss 3.7708 | lr 5.98e-04 | 121,160 tok/s (纯训练 120,247) | 0h18m38s | ETA 6h34m17s
+step   2060 | loss 3.7537 | lr 5.98e-04 | 119,583 tok/s (纯训练 120,240) | 0h18m49s | ETA 6h39m18s
+step   2080 | loss 3.7564 | lr 5.98e-04 | 119,088 tok/s (纯训练 120,229) | 0h19m00s | ETA 6h40m47s
+step   2100 | loss 3.7453 | lr 5.98e-04 | 119,759 tok/s (纯训练 120,225) | 0h19m11s | ETA 6h38m21s
+step   2120 | loss 3.7557 | lr 5.98e-04 | 121,117 tok/s (纯训练 120,233) | 0h19m21s | ETA 6h33m42s
+step   2140 | loss 3.7419 | lr 5.98e-04 | 121,668 tok/s (纯训练 120,246) | 0h19m32s | ETA 6h31m44s
+step   2160 | loss 3.7371 | lr 5.98e-04 | 119,597 tok/s (纯训练 120,240) | 0h19m43s | ETA 6h38m21s
+step   2180 | loss 3.7174 | lr 5.98e-04 | 123,122 tok/s (纯训练 120,266) | 0h19m54s | ETA 6h26m46s
+step   2200 | loss 3.7476 | lr 5.98e-04 | 120,852 tok/s (纯训练 120,271) | 0h20m05s | ETA 6h33m51s
+step   2220 | loss 3.7140 | lr 5.98e-04 | 121,572 tok/s (纯训练 120,283) | 0h20m16s | ETA 6h31m20s
+step   2240 | loss 3.7268 | lr 5.98e-04 | 122,210 tok/s (纯训练 120,300) | 0h20m26s | ETA 6h29m06s
+step   2260 | loss 3.7094 | lr 5.98e-04 | 121,100 tok/s (纯训练 120,307) | 0h20m37s | ETA 6h32m30s
+step   2280 | loss 3.7163 | lr 5.98e-04 | 120,030 tok/s (纯训练 120,305) | 0h20m48s | ETA 6h35m49s
+step   2300 | loss 3.6965 | lr 5.98e-04 | 120,245 tok/s (纯训练 120,304) | 0h20m59s | ETA 6h34m55s
+step   2320 | loss 3.7177 | lr 5.98e-04 | 120,385 tok/s (纯训练 120,305) | 0h21m10s | ETA 6h34m17s
+step   2340 | loss 3.6998 | lr 5.98e-04 | 120,653 tok/s (纯训练 120,308) | 0h21m21s | ETA 6h33m13s
+step   2360 | loss 3.6978 | lr 5.98e-04 | 121,832 tok/s (纯训练 120,320) | 0h21m31s | ETA 6h29m14s
+step   2380 | loss 3.7098 | lr 5.98e-04 | 119,729 tok/s (纯训练 120,315) | 0h21m42s | ETA 6h35m54s
+step   2400 | loss 3.6739 | lr 5.98e-04 | 119,764 tok/s (纯训练 120,311) | 0h21m53s | ETA 6h35m36s
+step   2420 | loss 3.6565 | lr 5.98e-04 | 120,221 tok/s (纯训练 120,310) | 0h22m04s | ETA 6h33m55s
+step   2440 | loss 3.6882 | lr 5.98e-04 | 121,138 tok/s (纯训练 120,317) | 0h22m15s | ETA 6h30m45s
+step   2460 | loss 3.7168 | lr 5.98e-04 | 119,962 tok/s (纯训练 120,314) | 0h22m26s | ETA 6h34m24s
+step   2480 | loss 3.6829 | lr 5.97e-04 | 121,655 tok/s (纯训练 120,325) | 0h22m37s | ETA 6h28m44s
+step   2500 | loss 3.6617 | lr 5.97e-04 | 119,471 tok/s (纯训练 120,318) | 0h22m48s | ETA 6h35m39s
+step   2500 | [val] loss 3.7384 | peak 10.72 GB | 0h22m49s
+step   2520 | loss 3.6795 | lr 5.97e-04 | 110,683 tok/s (纯训练 120,308) | 0h23m00s | ETA 7h06m52s
+step   2540 | loss 3.6769 | lr 5.97e-04 | 120,404 tok/s (纯训练 120,309) | 0h23m10s | ETA 6h32m13s
+step   2560 | loss 3.6774 | lr 5.97e-04 | 121,965 tok/s (纯训练 120,322) | 0h23m21s | ETA 6h27m02s
+step   2580 | loss 3.6717 | lr 5.97e-04 | 121,500 tok/s (纯训练 120,331) | 0h23m32s | ETA 6h28m20s
+step   2600 | loss 3.6673 | lr 5.97e-04 | 120,672 tok/s (纯训练 120,333) | 0h23m43s | ETA 6h30m49s
+step   2620 | loss 3.6523 | lr 5.97e-04 | 120,264 tok/s (纯训练 120,333) | 0h23m54s | ETA 6h31m57s
+step   2640 | loss 3.6595 | lr 5.97e-04 | 120,341 tok/s (纯训练 120,333) | 0h24m05s | ETA 6h31m31s
+step   2660 | loss 3.6743 | lr 5.97e-04 | 120,875 tok/s (纯训练 120,337) | 0h24m15s | ETA 6h29m37s
+step   2680 | loss 3.6518 | lr 5.97e-04 | 121,326 tok/s (纯训练 120,344) | 0h24m26s | ETA 6h27m59s
+step   2700 | loss 3.6737 | lr 5.97e-04 | 122,150 tok/s (纯训练 120,358) | 0h24m37s | ETA 6h25m11s
+step   2720 | loss 3.6763 | lr 5.97e-04 | 119,851 tok/s (纯训练 120,354) | 0h24m48s | ETA 6h32m24s
+step   2740 | loss 3.6350 | lr 5.97e-04 | 121,289 tok/s (纯训练 120,361) | 0h24m59s | ETA 6h27m34s
+step   2760 | loss 3.6496 | lr 5.97e-04 | 120,683 tok/s (纯训练 120,363) | 0h25m10s | ETA 6h29m20s
+step   2780 | loss 3.6467 | lr 5.97e-04 | 121,767 tok/s (纯训练 120,373) | 0h25m20s | ETA 6h25m41s
+step   2800 | loss 3.6518 | lr 5.97e-04 | 121,269 tok/s (纯训练 120,379) | 0h25m31s | ETA 6h27m05s
+step   2820 | loss 3.6317 | lr 5.97e-04 | 121,523 tok/s (纯训练 120,387) | 0h25m42s | ETA 6h26m06s
+step   2840 | loss 3.6223 | lr 5.96e-04 | 120,412 tok/s (纯训练 120,387) | 0h25m53s | ETA 6h29m29s
+step   2860 | loss 3.6273 | lr 5.96e-04 | 120,591 tok/s (纯训练 120,389) | 0h26m04s | ETA 6h28m43s
+step   2880 | loss 3.6498 | lr 5.96e-04 | 120,913 tok/s (纯训练 120,393) | 0h26m15s | ETA 6h27m30s
+step   2900 | loss 3.6132 | lr 5.96e-04 | 122,332 tok/s (纯训练 120,406) | 0h26m25s | ETA 6h22m50s
+step   2920 | loss 3.6398 | lr 5.96e-04 | 121,579 tok/s (纯训练 120,414) | 0h26m36s | ETA 6h25m01s
+step   2940 | loss 3.6381 | lr 5.96e-04 | 120,546 tok/s (纯训练 120,415) | 0h26m47s | ETA 6h28m08s
+step   2960 | loss 3.6120 | lr 5.96e-04 | 120,859 tok/s (纯训练 120,418) | 0h26m58s | ETA 6h26m57s
+step   2980 | loss 3.6314 | lr 5.96e-04 | 120,689 tok/s (纯训练 120,419) | 0h27m09s | ETA 6h27m19s
+step   3000 | loss 3.5941 | lr 5.96e-04 | 122,263 tok/s (纯训练 120,431) | 0h27m19s | ETA 6h22m09s
+step   3000 | [val] loss 3.6719 | peak 10.72 GB | 0h27m20s
+step   3000 | [sample] ----------------------------------------
+  人工智能是人工智能领域的技术。人工智能已经被应用于许多领域，包括医疗保健、金融、交通、通信等。在医疗保健领域，人工智能可以被用于诊断和治疗疾病，提高医疗保健的效率和准确性。在交通领域，人工智能可以被用于优化交通流量、提高交通效率、提高效率等。除了医疗保健领域，人工智能还可以用于治疗
+  中国的首都是洛杉矶。好的，那么来出个问题。\n "我为什么得不要说。"你好，请问你有什么好的想法？\n "我好想问一个问题，我不想问一个问题，我不知道如何才能选择最适合我的目的地。"我问道：“你为什么要这么多？我想买点东西，
+  The capital of France is the most famous country in the world.\n World War II, the capital city of France, was also a country of origin.\n “I think that’s all you have to know,” says the chief minister of the Liberal or Liberal of the Liberal people.\n Crucial
+  Once upon a time, it would not have been able to work with three men nearly equal.\n The following items are all the more powerful, the more powerful, the more powerful, the more powerful, stronger, the more strong, the stronger, in terms of the more strong, and the greater, the better, the
+  ----------------------------------------------
+step   3000 | [ckpt] ckpt-0003000.pt（≈0.56 GB：fp32 权重+Adam 态）
+step   3020 | loss 3.6167 | lr 5.96e-04 | 98,384 tok/s (纯训练 120,442) | 0h27m33s | ETA 7h54m41s
+step   3040 | loss 3.6144 | lr 5.96e-04 | 120,506 tok/s (纯训练 120,442) | 0h27m44s | ETA 6h27m22s
+step   3060 | loss 3.6268 | lr 5.96e-04 | 121,311 tok/s (纯训练 120,448) | 0h27m54s | ETA 6h24m37s
+step   3080 | loss 3.6203 | lr 5.96e-04 | 120,604 tok/s (纯训练 120,449) | 0h28m05s | ETA 6h26m41s
+step   3100 | loss 3.6253 | lr 5.96e-04 | 121,654 tok/s (纯训练 120,457) | 0h28m16s | ETA 6h23m10s
+step   3120 | loss 3.6130 | lr 5.96e-04 | 122,584 tok/s (纯训练 120,470) | 0h28m27s | ETA 6h20m05s
+step   3140 | loss 3.5878 | lr 5.95e-04 | 121,140 tok/s (纯训练 120,474) | 0h28m37s | ETA 6h24m26s
+step   3160 | loss 3.6095 | lr 5.95e-04 | 120,758 tok/s (纯训练 120,476) | 0h28m48s | ETA 6h25m28s
+step   3180 | loss 3.6070 | lr 5.95e-04 | 120,681 tok/s (纯训练 120,477) | 0h28m59s | ETA 6h25m32s
+step   3200 | loss 3.5928 | lr 5.95e-04 | 120,753 tok/s (纯训练 120,479) | 0h29m10s | ETA 6h25m07s
+step   3220 | loss 3.6074 | lr 5.95e-04 | 122,382 tok/s (纯训练 120,491) | 0h29m21s | ETA 6h19m49s
+step   3240 | loss 3.5896 | lr 5.95e-04 | 121,959 tok/s (纯训练 120,500) | 0h29m31s | ETA 6h20m57s
+step   3260 | loss 3.5899 | lr 5.95e-04 | 122,053 tok/s (纯训练 120,509) | 0h29m42s | ETA 6h20m29s
+step   3280 | loss 3.5889 | lr 5.95e-04 | 121,127 tok/s (纯训练 120,513) | 0h29m53s | ETA 6h23m13s
+[stop] 达到墙钟预算 30.0 min，step 3292 处优雅收尾
+step   3292 | [val] loss 3.6377 | peak 10.72 GB | 0h30m00s
+step   3292 | [ckpt] ckpt-0003292.pt（≈0.56 GB：fp32 权重+Adam 态）
+[final] step 3292/45777 | val 3.6377 | 用时 0h30m01s (开销 0h00m11s) | 纯训练吞吐 120,517 tok/s | 总 token 215,744,512 | peak 10.72 GB | stop=max_minutes(30.0)

@@ -27,6 +27,8 @@
 | 件 | 来源 | 规模 | 指纹（sha256 前缀） | 落位 |
 |---|---|---|---|---|
 | day1-char20m last.pt | Day 1 字符级 20M 终版（step 33000，val 1.5599，含 optimizer 态） | 266.7MB | `5d97b5f73852a2e9` | `out/day1-char20m/last.pt`（`reports/2026-11-18-day1-char20m.md` 有完整配置与复现命令） |
+| day3-50m last.pt | Day 3 50M 30min 预注册跑终版（d576/L8/H9 = 50,292,288；step 3292，val 3.6377，含 optimizer + 三路 RNG 态） | 603.6MB | `71fc274be289c3c2` | `out/day3-50m/last.pt`（`reports/2026-11-18-day3-50m-30min.md`） |
+| day3-140m-probe last.pt | Day 3 140M 探针（d768/L16/H12 = 137,847,552；step 40，val 8.9169；门①判定用） | 1.65GB | `df8fc7ac351415db` | `out/day3-140m-probe/last.pt`（`reports/2026-11-18-day3-140m-probe.md`） |
 
 ## Tokenizer（Day 2 产出）
 

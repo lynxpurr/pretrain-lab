@@ -18,7 +18,7 @@
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · train_* 训练 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 正式训练框架（Day 3，多分片/累积/续训/采样）** · train_char20m.py 字符级最小闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
@@ -26,21 +26,24 @@
 | 产物 | `out/<run>/last.pt`（gitignore）· `logs/`（gitignore，证据快照拷 reports/） |
 | 环境 | `.venv-pre/`（D-07 uv 托管 3.12.13 + torch 2.11.0+cu128；重建命令见 reports/2026-11-18-day0-env-snapshot.md） |
 
-## §3 训练跑批标准动作（Day 1 验证过的最小闭环）
+## §3 训练跑批标准动作（Day 1 最小闭环 → **Day 3 正式框架 `tools/train.py`**）
 
 **启动前**（缺一不跑）：
 1. 数据现值域自检：`python -c "…memmap.max() < vocab_size…"`（lesson：值域断言前置数据侧）。
-2. 锚定预判：首步 loss 应 ≈ ln(vocab_size)（字符级 11765 → 9.37；BPE 32k → 10.37）。跑后第一行日志对账，偏差 >0.2 即停查管线。
-3. 冒烟：小配置 60 步内 loss 明显下降（9.43→5.37 是 Day 1 参考形态），再上正式跑。
-4. 参数检查：`--max-minutes`（兜底）> 预估时长；`--ckpt-every` ≤ 2000 步；`--eval-every`/`--sample-every` 已设。
+2. 锚定预判：首步 loss 应 ≈ ln(vocab_size)（字符级 11765 → 9.37；BPE 32k → 10.37）。**容差随模型规模放宽**：22M +0.06 / 30M +0.08 / **140M +0.17** → 判据 = 落在 `ln(V) + 0~0.25` 且不接近 0；>0.5 或 <0 停线查（数据/词表/取批）。
+3. 冒烟：小配置 60 步内 loss 明显下降（50M 参考形态：100 步 10.48→6.93），再上正式跑。
+4. 参数检查：`--max-minutes`（兜底，正常时长 2×）> 预估；`--ckpt-every` ≤ 2000 步；`--eval-every`/`--sample-every` 已设；`--target-tokens` 决定 total_steps（LR 调度）。
 
-**启动**：`tmux new-session -d -s <run>"cd <仓根> && .venv-pre/bin/python tools/train_*.py --out-dir out/<run> --log-dir logs …"`，随后 `tail -3 logs/<run>-*.log` 确认首行正常。脱离 = `Ctrl+b d`（**勿按 Ctrl+C**）。
+**启动**：`tmux new-session -d -s <run>"cd <仓根> && PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/train.py --run-name <run> --data-dir data/shards --n-embd … --batch-size … --grad-accum … --out-dir out/<run>"`，随后 `tail -5 logs/<run>-*.log` 确认 `[anchor]`/`[model]` 行正常。脱离 = `Ctrl+b d`（**勿按 Ctrl+C**）。**输出不要用 `| head`/`| tail` 截断管道**（SIGPIPE 会杀训练进程），一律 `> log` 或 `| tee`。
 
-**监控**（每 10~20 分钟一次，或挂后台守护等会话结束）：
-- `grep "tok/s" logs/<run>-*.log | tail -3`（吞吐是否衰减）
+**监控**（每 20~30 分钟一次）：
+- `grep "tok/s" logs/<run>-*.log | tail -3`（窗口值与纯训练值；纯训练值 = 决策门口径）
 - `grep "\[val\]" …`（val 是否下行；train/val 背离 = 过拟合信号）
-- `awk` 取 `[sample]` 段（质性信号；固定 prompt 对比不同 step）
-- `nvidia-smi --query-gpu=memory.used,temperature.gpu,utilization.gpu --format=csv,noheader`（>80°C 关注散热）
+- `awk` 取 `[sample]` 段（固定 4 条中英 prompt；`decode(skip_special_tokens=False)`，EOS 可见 = 解码链路自检）
+- `nvidia-smi --query-gpu=memory.used,temperature.gpu,utilization.gpu,clocks.sm --format=csv,noheader`（>75°C 关注；SM 频率掉 = 降频）
+- 判活：`logs/<run>.exit` 出现 `EXIT:1` 才算失败；无标记 + 产物增长 = 正在跑
+
+**崩溃续训**：`--resume auto`（读 `out/<run>/last.pt`，含 model/optimizer/step/tokens_seen/三路 RNG）。验证要点 = 恢复后同 step 的 val 应与 kill 前**完全相同**、`tokens_seen == step × tokens_per_step`。
 
 **收波**：证据三分 → `reports/`（md 摘要 + csv + log）→ LAB_NOTEBOOK 当日段 → lessons（有新教训才写）→ qa 题目池 → PLAN 变更记录（有决策/日期变更才写）→ README 状态 → checkpoint/数据指纹补 PROVENANCE → `git commit -m "day-N: …"` + push。
 
@@ -77,14 +80,19 @@ cd data/shards && sha256sum -c SHA256SUMS
 | 吞吐明显低于锚点 | GPU 被占/降频/bs 变化 | `nvidia-smi` 对账；参照 PLAN §8 训练运行基线（Day 1：22.2M @ bs64×512 = 187,480 字符/s） |
 | 分片 `sha256sum -c` 失败 | 数据被动过/写坏 | **先查再训**，勿在坏分片上跑批；对应分片用 `tools/build_shards.py` 重建 |
 | BPE 数据 token 数异常 / 解码乱码 | tokenizer 配置（ByteLevel / specials / decode） | 跑往返自检（普通文本 + specials 两段，`skip_special_tokens=False`）；同文对拍 minimind 压缩率 |
-| 长任务"日志没进度"/退出码误判 | stale exit 标记、`tee` 缓冲 | 启动前 `rm -f logs/<run>.exit`；判活看 `ps -o pid,etime,%cpu,rss` + 产物文件增长，**不看日志 mtime** |
+| 长任务"日志没进度"/退出码误判 | stale exit 标记、`tee` 缓冲 | 启动前 `rm -f logs/<run>.exit`；判活看 `ps -o pid,etime,%cpu,rss` + 产物文件增长，**不看日志 mtime**；`EXIT:1` 才判失败 |
+| `CUDA out of memory`，`Tried to allocate N GiB` | 先看 N 与位置：N≈`positions×32000×4` = CE 的 fp32 副本 | 降 micro-bs（50M 上限 16、140M 上限 8）；或 `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`（140M 可到 10，不提速）；**别加 grad-ckpt 换 bs**（慢 23%） |
+| 续训 `TypeError: RNG state must be a torch.ByteTensor` | `torch.load(map_location="cuda")` 把 RNG 字节张量搬上 GPU | 加载后 `.cpu()`（`tools/train.py` 已修）；配套检查 `tokens_seen == step × tokens_per_step` |
+| 训练进程莫名 `BrokenPipeError` / EXIT:1 | 输出被 `| head`/`| tail` 截断（SIGPIPE） | 长任务一律 `> log 2>&1` 或 `| tee`，读文件不截管道 |
+| 想用 `torch.compile` 提速 | sm_120 上 inductor 未走快路径（Day 3 实测 4,077 vs 52,250 tok/s） | **默认关闭**；重试须做"40 步以上、先预热 20 步、同 seed 同数据"的证伪实验 |
 | 证据 log 未入库 | `.gitignore` 的 `*.log` | `!reports/*.log` 例外；收波 `git add -n .` 核对 md/csv/log 三件 |
 
 ## §5 红线
 
 - `reports/` 只增不改；改错走勘误追加。
 - 每份数据落位即录指纹（raw 层 17 条 Day 0 已立、字符级 3 条 Day 1 已立、tokenizer 3 条 + 分片 7 条 Day 2 已立；SFT 数据 Day 4 续录）。
-- 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**；50M 需 ≥96k 折算或直接跑 140M 探针）/②（Day 6 loss 仍陡降→加训）预注册于 PLAN §4/§4.1，跑前不改。
+- 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**；50M 需 ≥96k 折算或直接跑 140M 探针）**已判定 PASS（52,250 tok/s，2026-11-18）**；门②（Day 6 loss 仍陡降→加训）预注册于 PLAN §4/§4.1，跑前不改。
+- 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。
 - 边界：nl2fem / finetune-lab 是知识上游非资产上游（PLAN §7），只引用知识不改其档案。
 

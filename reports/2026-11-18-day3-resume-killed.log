@@ -1,0 +1,9 @@
+[cfg] {"vocab_size": 32000, "n_embd": 576, "n_layer": 8, "n_head": 9, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=16×accum4×T1024 = 65,536 tok/step · total_steps=160 · target_tokens=3,000,000,000
+[model] params=50,292,288 (non-emb 31,860,288) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=6.0e-04 warmup=50 cosine→10% wd=0.1 clip=1.0 bf16 · max_minutes=∞ · notes=-
+[anchor] micro-step 1 loss 10.4756 vs ln(V)=10.3735 (+0.102)
+step      1 | loss 10.4731 | lr 1.20e-05 | 74,158 tok/s (纯训练 74,158) | 0h00m00s | ETA 0h02m20s
+step     20 | loss 9.5432 | lr 2.40e-04 | 123,895 tok/s (纯训练 119,875) | 0h00m10s | ETA 0h01m14s
+step     40 | loss 8.1587 | lr 4.80e-04 | 123,866 tok/s (纯训练 121,838) | 0h00m21s | ETA 0h01m03s
+step     40 | [val] loss 7.6893 | peak 10.72 GB | 0h00m21s
+step     40 | [ckpt] ckpt-0000040.pt（≈0.56 GB：fp32 权重+Adam 态）
