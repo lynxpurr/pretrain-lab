@@ -2,6 +2,8 @@
 
 ## 验证记录（判据：HANDOFF §3-1，D-07）
 
+> 补记（2026-11-18 晚）：HANDOFF 已重构，Day 0 清单原 §3 表并入新 §3「已完成摘要」；本报告即该批次判据的原始证据，不再依赖 HANDOFF 章节号。
+
 ```
 python: 3.12.13 (uv-managed, ~/.local/share/uv/python)
 torch: 2.11.0+cu128
