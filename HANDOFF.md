@@ -1,6 +1,6 @@
 # HANDOFF — 新会话交接
 
-> 更新：2026-11-18（立项建立 + §0 开工序就位，待启动拍板）· 本件是新会话的**唯一启动入口**：开工序 + 状态一段话 + 复现检查 + Day 0 清单。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、风险、纪律、边界），本件只指路不复述。
+> 更新：2026-11-18（**启动拍板落定：Day 1 = 2026-11-19（周四）~ Day 10 = 2026-11-28（周五）**；D-10 拍板 = A 手写为主 B 兜底；**Day 0 环境预铺完成**）· 本件是新会话的**唯一启动入口**：开工序 + 状态一段话 + 复现检查 + Day 0 清单。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、风险、纪律、边界），本件只指路不复述。
 
 ## 0. 新会话开工序（持本件开工——按序执行，不跳步）
 
@@ -13,7 +13,7 @@
 
 ## 1. 状态一段话
 
-**pretrain-lab 已立项（2026-11-18），文档就绪，尚未开工**——小模型从零训练 10 天行动（~140M 手写预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`（2026-09-22 定稿）。热身两仓（nl2fem + finetune-lab，均 2026-09-27 收官）已把 SFT 半场预付完毕（素材按 Day 编目，PLAN §7 素材索引）；本仓主战场 = 从零预训练三件套（手写 model.py / BPE tokenizer / memmap 数据流水线）+ 部署链 + 训练报告。**当前待办：①启动时机拍板（10 天连续窗口是日程性约束，Day 9 缓冲日为硬保险）；②Day 0 环境预铺（见 §3 清单）；③D-10 SFT 载具（手写 vs ms-swift）Day 4 前拍板即可，不阻塞开工。**
+**pretrain-lab 已立项（2026-11-18），文档就绪，尚未开工**——小模型从零训练 10 天行动（~140M 手写预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`（2026-09-22 定稿）。热身两仓（nl2fem + finetune-lab，均 2026-09-27 收官）已把 SFT 半场预付完毕（素材按 Day 编目，PLAN §7 素材索引）；本仓主战场 = 从零预训练三件套（手写 model.py / BPE tokenizer / memmap 数据流水线）+ 部署链 + 训练报告。**窗口已拍板（2026-11-18）：Day 1 = 2026-11-19（周四）~ Day 10 = 2026-11-28（周五），Day 0 = 2026-11-18 晚，不占窗口；Day 9 缓冲日 = 11-27 硬保险。当前待办：Day 0 环境预铺（§3 清单，进行中）；D-10 已拍板 = A 手写为主、B ms-swift 兜底（PLAN §3）。**
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -38,13 +38,13 @@ ls data/raw/ >/dev/null 2>&1 && ls data/raw | head -3          # 数据集预下
 
 | # | 事项 | 判据 |
 |---|---|---|
-| 0 | **启动时机拍板**（用户）：确认 10 天连续窗口的起止日期，填入本表与 PLAN 变更记录 | 起止日期落档 |
-| 1 | 驱动/CUDA/torch cu128 栈验证：`.venv-pre` 建立（**D-07：uv 托管解释器**，`UV_TORCH_BACKEND=cu128` + 阿里云双镜像，命令参照 finetune-lab PLAN §9 换 venv 名） | `torch.cuda.is_available()` True + sm_120 在 arch list + 小矩阵运算过 |
-| 2 | tmux 就绪 + 激进风扇曲线 | 复现检查绿 |
-| 3 | clone 参考实现：minimind + nanoGPT（D-08） | 两目录在位 |
-| 4 | 数据集预下载（D-06：FineWeb-Edu sample / SkyPile 或 minimind pretrain_hq / SFT 数据；`HF_ENDPOINT=hf-mirror` 或 ModelScope 直连） | 落 `data/raw/`，指纹录 `data/PROVENANCE.md` |
-| 5 | D-10 SFT 载具拍板（可推迟到 Day 4 前；倾向 = A 手写为主 B 对照兜底，PLAN D-10） | 决策入 PLAN §3 |
-| 6 | `LAB_NOTEBOOK.md` Day 0 段落记 | 当日决策与现象入册 |
+| 0 | **启动时机拍板**（用户）：✅ 2026-11-18 拍板 = **Day 1 = 2026-11-19（周四）~ Day 10 = 2026-11-28（周五）**，已写入 §1/§5 与 PLAN 变更记录 | 起止日期落档 ✓ |
+| 1 | 驱动/CUDA/torch cu128 栈验证：✅ `.venv-pre` 建立（D-07：uv 托管 CPython 3.12.13，`UV_TORCH_BACKEND=cu128` + 阿里云双镜像，装法平移 finetune-lab PLAN §9） | ✅ CUDA True + sm_120 在 arch list + bf16 矩阵过（torch 2.11.0+cu128；证据 = reports/2026-11-18-day0-env-snapshot.md） |
+| 2 | tmux 就绪 + 激进风扇曲线 | tmux ✅（/usr/bin/tmux）；**风扇曲线 = 用户侧待办**（明日开训前调好） |
+| 3 | clone 参考实现：✅ minimind @ `233d00f` + nanoGPT @ `3adf61e`（D-08，落 `~/projects/`） | 两目录在位 ✓ |
+| 4 | 数据集预下载：✅ FineWeb-Edu sample-10BT 27.85GB + minimind pretrain_t2t 8.28GB + sft_t2t_mini 1.74GB + dpo 0.05GB（D-06；ModelScope 无 minimind_dataset → 回落 hf-mirror） | 落 `data/raw/` ✓；指纹录 `data/raw/SHA256SUMS`（17 条）+ `data/PROVENANCE.md` ✓ |
+| 5 | D-10 SFT 载具拍板：✅ 2026-11-18 拍板 = **A 手写为主、B ms-swift 对照/兜底**（PLAN §3 已更新） | 决策入 PLAN §3 ✓ |
+| 6 | `LAB_NOTEBOOK.md` Day 0 段落记：✅ | 当日决策与现象入册 ✓ |
 
 ## 4. 锚点速查（对账用的已知答案，随执行回填）
 
@@ -52,6 +52,7 @@ ls data/raw/ >/dev/null 2>&1 && ls data/raw | head -3          # 数据集预下
 |---|---|---|
 | 机器基线 | .118 · RTX 5070 Ti 16GB · 空闲 ~14GB（laya-triage 常驻 ~1.8G，tei 容器不在位） | 2026-11-18 实测（finetune-lab 复现检查同日留痕） |
 | 50 系栈验证 | cu128/sm_120 全套（ms-swift 4.5.3 + torch 2.11.0+cu128）在 finetune-lab `.venv-swift` 实证可用 | finetune-lab PLAN §9 |
+| 本仓 `.venv-pre` 栈验证 | torch 2.11.0+cu128 · CUDA True · sm_120 在 arch list · bf16 矩阵过（uv 托管 3.12.13，GPU 空闲 13.4GiB） | reports/2026-11-18-day0-env-snapshot.md（2026-11-18） |
 | 热身收官锚 | nl2fem develop @ `1ea5401`（Phase 5 全收）· finetune-lab develop @ `cc5201c`（收尾复核批） | 两仓 git log 2026-11-18 |
 | （执行中回填：字符级 20M loss 轨迹 / 50M 吞吐 / 140M 总时长 / 各版评测读数） | | |
 
@@ -59,17 +60,17 @@ ls data/raw/ >/dev/null 2>&1 && ls data/raw | head -3          # 数据集预下
 
 | 波次 | 内容 | 状态 |
 |---|---|---|
-| Day 0 | 环境预铺（§3 清单） | 待启动拍板 |
-| Day 1 | 手写 model.py + 字符级 20M 最小闭环 | 未开工 |
-| Day 2 | 32k BPE tokenizer + memmap 数据流水线 | 未开工 |
-| Day 3 | 训练框架 + 50M 冒烟 + **决策门①** | 未开工 |
-| Day 4 | 140M 主训练启动 + SFT 准备（D-10 拍板） | 未开工 |
-| Day 5 | 中期 SFT + 评测框架 | 未开工 |
-| Day 6 | 主训练收官 + SFT v2 + **决策门②** | 未开工 |
-| Day 7 | LoRA 对比 + GGUF/Ollama/Gradio 部署 | 未开工（超期可砍） |
-| Day 8 | 深化（扫参/tokenizer 消融/DPO）+ 报告开写 | 未开工（超期可砍） |
-| Day 9 | 硬缓冲日 | 未开工 |
-| Day 10 | 收尾：最终对比 + repo 整理 + 报告 | 未开工 |
+| Day 0（11-18 晚） | 环境预铺（§3 清单） | ✅ 完成 |
+| Day 1（11-19） | 手写 model.py + 字符级 20M 最小闭环 | 未开工 |
+| Day 2（11-20） | 32k BPE tokenizer + memmap 数据流水线 | 未开工 |
+| Day 3（11-21） | 训练框架 + 50M 冒烟 + **决策门①** | 未开工 |
+| Day 4（11-22） | 140M 主训练启动 + SFT 准备（D-10 已拍：A 主 B 兜底） | 未开工 |
+| Day 5（11-23） | 中期 SFT + 评测框架 | 未开工 |
+| Day 6（11-24） | 主训练收官 + SFT v2 + **决策门②** | 未开工 |
+| Day 7（11-25） | LoRA 对比 + GGUF/Ollama/Gradio 部署 | 未开工（超期可砍） |
+| Day 8（11-26） | 深化（扫参/tokenizer 消融/DPO）+ 报告开写 | 未开工（超期可砍） |
+| Day 9（11-27） | 硬缓冲日 | 未开工 |
+| Day 10（11-28） | 收尾：最终对比 + repo 整理 + 报告 | 未开工 |
 
 ## 6. 惯例
 

@@ -34,7 +34,7 @@
 | D-07 | 预训练栈：PyTorch 2.7+（**cu128，50 系硬性要求**）+ HF tokenizers + tensorboard/W&B + tmux；venv 用 **uv 托管解释器**（`.venv-pre`） | 前半 = 底稿 §四；后半 = 2026-11-18 新教训（nl2fem 双 venv 因系统 python 升级断链——venv 不链 `/usr/bin/python*`，uv 托管 3.x 免疫） | — |
 | D-08 | 参考实现：**minimind**（中文全流程、与目标几乎一致）+ **nanoGPT**（必读）；晚间可看 Karpathy 视频 | 站在巨人肩上 | — |
 | D-09 | **全本地执行**（.118 训练机：RTX 5070 Ti 16GB / 96GB RAM / 2TB SSD） | 底稿 §一结论：本地可完全完成，成本仅电费（~¥4~5/天）；50 系环境坑全部压到 Day 0 解决。云端备选调研在 nl2fem `research/2026-09-25-online-finetune-platforms.md` §5/§6，仅当本地栈硬性失败且不可修时启用 | 本地栈硬性失败且不可修 |
-| D-10 | **SFT 载具待拍板（Day 4~6 前定，不阻塞开工）**：选项 A = 手写 SFT 循环（与自研预训练栈同源，符合"脱稿复述完整训练循环"的立项初衷）；选项 B = ms-swift（热身已验证，`ms-swift-finetune` skill 直接生效，省写模板对拍）。倾向记录：A 为主、B 作对照或兜底 | 底稿 §四 Agent 用法条："10 天后能脱稿复述整个训练循环，才算完整经历" | Day 4 前拍板即可 |
+| D-10 | **SFT 载具已拍板（2026-11-18 Day 0 提前拍定）**：**A = 手写 SFT 循环为主**（与自研预训练栈同源，符合"脱稿复述完整训练循环"的立项初衷）；B = ms-swift 作对照/兜底（热身已验证，`ms-swift-finetune` skill 直接生效） | 底稿 §四 Agent 用法条："10 天后能脱稿复述整个训练循环，才算完整经历" | SFT 实测受阻 → 切 B 兜底 |
 
 ## 4. 逐日方案（底稿 §五原文照搬，微调：载具名对齐本仓）
 
@@ -91,10 +91,11 @@
 
 - 机器：.118 · RTX 5070 Ti 16GB（Blackwell, sm_120）· AMD Ryzen Pro 9 · 96GB RAM · 2TB SSD；开发机 = Windows 笔记本（8845HS，无 CUDA，WSL2 建议）
 - GPU 现状（2026-11-18 实测）：空闲 13998 MiB；常驻 laya-triage（1820 MiB）在位，tei-embed/tei-rerank 不在位——预训练无需清空常驻（显存余量足），14B 级实验才需按 runbook 清空
-- `.venv-pre`：待 Day 0 建立（D-07：uv 托管解释器 + cu128 栈），建立后回填版本锁
-- 参考实现：minimind / nanoGPT 待 clone（Day 0）
-- 数据集：待 Day 0 预下载（D-06），落位与指纹回填 `data/PROVENANCE.md`
+- `.venv-pre`：✅ 2026-11-18 建立（D-07：uv 托管 CPython 3.12.13，`~/.local/share/uv/python`，不链 /usr/bin）· torch 2.11.0+cu128 · transformers 5.23.0 · tokenizers 0.23.3 · datasets 5.2.0 · tensorboard/wandb/matplotlib/numpy 在位；验证 = CUDA True + sm_120 在 arch list + bf16 矩阵过（证据 = [reports/2026-11-18-day0-env-snapshot.md](reports/2026-11-18-day0-env-snapshot.md)，装法平移 nl2fem runbook §3 / finetune-lab PLAN §9）
+- 参考实现：✅ minimind @ `233d00f`、nanoGPT @ `3adf61e`，落 `~/projects/`（D-08；注意 minimind 数据文件现行名 = `pretrain_t2t(_mini)/sft_t2t(_mini)`，旧名 pretrain_hq/sft_512 已弃）
+- 数据集：✅ Day 0 预下载落位（D-06）：FineWeb-Edu sample-10BT 27.85GB（英，ODC-BY）+ minimind pretrain_t2t 8.275GB（中，Apache-2.0）+ sft_t2t_mini 1.739GB + dpo 0.054GB；**ModelScope 无 minimind_dataset（"record not found"）→ 回落 hf-mirror 渠道**；指纹 = `data/raw/SHA256SUMS`（17 条）+ `data/PROVENANCE.md` 前缀表；token 数待 Day 2 自训 tokenizer 实测回填
 
 ## 变更记录
 
 - 2026-11-18：建立。立项 = 用户拍板（10 天计划启动拍板前置：新仓 pretrain-lab，同日拍板）；底稿 = NoteFlow `small-llm-10day-plan.md`（2026-09-22）原文照搬逐日方案/风险表 + 决策项升格 D-01~D-08；新增 D-09（全本地）、D-10（SFT 载具待拍板）；风险表补 venv 断链条（nl2fem 双 venv 断链同日实证）；启动时机（10 天连续窗口）待用户拍板，Day 0 清单见 HANDOFF §3。
+- 2026-11-18（晚，Day 0）：**启动时机拍板 = Day 1 = 2026-11-19（周四）~ Day 10 = 2026-11-28（周五）**，Day 9 硬缓冲 = 11-27；HANDOFF §5 波次队列已换算实际日期。**D-10 提前拍板 = A 手写 SFT 为主、B ms-swift 对照/兜底**。§2 复现检查同日全绿（GPU 空闲 13998 MiB 与锚点一致 · 磁盘余 2.3T · tmux 在位 · develop 干净同步）。
