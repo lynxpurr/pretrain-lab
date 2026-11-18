@@ -12,9 +12,14 @@ wandb/
 # 语料与数据产物（指纹录 data/PROVENANCE.md，大文件不入库）
 data/raw/
 data/shards/
+data/day1-char20m/
 data/*.bin
 data/*.idx
 data/tokenizer/**
+
+# 训练运行产物（证据快照拷 reports/，原始 logs 不入库）
+logs/
+out/
 
 # venv（D-07：uv 托管解释器）
 .venv*/
