@@ -3,7 +3,7 @@
 > 建立：2026-11-18 · 一句话：本地 5070 Ti 16GB 上，10 天完整经历 **~140M 从零预训练 → SFT → LoRA 对比 → 部署 demo** 全生命周期。**学习导向**。
 > 底稿：NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md` · 热身：nl2fem + finetune-lab（均 2026-09-27 收官，SFT 半场已预付，本仓主攻从零预训练半场）。
 
-## 状态快照（2026-11-19 · Day 0~5 主训练收官：140M × 3B token → val 2.7709）
+## 状态快照（2026-11-19 · Day 0~6：140M×3B 底座 + SFT v1 + 门② 判定不加训）
 
 - **窗口**：提前起跑，Day 1 = 2026-11-18（周三）~ Day 10 = 2026-11-27（周四），Day 9（11-26）硬缓冲；Day 2/Day 3 均为 11-18 当日续跑（**Day 4 起日期不变，机制上已多出两天缓冲**）。
 - **Day 0（11-18 早）**：`.venv-pre`（uv 托管 3.12.13 + torch 2.11.0+cu128，CUDA/sm_120/bf16 验证过）· minimind@`233d00f` + nanoGPT@`3adf61e` · 数据 37.9GB 预下载（fineweb-edu 27.85G + minimind 10.07G，指纹落 `data/PROVENANCE.md`）。
@@ -12,7 +12,8 @@
 - **Day 3（11-18 续跑）**：`tools/train.py` 完整框架（多分片加权取片 / 梯度累积 / 三路 RNG 续训 / 固定 val / 双语采样 / EXIT 标记）+ **50M 30min 预注册跑 120,517 tok/s**（val 3.6377）+ **140M 探针 52,250 tok/s → 决策门① PASS**（3B 单程 **15.9h**）——证据 [reports/2026-11-18-day3-framework.md](reports/2026-11-18-day3-framework.md) · [50m-30min](reports/2026-11-18-day3-50m-30min.md) · [140m-probe](reports/2026-11-18-day3-140m-probe.md)。
 - **Day 4~5（11-18 18:46 → 11-19 10:53）**：**140M 主训练收官** — 3,000,041,472 token / 16h07m41s / **val 2.7709** / 52,171 tok/s / 46 ckpt ≈73GB / 0 尖峰；终版采样中英事实已对（"中国的首都是北京"、"The capital of France is Paris"）——证据 [reports/2026-11-19-day4-main140m.md](reports/2026-11-19-day4-main140m.md)。SFT 数据 `data/sft-mix/`（250M token，assistant-only mask）+ `tools/sft.py` 已就绪（CPU 自检过）。
 - **Day 5（11-19）**：**SFT v1 收官**（3,815 步 / 1h19m26s / SFT val **1.5515**）+ **base/SFT 对比评测**：题库 **6/18（33%）→ 16/18（89%）**、SFT PPL **9.82 → 4.60**、预训练 PPL 15.35 → 16.31（遗忘 +6.2%）——证据 [reports/2026-11-19-day5-eval.md](reports/2026-11-19-day5-eval.md)（质性缺陷：复读环/编造推理/拒答模板，规则分高估质量）。门② 双证据（最后 10% 降幅 0.0134 + 恒定 lr 探针 0.0051）→ **不加训**。
-- **下一步（Day 6）**：门② 正式落档 + SFT v2（先做解码对照再决定是否重训）+ 评测扩展（复读/退化指标）+ LoRA 准备——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) · 概念题 [notes/qa-day-4.md](notes/qa-day-4.md)。
+- **Day 6（11-19）**：**门② 正式判定 = 不加训**（最后 10% 降幅 0.0134 + 恒定 lr 探针 0.0051 双证据）+ **解码对照**：证伪"greedy 放大复读"（采样 rep-4 0.123 vs greedy 0.131）、rp1.3 能压到 0.032 但题库 16→13——**复读来自数据罗列风格，校准/格式缺陷也与解码无关** → SFT v2 走数据侧；评测协议定档（greedy + distinct-2/rep-4 + rubric）——证据 [reports/2026-11-19-day6-decode.md](reports/2026-11-19-day6-decode.md) · [gate2](reports/2026-11-19-day6-gate2.md)。
+- **下一步（Day 7）**：SFT 数据 v2（校准/拒答 + 格式约束 + 压罗列癖）→ SFT v2 → LoRA（A 手写）→ GGUF/Ollama/Gradio 部署——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) · 概念题 [notes/qa-day-5.md](notes/qa-day-5.md)。
 - **路线**：Day 3 框架+门① ✅ → Day 4 140M 主训练起跑 → Day 5/6 收官 + SFT v2 → Day 7 LoRA/部署 → Day 8 深化 + 报告 → Day 9 缓冲 → Day 10 收尾。
 - 预期管理：140M/30 亿 token ≈ GPT-2 124M 水平（通顺、贫乏）——产出 = 经验 + 亲手训的模型 + 报告 + demo，非对标开源质量
 

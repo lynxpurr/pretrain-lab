@@ -185,13 +185,23 @@ class GPT(nn.Module):
     @torch.no_grad()
     def generate(self, idx: torch.Tensor, max_new_tokens: int,
                  temperature: float = 1.0, top_k: int | None = None,
+                 top_p: float = 1.0, repetition_penalty: float = 1.0,
                  greedy: bool = False) -> torch.Tensor:
-        """从 idx (B,T) 采样续写。无 KV cache（整段重算）；greedy=True 时取 argmax（评测用，可复现）。"""
+        """从 idx (B,T) 采样续写。无 KV cache（整段重算）；greedy=True 取 argmax（评测可复现）。
+
+        解码顺序：repetition_penalty → greedy/温度 → top_k → top_p → softmax → multinomial。
+        """
         self.eval()
         for _ in range(max_new_tokens):
             idx_cond = idx[:, -self.cfg.block_size:]
             logits, _ = self(idx_cond)
             logits = logits[:, -1, :]
+            if repetition_penalty != 1.0:
+                for b in range(idx.size(0)):
+                    uniq = torch.unique(idx[b])
+                    vals = logits[b, uniq]
+                    logits[b, uniq] = torch.where(vals > 0, vals / repetition_penalty,
+                                                  vals * repetition_penalty)
             if greedy:
                 next_id = logits.argmax(dim=-1, keepdim=True)
                 idx = torch.cat([idx, next_id], dim=1)
@@ -201,6 +211,13 @@ class GPT(nn.Module):
                 v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
                 logits[logits < v[:, [-1]]] = -float("inf")
             probs = F.softmax(logits, dim=-1)
+            if top_p < 1.0:
+                sp, si = probs.sort(dim=-1, descending=True)
+                cum = sp.cumsum(dim=-1)
+                drop = (cum - sp) > top_p
+                sp[drop] = 0.0
+                probs = torch.zeros_like(probs).scatter_(-1, si, sp)
+                probs = probs / probs.sum(dim=-1, keepdim=True).clamp_min(1e-12)
             next_id = torch.multinomial(probs, num_samples=1)
             idx = torch.cat([idx, next_id], dim=1)
         return idx
