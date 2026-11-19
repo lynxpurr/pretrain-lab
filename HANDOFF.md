@@ -21,7 +21,7 @@
 
 **pretrain-lab 进行中：Day 0~3 已收官，决策门① PASS，140M 主训练已于 2026-11-18 18:46 起跑（进行中）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2/Day 3 均为 11-18 当日续跑（**Day 4 起日期不变，机制上已多出两天缓冲**）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（val 1.5599 / 187,480 字符/秒）。**Day 2**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh=6:4，6×1GB 分片 + val 4M）。**Day 3**：`tools/train.py` 完整框架 · **50M 30min 120,517 tok/s** · **140M 探针 52,250 tok/s ≥ 35k → 门① PASS** · 3B 单程 15.9h · 主训练定档 bs8×accum8（65,536 tok/step · 45,777 步 · ckpt 46 件 ≈76GB）。
 
-**Day 4（11-18 晚起跑，进行中）**：**主训练 `main140m` 运行中**（tmux 会话 `main140m`，日志 `logs/main140m-*.log`，`out/main140m/last.pt` 每 1000 步滚动）——起跑读数 `[anchor] 10.5431 (+0.170)` · **52.8k tok/s** · 1.25s/步 · val@500 **4.9742** · ETA **11-19 ~10:30**（16h 单程）。同时已完成 **SFT 数据 `data/sft-mix/`**（250,001,408 token = 404,210 条对话 + 25% 预训练块，assistant-only mask，val 2M，指纹入库）与 **`tools/sft.py`**（底座载入 + `ignore_index=-100`；CPU 3 步自检 `EXIT:0`，GPU 冒烟待主训练让出显存）。
+**Day 4（11-18 18:46 起跑 → 11-19 10:53 收官）：140M 主训练完成** — 16h07m41s · **3,000,041,472 token** · **val 2.7709**（train 2.677）· **52,171 tok/s**（全程无衰减）· 46 个 ckpt ≈73GB · 0 尖峰 · `EXIT:0` · 终版 `last.pt` sha `0c0096cc172e8a58`。终版采样：中文"中国的首都是北京"、英文"The capital of France is Paris"（事实已对），并自发执行翻译/总结指令。**门② 预读 = 最后 10% val 降幅 0.0134 < 阈值 0.02~0.03 → 倾向不加训**（正式判定 Day 6）。同时已完成 **SFT 数据 `data/sft-mix/`**（250,001,408 token = 404,210 条对话 + 25% 预训练块，assistant-only mask，val 2M，指纹入库）与 **`tools/sft.py`**（底座载入 + `ignore_index=-100`；CPU 两种自检过，GPU 冒烟待做）。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -93,7 +93,7 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 | Day 1（11-18） | 手写 model.py + 字符级 20M 最小闭环 | ✅ 完成（22.2M / 96.1min / 187,480 字符/s / val 1.5599） |
 | Day 2（11-18 当日续跑） | 32k BPE tokenizer + memmap 数据流水线 | ✅ 完成（32k / zh 1.841 · en 4.226 chars/token；3B token 6 片 + val 4M；构建 20.7min；冒烟 10.4542） |
 | Day 3（11-18 当日续跑） | 训练框架 + 50M 冒烟/30min + 140M 探针 + **决策门①** | ✅ 完成（门① **PASS**：140M 52,250 tok/s；50M 120,517；3B 单程 15.9h） |
-| Day 4（11-18 晚起跑） | **140M 主训练起跑** + SFT 数据/脚本（D-10 = A 主 B 兜底） | **进行中**：主训练 18:46 起跑（52.8k tok/s，ETA 11-19 ~10:30）· SFT 数据 250M + `tools/sft.py` 已完成（CPU 自检过）· GPU 冒烟待让出显存 |
+| Day 4（11-18 18:46 → 11-19 10:53） | **140M 主训练** + SFT 数据/脚本（D-10 = A 主 B 兜底） | ✅ 主训练收官（3B token / 16h08m / **val 2.7709** / 52,171 tok/s / 46 ckpt ≈73GB）· SFT 数据 250M + `tools/sft.py` 就绪 · **GPU 冒烟与 SFT v1 待做** |
 | Day 5（11-22） | 中期 SFT + 评测框架 | 未开工 |
 | Day 6（11-23） | 主训练收官 + SFT v2 + **决策门②**（loss 仍陡降 → 加训 15 亿） | 未开工 |
 | Day 7（11-24） | LoRA 对比 + GGUF/Ollama/Gradio 部署 | 未开工（超期可砍） |
