@@ -11,7 +11,8 @@
 - **Day 2（11-18 续跑）**：32k 中英 BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** memmap 训练集（en:zh = 60:40，6×1GB 片 + val 4M，全部 sha256 入库）+ 换轨冒烟首步 **10.4542** ≈ ln(32000)=10.3735——证据 [reports/2026-11-18-day2-shards.md](reports/2026-11-18-day2-shards.md)（另 tokenizer/smoke 两件同目录）。
 - **Day 3（11-18 续跑）**：`tools/train.py` 完整框架（多分片加权取片 / 梯度累积 / 三路 RNG 续训 / 固定 val / 双语采样 / EXIT 标记）+ **50M 30min 预注册跑 120,517 tok/s**（val 3.6377）+ **140M 探针 52,250 tok/s → 决策门① PASS**（3B 单程 **15.9h**）——证据 [reports/2026-11-18-day3-framework.md](reports/2026-11-18-day3-framework.md) · [50m-30min](reports/2026-11-18-day3-50m-30min.md) · [140m-probe](reports/2026-11-18-day3-140m-probe.md)。
 - **Day 4~5（11-18 18:46 → 11-19 10:53）**：**140M 主训练收官** — 3,000,041,472 token / 16h07m41s / **val 2.7709** / 52,171 tok/s / 46 ckpt ≈73GB / 0 尖峰；终版采样中英事实已对（"中国的首都是北京"、"The capital of France is Paris"）——证据 [reports/2026-11-19-day4-main140m.md](reports/2026-11-19-day4-main140m.md)。SFT 数据 `data/sft-mix/`（250M token，assistant-only mask）+ `tools/sft.py` 已就绪（CPU 自检过）。
-- **下一步（Day 5）**：SFT GPU 冒烟 → 正式 SFT v1（lr 1e-4 / 1 epoch / ≈1.3h）→ 评测框架（held-out 困惑度 + 自设计题库）——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) · 概念题 [notes/qa-day-4.md](notes/qa-day-4.md)。
+- **Day 5（11-19）**：**SFT v1 收官**（3,815 步 / 1h19m26s / SFT val **1.5515**）+ **base/SFT 对比评测**：题库 **6/18（33%）→ 16/18（89%）**、SFT PPL **9.82 → 4.60**、预训练 PPL 15.35 → 16.31（遗忘 +6.2%）——证据 [reports/2026-11-19-day5-eval.md](reports/2026-11-19-day5-eval.md)（质性缺陷：复读环/编造推理/拒答模板，规则分高估质量）。门② 双证据（最后 10% 降幅 0.0134 + 恒定 lr 探针 0.0051）→ **不加训**。
+- **下一步（Day 6）**：门② 正式落档 + SFT v2（先做解码对照再决定是否重训）+ 评测扩展（复读/退化指标）+ LoRA 准备——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) · 概念题 [notes/qa-day-4.md](notes/qa-day-4.md)。
 - **路线**：Day 3 框架+门① ✅ → Day 4 140M 主训练起跑 → Day 5/6 收官 + SFT v2 → Day 7 LoRA/部署 → Day 8 深化 + 报告 → Day 9 缓冲 → Day 10 收尾。
 - 预期管理：140M/30 亿 token ≈ GPT-2 124M 水平（通顺、贫乏）——产出 = 经验 + 亲手训的模型 + 报告 + demo，非对标开源质量
 

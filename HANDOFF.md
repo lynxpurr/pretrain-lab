@@ -19,9 +19,11 @@
 
 ## 1. 状态一段话
 
-**pretrain-lab 进行中：Day 0~3 已收官，决策门① PASS，140M 主训练已于 2026-11-18 18:46 起跑（进行中）**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2/Day 3 均为 11-18 当日续跑（**Day 4 起日期不变，机制上已多出两天缓冲**）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（val 1.5599 / 187,480 字符/秒）。**Day 2**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh=6:4，6×1GB 分片 + val 4M）。**Day 3**：`tools/train.py` 完整框架 · **50M 30min 120,517 tok/s** · **140M 探针 52,250 tok/s ≥ 35k → 门① PASS** · 3B 单程 15.9h · 主训练定档 bs8×accum8（65,536 tok/step · 45,777 步 · ckpt 46 件 ≈76GB）。
+**pretrain-lab 进行中：Day 0~5 已收官（门① PASS、140M 主训练完成、SFT v1 完成），下一动作 = Day 6 门② 正式判定 + LoRA/SFT v2**——小模型从零训练 10 天行动（~140M 预训练 → SFT → LoRA 对比 → GGUF/Ollama demo），底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。**窗口（2026-11-18 提前起跑拍板）**：Day 1 = 2026-11-18（周三）~ **Day 10 = 2026-11-27（周四）**，Day 9（11-26）硬缓冲；Day 2/Day 3 均为 11-18 当日续跑（**Day 4 起日期不变，机制上已多出两天缓冲**）。**D-10 已拍板** = A 手写 SFT 为主、B ms-swift 对照/兜底（PLAN §3）。**Day 1**：手写 `tools/model.py`（D-02 全套，22,220,544 参数）+ 字符级 20M 闭环（val 1.5599 / 187,480 字符/秒）。**Day 2**：32k BPE（zh 1.841 / en 4.226 chars/token）+ **3,000,000,000 token** 训练集（en:zh=6:4，6×1GB 分片 + val 4M）。**Day 3**：`tools/train.py` 完整框架 · **50M 30min 120,517 tok/s** · **140M 探针 52,250 tok/s ≥ 35k → 门① PASS** · 3B 单程 15.9h · 主训练定档 bs8×accum8（65,536 tok/step · 45,777 步 · ckpt 46 件 ≈76GB）。
 
-**Day 4（11-18 18:46 起跑 → 11-19 10:53 收官）：140M 主训练完成** — 16h07m41s · **3,000,041,472 token** · **val 2.7709**（train 2.677）· **52,171 tok/s**（全程无衰减）· 46 个 ckpt ≈73GB · 0 尖峰 · `EXIT:0` · 终版 `last.pt` sha `0c0096cc172e8a58`。终版采样：中文"中国的首都是北京"、英文"The capital of France is Paris"（事实已对），并自发执行翻译/总结指令。**门② 预读 = 最后 10% val 降幅 0.0134 < 阈值 0.02~0.03 → 倾向不加训**（正式判定 Day 6）。同时已完成 **SFT 数据 `data/sft-mix/`**（250,001,408 token = 404,210 条对话 + 25% 预训练块，assistant-only mask，val 2M，指纹入库）与 **`tools/sft.py`**（底座载入 + `ignore_index=-100`；CPU 两种自检过，GPU 冒烟待做）。
+**Day 4（11-18 18:46 → 11-19 10:53）：140M 主训练完成** — 16h07m41s · **3,000,041,472 token** · **val 2.7709**（train 2.677）· **52,171 tok/s**（全程无衰减）· 46 个 ckpt ≈73GB · 0 尖峰 · `EXIT:0` · 终版 `last.pt` sha `0c0096cc172e8a58`。终版采样：中文"中国的首都是北京"、英文"The capital of France is Paris"（事实已对），并自发执行翻译/总结指令。同时完成 **SFT 数据 `data/sft-mix/`**（250,001,408 token = 404,210 条对话 + 25% 预训练块，assistant-only mask，val 2M，指纹入库）与 **`tools/sft.py`**。
+
+**Day 5（11-19）：SFT v1 收官 + base/SFT 对比评测 + 门② 双证据。** SFT v1（`out/sft-v1/last.pt`，sha `853322df4583bfa2`）= 3,815 步 / 1h19m26s / 53,004 tok/s / SFT val **1.5515** / `EXIT:0`。评测（`reports/2026-11-19-day5-eval.md`）：**base = 预训练 PPL 15.350 · SFT PPL 9.818 · 题库 6/18（33%）**；**sft = 预训练 PPL 16.307（遗忘 +6.2%）· SFT PPL 4.596（2.1×↓）· 题库 16/18（89%）**——但质性复核发现复读环/编造推理/拒答模板等问题（详见 LAB_NOTEBOOK Day 5 补记），**规则分高估质量**。门② 双证据 = 最后 10% 降幅 0.0134 + 恒定 lr 探针 0.0051（上界）→ **判"不加训"**。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -60,6 +62,8 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 | 2（11-18 续跑） | 32k BPE tokenizer + 3B memmap 流水线：`tools/{train_tokenizer,build_shards}.py` | 32k（zh 1.841 / en 4.226 chars/token）· 3,000,000,000 token（en 60%/zh 40%，6×1GB + val 4M，指纹入库）· 构建 20.7 min · 冒烟首步 10.4542；证据 `reports/2026-11-18-day2-{tokenizer,shards,smoke}.{md,csv,log}` |
 | 2 盘点校准 | 门①口径（140M 等效 ≥35k）+ 配置/时长/ckpt 预算 + G1~G6 进度 + zh 供给预案 + lessons 4 条 + skill §3.1/§6 | `0366874` |
 | 3（11-18 续跑） | 完整训练框架 `tools/train.py` + 50M 定档/冒烟/30min + 140M 探针 + **决策门①** | 50M 50,292,288 @bs16 封顶 · **120,517 tok/s**（215.7M token / val 3.6377）· **140M 52,250 tok/s → 门① PASS** · 3B 单程 **15.9h** · 续训 kill→restore val 一字不差 · 证据 `reports/2026-11-18-day3-{framework,50m-30min,140m-probe}.md` |
+| 4（11-18 晚 → 11-19 晨） | **140M 主训练 3B token** + SFT 数据 250M + `tools/sft.py` | **val 2.7709** · 16h07m41s · 52,171 tok/s · 46 ckpt ≈73GB · 0 尖峰 · 终版事实采样已对 · 证据 `reports/2026-11-19-day4-main140m.md` |
+| 5（11-19） | **SFT v1** + 对比评测 + 门② 双证据 | SFT val **1.5515** · 1h19m26s / 3,815 步 · **base 6/18 → sft 16/18（89%）** · SFT PPL 9.82→4.60 · 预训练 PPL 15.35→16.31（遗忘 +6.2%）· 探针 300 步只降 0.0051 · 证据 `reports/2026-11-19-day5-{eval,sft-v1}.md/log` |
 
 ## 4. 锚点速查（对账用已知答案）
 
@@ -79,6 +83,10 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 | **140M 吞吐锚**（Day 3） | 137,847,552 @ bs8×accum8×T1024 = 65,536 tok/step → **52,250 tok/s**（43.2 TFLOPS）· 40 步 peak 10.51GB · 3B 单程 **15.9h** | `reports/2026-11-18-day3-140m-probe.md` |
 | **主训练定档**（Day 3） | bs8×accum8 · **65,536 tok/step · 45,777 步 · 1.25s/步** · lr 6e-4 / warmup 500 / cosine→6e-5 / wd0.1 / clip1.0 · ckpt 每 1000 步 **46 件 ≈76GB** · 命令见报告 §6 | `reports/2026-11-18-day3-140m-probe.md` §6 |
 | **主训练 val 锚**（Day 4~5 实测，门② 定标用） | @4k **3.3932** · @8k 3.2052 · @12k 3.1104 · @16k 3.0459 · @20k **2.9936** · @24k 2.9424 · @28k 2.8996 · @32k 2.8576 · @34k **2.8384**；最近 500 步降幅 −0.0050（4.5k 时为 −0.046，9× 变平）· train 窗口 2.75 · **0 尖峰**（1711 窗口） | `logs/main140m-*.log` · `logs/main140m-loss_curve.csv` |
+| **主训练终版**（Day 5） | **val 2.7709** · 3,000,041,472 token / 16h07m41s / **52,171 tok/s** · 46 ckpt ≈73GB · 最后 10% 降幅 **0.0134**（门② 阈值 0.02~0.03）· `last.pt` sha `0c0096cc172e8a58` | `reports/2026-11-19-day4-main140m.md` |
+| **SFT v1**（Day 5） | SFT val **1.5515** · 3,815 步 / 1h19m26s / 53,004 tok/s · `last.pt` sha `853322df4583bfa2` | `reports/2026-11-19-day5-sft-v1.log` |
+| **对比评测**（Day 5） | base：预训练 PPL **15.350** / SFT PPL 9.818 / 题库 **6-18**；sft：预训练 PPL **16.307**（+6.2%）/ SFT PPL **4.596** / 题库 **16-18（89%）**（规则分，质性复核见笔记本） | `reports/2026-11-19-day5-eval.md` |
+| **门② 双证据**（Day 5） | 最后 10% val 降幅 **0.0134**（<0.02）· 恒定 lr 6e-5 探针 300 步 **0.0051**（上界，逐段衰减） → **判定：不加训**（正式落档 Day 6） | `reports/2026-11-19-day5-probe-const-lr.log` |
 | micro-bs 边界（Day 3） | 50M = **16**（bs24 OOM）· 140M = **8**（bs10 需 `expandable_segments`，bs12 OOM；bs16+grad-ckpt 仅 40,449 tok/s）· `torch.compile` 4,077 tok/s（弃用） | `reports/2026-11-18-day3-{memsweep,framework}.log/md` |
 | 参考实现 | minimind @ `233d00f` · nanoGPT @ `3adf61e`（`~/projects/`；minimind 数据现行名 = `pretrain_t2t(_mini)/sft_t2t(_mini)`） | Day 0 clone |
 | 数据指纹 | raw 层 17 条 = `data/raw/SHA256SUMS` · 字符级 3 条 = `data/day1-char20m/SHA256SUMS` · tokenizer 3 条 = `data/tokenizer-32k/SHA256SUMS` · 分片 7 条 = `data/shards/SHA256SUMS`（全部入库）· Day 1 checkpoint `last.pt` = `5d97b5f73852a2e9` · **Day 3：50M `out/day3-50m/last.pt` = `71fc274be289c3c2`（603.6MB）· 140M 探针 `out/day3-140m-probe/last.pt` = `df8fc7ac351415db`（1.65GB）** | `data/PROVENANCE.md` |
@@ -94,14 +102,14 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 | Day 2（11-18 当日续跑） | 32k BPE tokenizer + memmap 数据流水线 | ✅ 完成（32k / zh 1.841 · en 4.226 chars/token；3B token 6 片 + val 4M；构建 20.7min；冒烟 10.4542） |
 | Day 3（11-18 当日续跑） | 训练框架 + 50M 冒烟/30min + 140M 探针 + **决策门①** | ✅ 完成（门① **PASS**：140M 52,250 tok/s；50M 120,517；3B 单程 15.9h） |
 | Day 4（11-18 18:46 → 11-19 10:53） | **140M 主训练** + SFT 数据/脚本（D-10 = A 主 B 兜底） | ✅ 主训练收官（3B token / 16h08m / **val 2.7709** / 52,171 tok/s / 46 ckpt ≈73GB）· SFT 数据 250M + `tools/sft.py` 就绪 · **GPU 冒烟与 SFT v1 待做** |
-| Day 5（11-22） | 中期 SFT + 评测框架 | 未开工 |
-| Day 6（11-23） | 主训练收官 + SFT v2 + **决策门②**（loss 仍陡降 → 加训 15 亿） | 未开工 |
+| Day 5（11-19） | SFT v1 + 评测框架 + 门② 诊断 | ✅ 完成（SFT val 1.5515；题库 33%→89%；SFT PPL 4.60；探针 0.0051） |
+| Day 6（11-20 或 11-23） | **门② 正式判定** + SFT v2（数据问题修正）+ 中期评测 | **下一动作（清单 §7）** |
 | Day 7（11-24） | LoRA 对比 + GGUF/Ollama/Gradio 部署 | 未开工（超期可砍） |
 | Day 8（11-25） | 深化（扫参/tokenizer 消融/DPO）+ 报告开写 | 未开工（超期可砍） |
 | Day 9（11-26） | 硬缓冲日 | 未开工 |
 | Day 10（11-27） | 收尾：最终对比 + repo 整理 + 报告 | 未开工 |
 
-**关键路径与缓冲（Day 3 实测重算）**：Day 3 框架 + 门① ✅ → **Day 4 140M 起跑（15.9h 单程）→ 次日收官** → Day 5/6 SFT v2 + 门② → Day 7 部署 → Day 10 报告。**主训练须在 Day 6（11-23）中午前完成**——按实测 16h 单程，Day 4~5 任意时点起跑都有充足余量；若 Day 4 起跑，主训练最早 11-19 晚/11-20 晨收官。缓冲 = **11-19/11-20 两天（Day 2/3 均为 11-18 提前完成置换）** + Day 9（11-26）硬缓冲。门①口径已判定（PASS，见 §4）；门②加训 1.5B 的 zh 供给预案见 PLAN §5。主训练占 GPU 期间，白天 SFT 数据/评测框架工作以 CPU 为主，避免争抢。
+**关键路径与缓冲（Day 5 实测重算）**：Day 3 框架 + 门① ✅ → Day 4 主训练 3B ✅（11-19 10:53 收官）→ Day 5 SFT v1 + 评测 ✅ → **Day 6 门② 判定 + SFT v2 + LoRA 准备** → Day 7 部署 → Day 10 报告。**原计划的"主训练须在 Day 6 中午前完成"已提前 1.5 天达成**；缓冲 = **11-20 ~ 11-22 三天（Day 2/3/4/5 连续提前完成置换）** + Day 9（11-26）硬缓冲——G3/G4（LoRA/部署）与 G6（报告）都有充裕时间，不需要砍项。门② 若意外判加训（当前双证据指向不加训），1.5B 追加需 ~8h + zh 供给预案（PLAN §5）。
 
 ## 6. 惯例与红线
 
@@ -113,21 +121,17 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 - **决策门预注册**：门①（Day 3 吞吐）/门②（Day 6 loss）跑前不改。
 - **上游知识指针**：finetune-lab `notes/lessons.md`（四杠杆×四失败轴 + OOD 三层）· `ms-swift-finetune` skill（D-10 选 B 时）· nl2fem `notes/ref-*-concepts.md`。
 
-## 7. Day 4 清单（140M 主训练起跑 + SFT 数据/脚本）——进度
+## 7. Day 6 清单（门② 正式判定 + SFT v2 + LoRA 准备）
 
-> Day 3 清单已全部收官，证据见 §3 与 `reports/2026-11-18-day3-*.md`。**Day 4 状态：1/2/3/4 已完成或进行中，5 进行中，6 待主训练收官后做。**
+> Day 4/5 清单已全部收官（主训练 3B / val 2.7709；SFT v1 val 1.5515；题库 33%→89%），证据见 §3/§4 与 `reports/2026-11-19-day4-main140m.md`、`reports/2026-11-19-day5-{eval,sft-v1}.*`。
 
-| # | 事项 | 判据 | 状态 |
-|---|---|---|---|
-| 1 | **启动 140M 主训练**（命令 = `reports/2026-11-18-day3-140m-probe.md` §6，tmux 后台） | 首 10 分钟：`[anchor]` 10.37~10.62 · tok/s ≥48k · peak ≤11GB | ✅ 18:46 起跑：anchor **10.5431** · **52.8k tok/s** · peak 10.51GB |
-| 2 | 起跑后 30 分钟对账 | tok/s ≥50k · 1.25s/步 · val@500 · ≤70°C · 无 EXIT:1 | ✅ val@500 **4.9742**（比预估 8.5~9.0 低得多，属正常——500 步=32.8M token，比探针多 12.5×）· 58°C · SM 2797MHz |
-| 3 | **SFT 数据构建**（CPU）：chat 模板 + 混 20~30% 预训练语料 | 抽检/mask 正确；`SHA256SUMS` + PROVENANCE | ✅ `data/sft-mix/` **250,001,408 token**（404,210 会话 + 25% 预训练块，监督 78.15%）+ val 2M · 段级 mask 自检 0 违规 · 指纹入库 |
-| 4 | **`tools/sft.py`**（与 `train.py` 同源，loss 只算 assistant token） | 冒烟：loss 从 ln(V) 起降；mask 覆盖正确 | ⚠️ **CPU 3 步自检过**（`EXIT:0`，anchor 10.3615）；**GPU 冒烟待主训练完成后做**（现仅余 ~2.8GB 显存） |
-| 5 | 主训练监控（每 30~60 min）+ 采样检查 | val 单调下行无尖峰；ckpt 谱系按时生成 | 进行中（ckpt@1000 起每 1000 步） |
-| 6 | 收波：证据三分 + 指纹 + 笔记本 | 同 §6 校准清单五面 | 待主训练收官后 |
+| # | 事项 | 判据 |
+|---|---|---|
+| 1 | **门② 正式判定落档**：`reports/2026-11-2x-day6-gate2.md`，并列"最后 10% 降幅 0.0134"与"恒定 lr 探针 0.0051（上界）" | 判定 = **不加训**（双证据一致）；若判加训，先定 zh 配比（PLAN §5 预案）再启动 |
+| 2 | **SFT v1 质性缺陷归因**：复读环（"文化/艺术/交通"）、拒答模板泄漏、编造推理、译错方向 | 每条给出归因（数据风格 / greedy 解码 / 容量不足）与最小修法；**先做解码对照**（top-p 0.9 / repetition penalty / temperature 0.7）再决定是否重训 |
+| 3 | **SFT v2**（按 §2 结论）：候选 = ①数据侧过滤/加权（拒答模板样本、超短答案）；②2 epoch 或 lr 3e-5 续训；③解码参数进评测默认 | 同题库 ≥ v1 的 16/18；质性复核（复读率、拒答率）明显改善；预训练 PPL 退化 ≤10% |
+| 4 | **评测框架扩展**：加"复读/退化"自动指标（distinct-2、重复片段率）与人工 rubric 表 | `tools/eval.py` 输出含新指标；Day 10 三版对比可直接复用 |
+| 5 | **LoRA 准备（Day 7）**：手写 LoRA（D-10 A 方案）或 ms-swift B 兜底；同底座同数据 | 100 步冒烟损失下降 + 可训练参数占比报告（目标 <2%） |
+| 6 | 收波：证据三分 + 笔记本 + PLAN/HANDOFF/README + commit | 同 §6 校准清单五面 |
 
-**Day 4 决策点**：①主训练 loss 尖峰（窗口均值 >2× 基线）→ 从最近 ckpt 降 LR 重启（`--resume auto --base-lr 3e-4`）；②SFT chat 模板 = `<|im_start|>{role}\n{content}<|im_end|>\n`（对齐 minimind 原格式，specials 1/2），已定；③SFT 序列长度 = 1024（与预训练一致），长会话截断 0.11%。
-
-**主训练收官后（Day 5 开局三件事）**：①`--resume auto` 不适用——直接读 `out/main140m/last.pt` 作为 SFT 底座；②先跑 GPU 冒烟（`tools/sft.py --init-from out/main140m/last.pt --max-steps 50 --batch-size 4`）验证显存/loss/mask，再决定正式 SFT 的 bs；③SFT v1 预注册：lr 1e-4 / warmup 100 / 1 epoch over 250M（≈3,815 步 ≈ 1.3h @ 52k tok/s）。
-
-**门② 的混杂与辅助诊断（Day 5 备忘，不改预注册门）**：口径"最后 10% 步的 val 降幅 >0.02~0.03"落在 cosine 把 lr 从 7.3e-5 压到 6e-5 的区间，降幅变平会同时来自"lr→0"与"数据饱和"。**辅助诊断（不改门）**：主训练收官后，从 ~90% 的 `ckpt-0041000.pt` 起做一次**恒定 lr 探针**（新跑 300 步 @ lr 6e-5、warmup≈0，读 val 是否还能降 >0.01）——需要给 `tools/train.py` 加 `--init-from`（只载 model、优化器重开、step 从 0 起算，约 10 行），Day 6 判定时把探针读数与"最后 10% 降幅"并列呈现。
+**Day 6 决策点**：①SFT v2 走"数据修正"还是"训练加码"（默认先做解码对照，成本 10 分钟，避免误判数据问题）；②LoRA 用 A 手写还是 B ms-swift（默认 A，B 留兜底）；③是否给 SFT 数据加 system prompt（本数据集无 system 消息，如加需重跑构建）。

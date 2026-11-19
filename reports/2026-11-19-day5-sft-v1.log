@@ -1,0 +1,297 @@
+[init] 底座 out/main140m/last.pt（step=45777）→ SFT 重新开优化器
+[cfg] {"vocab_size": 32000, "n_embd": 768, "n_layer": 16, "n_head": 12, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=8×accum8×T1024 = 65,536 tok/step · total_steps=3,815
+[data] data/sft-mix train=250,001,408 tok （监督占比 78.15%，预训练混入 25%）· val=2,001,920
+[opt] lr=1.0e-04 warmup=100 cosine→10% ignore_index=-100 · notes=SFT v1：1 epoch over 250M（25% 预训练混入）· lr 1e-4
+[anchor] micro-step 1 loss 2.6936 | 监督占比 81.16% | 随机基线 ln(V)=10.3735
+step      1 | loss 2.6942 | lr 1.00e-06 | 40,285 tok/s (纯训练 40,285) | 0h00m01s
+step     20 | loss 2.5234 | lr 2.00e-05 | 53,156 tok/s (纯训练 52,321) | 0h00m25s
+step     40 | loss 2.3058 | lr 4.00e-05 | 53,108 tok/s (纯训练 52,711) | 0h00m49s
+step     60 | loss 2.2514 | lr 6.00e-05 | 52,171 tok/s (纯训练 52,530) | 0h01m14s
+step     80 | loss 2.2545 | lr 8.00e-05 | 51,579 tok/s (纯训练 52,289) | 0h01m40s
+step    100 | loss 2.2010 | lr 1.00e-04 | 51,160 tok/s (纯训练 52,059) | 0h02m05s
+step    120 | loss 2.1767 | lr 1.00e-04 | 51,919 tok/s (纯训练 52,036) | 0h02m31s
+step    140 | loss 2.1676 | lr 1.00e-04 | 51,547 tok/s (纯训练 51,965) | 0h02m56s
+step    160 | loss 2.1612 | lr 9.99e-05 | 51,990 tok/s (纯训练 51,968) | 0h03m21s
+step    180 | loss 2.1436 | lr 9.99e-05 | 51,781 tok/s (纯训练 51,948) | 0h03m47s
+step    200 | loss 2.1531 | lr 9.98e-05 | 51,995 tok/s (纯训练 51,952) | 0h04m12s
+step    220 | loss 2.1184 | lr 9.98e-05 | 52,607 tok/s (纯训练 52,011) | 0h04m37s
+step    240 | loss 2.1472 | lr 9.97e-05 | 52,044 tok/s (纯训练 52,014) | 0h05m02s
+step    250 | [val] loss 1.7658 | peak 12.05 GB | 0h05m15s
+step    250 | [ckpt] last.pt
+step    260 | loss 2.1114 | lr 9.96e-05 | 48,539 tok/s (纯训练 52,046) | 0h05m29s
+step    280 | loss 2.1323 | lr 9.95e-05 | 52,410 tok/s (纯训练 52,072) | 0h05m54s
+step    300 | loss 2.1067 | lr 9.94e-05 | 52,574 tok/s (纯训练 52,105) | 0h06m19s
+step    320 | loss 2.1330 | lr 9.92e-05 | 52,545 tok/s (纯训练 52,132) | 0h06m44s
+step    340 | loss 2.1187 | lr 9.91e-05 | 52,698 tok/s (纯训练 52,165) | 0h07m09s
+step    360 | loss 2.0952 | lr 9.89e-05 | 52,726 tok/s (纯训练 52,196) | 0h07m34s
+step    380 | loss 2.0928 | lr 9.88e-05 | 52,706 tok/s (纯训练 52,222) | 0h07m58s
+step    400 | loss 2.1109 | lr 9.86e-05 | 52,813 tok/s (纯训练 52,252) | 0h08m23s
+step    420 | loss 2.0987 | lr 9.84e-05 | 52,882 tok/s (纯训练 52,281) | 0h08m48s
+step    440 | loss 2.0752 | lr 9.82e-05 | 52,877 tok/s (纯训练 52,308) | 0h09m13s
+step    460 | loss 2.0688 | lr 9.79e-05 | 52,964 tok/s (纯训练 52,336) | 0h09m38s
+step    480 | loss 2.0481 | lr 9.77e-05 | 52,673 tok/s (纯训练 52,350) | 0h10m02s
+step    500 | loss 2.0604 | lr 9.75e-05 | 52,981 tok/s (纯训练 52,375) | 0h10m27s
+step    500 | [val] loss 1.7115 | peak 12.05 GB | 0h10m28s
+step    500 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我叫小黑，你可以叫我小黑哦～
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种人工智能技术，通过训练模型，使计算机能够从数据中学习，从而能够自动改进和优化其性能。这种模型可以用于分类、回归、聚类等任务，通过不断学习和优化算法，提高预测准确性，并能处理大量数据。
+  Q: What is the capital of France?
+  A: The capital of France is Paris. It is the largest city in the world and has a population of over 25 million. The city is located in the French Alps, bordered by France-Hong Kong and the Great Wall, and it is known for its rich history. The city has a rich history, with many historical sites, including museums, museums, and historical sites, as well as a thriving food and drink scene.
+  ----------------------------------------------
+step    500 | [ckpt] last.pt
+step    520 | loss 2.0757 | lr 9.72e-05 | 45,275 tok/s (纯训练 52,397) | 0h10m56s
+step    540 | loss 2.0880 | lr 9.69e-05 | 52,960 tok/s (纯训练 52,417) | 0h11m21s
+step    560 | loss 2.0627 | lr 9.67e-05 | 52,877 tok/s (纯训练 52,434) | 0h11m46s
+step    580 | loss 2.0699 | lr 9.64e-05 | 52,917 tok/s (纯训练 52,450) | 0h12m10s
+step    600 | loss 2.0683 | lr 9.61e-05 | 53,014 tok/s (纯训练 52,469) | 0h12m35s
+step    620 | loss 2.0675 | lr 9.57e-05 | 53,084 tok/s (纯训练 52,488) | 0h13m00s
+step    640 | loss 2.0321 | lr 9.54e-05 | 53,066 tok/s (纯训练 52,506) | 0h13m25s
+step    660 | loss 2.0609 | lr 9.51e-05 | 53,094 tok/s (纯训练 52,524) | 0h13m49s
+step    680 | loss 2.0569 | lr 9.47e-05 | 52,996 tok/s (纯训练 52,538) | 0h14m14s
+step    700 | loss 2.0701 | lr 9.43e-05 | 53,006 tok/s (纯训练 52,551) | 0h14m39s
+step    720 | loss 2.0681 | lr 9.40e-05 | 53,034 tok/s (纯训练 52,564) | 0h15m03s
+step    740 | loss 2.0431 | lr 9.36e-05 | 53,071 tok/s (纯训练 52,578) | 0h15m28s
+step    750 | [val] loss 1.6808 | peak 12.05 GB | 0h15m41s
+step    750 | [ckpt] last.pt
+step    760 | loss 2.0549 | lr 9.32e-05 | 48,575 tok/s (纯训练 52,590) | 0h15m55s
+step    780 | loss 2.0304 | lr 9.28e-05 | 53,098 tok/s (纯训练 52,603) | 0h16m20s
+step    800 | loss 2.0626 | lr 9.24e-05 | 53,077 tok/s (纯训练 52,614) | 0h16m44s
+step    820 | loss 2.0403 | lr 9.19e-05 | 53,033 tok/s (纯训练 52,624) | 0h17m09s
+step    840 | loss 2.0590 | lr 9.15e-05 | 53,126 tok/s (纯训练 52,636) | 0h17m34s
+step    860 | loss 2.0426 | lr 9.10e-05 | 53,055 tok/s (纯训练 52,646) | 0h17m59s
+step    880 | loss 2.0092 | lr 9.06e-05 | 53,039 tok/s (纯训练 52,655) | 0h18m23s
+step    900 | loss 2.0483 | lr 9.01e-05 | 53,094 tok/s (纯训练 52,664) | 0h18m48s
+step    920 | loss 2.0452 | lr 8.96e-05 | 53,114 tok/s (纯训练 52,674) | 0h19m13s
+step    940 | loss 2.0328 | lr 8.91e-05 | 53,111 tok/s (纯训练 52,683) | 0h19m37s
+step    960 | loss 2.0333 | lr 8.86e-05 | 53,107 tok/s (纯训练 52,692) | 0h20m02s
+step    980 | loss 2.0166 | lr 8.81e-05 | 53,099 tok/s (纯训练 52,700) | 0h20m27s
+step   1000 | loss 2.0434 | lr 8.76e-05 | 53,096 tok/s (纯训练 52,708) | 0h20m51s
+step   1000 | [val] loss 1.6583 | peak 12.05 GB | 0h20m52s
+step   1000 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我是由jingyaogong创造的高效语言模型，专注于提供精准、简洁的解答。
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种人工智能技术，通过让计算机从数据中自动学习模式，并从中提取出规律和模式，从而实现特定任务。通过处理海量数据，机器学习允许计算机通过算法自动进行学习和预测。
+  Q: What is the capital of France?
+  A: The capital of France is Paris. It is the capital of France and the capital city of France. It is the largest city in the world and is also the leading European city in the world. The capital of France is Paris.
+  ----------------------------------------------
+step   1000 | [ckpt] last.pt
+step   1020 | loss 2.0081 | lr 8.71e-05 | 45,968 tok/s (纯训练 52,716) | 0h21m20s
+step   1040 | loss 1.9983 | lr 8.65e-05 | 53,101 tok/s (纯训练 52,724) | 0h21m45s
+step   1060 | loss 2.0253 | lr 8.60e-05 | 53,037 tok/s (纯训练 52,730) | 0h22m09s
+step   1080 | loss 2.0154 | lr 8.54e-05 | 53,101 tok/s (纯训练 52,736) | 0h22m34s
+step   1100 | loss 2.0214 | lr 8.49e-05 | 53,019 tok/s (纯训练 52,741) | 0h22m59s
+step   1120 | loss 2.0306 | lr 8.43e-05 | 53,119 tok/s (纯训练 52,748) | 0h23m23s
+step   1140 | loss 1.9933 | lr 8.37e-05 | 53,047 tok/s (纯训练 52,753) | 0h23m48s
+step   1160 | loss 2.0158 | lr 8.31e-05 | 53,105 tok/s (纯训练 52,759) | 0h24m13s
+step   1180 | loss 2.0240 | lr 8.25e-05 | 53,114 tok/s (纯训练 52,765) | 0h24m37s
+step   1200 | loss 2.0581 | lr 8.19e-05 | 53,109 tok/s (纯训练 52,771) | 0h25m02s
+step   1220 | loss 2.0373 | lr 8.13e-05 | 53,091 tok/s (纯训练 52,776) | 0h25m27s
+step   1240 | loss 2.0265 | lr 8.07e-05 | 53,054 tok/s (纯训练 52,781) | 0h25m51s
+step   1250 | [val] loss 1.6386 | peak 12.05 GB | 0h26m05s
+step   1250 | [ckpt] last.pt
+step   1260 | loss 2.0156 | lr 8.01e-05 | 48,723 tok/s (纯训练 52,786) | 0h26m18s
+step   1280 | loss 2.0149 | lr 7.94e-05 | 53,101 tok/s (纯训练 52,791) | 0h26m43s
+step   1300 | loss 2.0034 | lr 7.88e-05 | 53,105 tok/s (纯训练 52,796) | 0h27m08s
+step   1320 | loss 2.0199 | lr 7.81e-05 | 53,113 tok/s (纯训练 52,801) | 0h27m32s
+step   1340 | loss 2.0068 | lr 7.75e-05 | 53,111 tok/s (纯训练 52,805) | 0h27m57s
+step   1360 | loss 2.0110 | lr 7.68e-05 | 53,124 tok/s (纯训练 52,810) | 0h28m22s
+step   1380 | loss 1.9792 | lr 7.61e-05 | 53,122 tok/s (纯训练 52,814) | 0h28m46s
+step   1400 | loss 1.9773 | lr 7.55e-05 | 53,141 tok/s (纯训练 52,819) | 0h29m11s
+step   1420 | loss 1.9896 | lr 7.48e-05 | 53,104 tok/s (纯训练 52,823) | 0h29m36s
+step   1440 | loss 1.9972 | lr 7.41e-05 | 53,104 tok/s (纯训练 52,827) | 0h30m00s
+step   1460 | loss 1.9923 | lr 7.34e-05 | 53,131 tok/s (纯训练 52,831) | 0h30m25s
+step   1480 | loss 1.9907 | lr 7.27e-05 | 53,095 tok/s (纯训练 52,835) | 0h30m50s
+step   1500 | loss 1.9882 | lr 7.20e-05 | 53,122 tok/s (纯训练 52,838) | 0h31m14s
+step   1500 | [val] loss 1.6217 | peak 12.05 GB | 0h31m15s
+step   1500 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我是一个AI模型，没有叫名为“谁”的角色。
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种人工智能技术，它让计算机系统能够从数据中学习和改进，而无需明确编程。它允许计算机从经验中提取模式，从而自动优化算法，执行特定任务。机器学习的核心是算法，它使计算机能够从数据中学习，而无需进行显式的编程。
+  Q: What is the capital of France?
+  A: The capital of France is Paris. France is a country in Europe with a land area of 1,400,000 square kilometers (9,600,000 square miles). It is also a major city with a population of approximately 5 million people. The French capital is located in Paris, France, France's capital and is known for its historical, cultural, and cultural significance. The capital city of France is Paris, which is located in the heart of the French capital, Paris, and is surrounded by
+  ----------------------------------------------
+step   1500 | [ckpt] last.pt
+step   1520 | loss 1.9774 | lr 7.13e-05 | 45,619 tok/s (纯训练 52,842) | 0h31m43s
+step   1540 | loss 1.9709 | lr 7.06e-05 | 53,114 tok/s (纯训练 52,846) | 0h32m08s
+step   1560 | loss 1.9843 | lr 6.99e-05 | 53,126 tok/s (纯训练 52,849) | 0h32m33s
+step   1580 | loss 1.9685 | lr 6.92e-05 | 53,118 tok/s (纯训练 52,853) | 0h32m57s
+step   1600 | loss 1.9961 | lr 6.84e-05 | 53,127 tok/s (纯训练 52,856) | 0h33m22s
+step   1620 | loss 1.9484 | lr 6.77e-05 | 53,133 tok/s (纯训练 52,860) | 0h33m47s
+step   1640 | loss 2.0079 | lr 6.70e-05 | 53,125 tok/s (纯训练 52,863) | 0h34m11s
+step   1660 | loss 1.9942 | lr 6.62e-05 | 53,116 tok/s (纯训练 52,866) | 0h34m36s
+step   1680 | loss 1.9764 | lr 6.55e-05 | 53,132 tok/s (纯训练 52,869) | 0h35m01s
+step   1700 | loss 1.9722 | lr 6.48e-05 | 53,119 tok/s (纯训练 52,872) | 0h35m25s
+step   1720 | loss 1.9885 | lr 6.40e-05 | 53,114 tok/s (纯训练 52,875) | 0h35m50s
+step   1740 | loss 1.9866 | lr 6.33e-05 | 53,118 tok/s (纯训练 52,878) | 0h36m15s
+step   1750 | [val] loss 1.6097 | peak 12.05 GB | 0h36m28s
+step   1750 | [ckpt] last.pt
+step   1760 | loss 1.9930 | lr 6.25e-05 | 48,534 tok/s (纯训练 52,880) | 0h36m42s
+step   1780 | loss 1.9951 | lr 6.18e-05 | 53,117 tok/s (纯训练 52,883) | 0h37m06s
+step   1800 | loss 1.9880 | lr 6.10e-05 | 53,114 tok/s (纯训练 52,885) | 0h37m31s
+step   1820 | loss 1.9913 | lr 6.03e-05 | 53,118 tok/s (纯训练 52,888) | 0h37m56s
+step   1840 | loss 1.9870 | lr 5.95e-05 | 53,103 tok/s (纯训练 52,890) | 0h38m20s
+step   1860 | loss 1.9739 | lr 5.87e-05 | 53,123 tok/s (纯训练 52,893) | 0h38m45s
+step   1880 | loss 1.9919 | lr 5.80e-05 | 53,115 tok/s (纯训练 52,895) | 0h39m10s
+step   1900 | loss 1.9694 | lr 5.72e-05 | 53,119 tok/s (纯训练 52,897) | 0h39m34s
+step   1920 | loss 1.9257 | lr 5.65e-05 | 53,126 tok/s (纯训练 52,900) | 0h39m59s
+step   1940 | loss 1.9484 | lr 5.57e-05 | 53,114 tok/s (纯训练 52,902) | 0h40m24s
+step   1960 | loss 1.9527 | lr 5.49e-05 | 53,117 tok/s (纯训练 52,904) | 0h40m48s
+step   1980 | loss 1.9892 | lr 5.42e-05 | 53,110 tok/s (纯训练 52,906) | 0h41m13s
+step   2000 | loss 1.9705 | lr 5.34e-05 | 53,093 tok/s (纯训练 52,908) | 0h41m38s
+step   2000 | [val] loss 1.5976 | peak 12.05 GB | 0h41m39s
+step   2000 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我叫小可爱，是一只可爱的小猫！
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种人工智能的分支，它使计算机系统能够从数据中学习并自动改进性能，而无需明确编程。通过训练模型，计算机系统能够识别模式、预测结果和优化决策。
+  Q: What is the capital of France?
+  A: The capital of France is Paris.
+
+Capital of France: Paris
+
+The capital of France is Paris.
+
+Capital of France: Paris
+
+The capital of France is Paris.
+
+So, the capital of France is Paris.
+  ----------------------------------------------
+step   2000 | [ckpt] last.pt
+step   2020 | loss 1.9731 | lr 5.27e-05 | 45,644 tok/s (纯训练 52,910) | 0h42m06s
+step   2040 | loss 1.9489 | lr 5.19e-05 | 53,116 tok/s (纯训练 52,912) | 0h42m31s
+step   2060 | loss 1.9826 | lr 5.11e-05 | 53,115 tok/s (纯训练 52,914) | 0h42m56s
+step   2080 | loss 1.9583 | lr 5.04e-05 | 53,119 tok/s (纯训练 52,916) | 0h43m21s
+step   2100 | loss 1.9378 | lr 4.96e-05 | 53,116 tok/s (纯训练 52,918) | 0h43m45s
+step   2120 | loss 1.9464 | lr 4.89e-05 | 53,102 tok/s (纯训练 52,920) | 0h44m10s
+step   2140 | loss 1.9663 | lr 4.81e-05 | 53,119 tok/s (纯训练 52,921) | 0h44m35s
+step   2160 | loss 1.9424 | lr 4.74e-05 | 53,109 tok/s (纯训练 52,923) | 0h44m59s
+step   2180 | loss 1.9236 | lr 4.66e-05 | 53,103 tok/s (纯训练 52,925) | 0h45m24s
+step   2200 | loss 1.9576 | lr 4.59e-05 | 53,118 tok/s (纯训练 52,927) | 0h45m49s
+step   2220 | loss 1.9634 | lr 4.51e-05 | 53,103 tok/s (纯训练 52,928) | 0h46m13s
+step   2240 | loss 1.9487 | lr 4.44e-05 | 53,094 tok/s (纯训练 52,930) | 0h46m38s
+step   2250 | [val] loss 1.5858 | peak 12.05 GB | 0h46m51s
+step   2250 | [ckpt] last.pt
+step   2260 | loss 1.9816 | lr 4.37e-05 | 48,674 tok/s (纯训练 52,931) | 0h47m05s
+step   2280 | loss 1.9555 | lr 4.29e-05 | 53,113 tok/s (纯训练 52,933) | 0h47m30s
+step   2300 | loss 1.9667 | lr 4.22e-05 | 53,124 tok/s (纯训练 52,935) | 0h47m54s
+step   2320 | loss 1.9839 | lr 4.15e-05 | 53,114 tok/s (纯训练 52,936) | 0h48m19s
+step   2340 | loss 1.9560 | lr 4.07e-05 | 53,109 tok/s (纯训练 52,938) | 0h48m44s
+step   2360 | loss 1.9525 | lr 4.00e-05 | 53,130 tok/s (纯训练 52,939) | 0h49m08s
+step   2380 | loss 1.9697 | lr 3.93e-05 | 53,105 tok/s (纯训练 52,941) | 0h49m33s
+step   2400 | loss 1.9521 | lr 3.86e-05 | 53,112 tok/s (纯训练 52,942) | 0h49m58s
+step   2420 | loss 1.9429 | lr 3.79e-05 | 53,125 tok/s (纯训练 52,944) | 0h50m22s
+step   2440 | loss 1.9625 | lr 3.72e-05 | 53,110 tok/s (纯训练 52,945) | 0h50m47s
+step   2460 | loss 1.9824 | lr 3.65e-05 | 53,117 tok/s (纯训练 52,946) | 0h51m12s
+step   2480 | loss 1.9354 | lr 3.58e-05 | 53,121 tok/s (纯训练 52,948) | 0h51m36s
+step   2500 | loss 1.9235 | lr 3.51e-05 | 53,116 tok/s (纯训练 52,949) | 0h52m01s
+step   2500 | [val] loss 1.5763 | peak 12.05 GB | 0h52m02s
+step   2500 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我叫通义千问，是阿里云开发的超大规模语言模型，专注于提供高效、精准的信息与帮助。
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种通过数据训练模型自动学习规律和模式的技术，而无需明确编程。它允许AI系统从数据中提取规律，从而自动改进其性能。
+  Q: What is the capital of France?
+  A: The capital of France is Paris, France is a country located in Western Europe. It is located on the French coast in the south and is bordered by the French Republic to the west, the Côte d'Azur to the east, and the Côte d'Azur to the south. This includes both the capital and the largest city in the region. The capital of France is Paris, France is a land of historical, cultural, and natural wonders,
+  ----------------------------------------------
+step   2500 | [ckpt] last.pt
+step   2520 | loss 1.9435 | lr 3.44e-05 | 45,504 tok/s (纯训练 52,951) | 0h52m30s
+step   2540 | loss 1.9376 | lr 3.38e-05 | 53,114 tok/s (纯训练 52,952) | 0h52m54s
+step   2560 | loss 1.9424 | lr 3.31e-05 | 53,112 tok/s (纯训练 52,953) | 0h53m19s
+step   2580 | loss 1.9442 | lr 3.24e-05 | 53,121 tok/s (纯训练 52,954) | 0h53m44s
+step   2600 | loss 1.9299 | lr 3.18e-05 | 53,105 tok/s (纯训练 52,956) | 0h54m09s
+step   2620 | loss 1.9154 | lr 3.11e-05 | 53,107 tok/s (纯训练 52,957) | 0h54m33s
+step   2640 | loss 1.9143 | lr 3.05e-05 | 53,119 tok/s (纯训练 52,958) | 0h54m58s
+step   2660 | loss 1.9429 | lr 2.98e-05 | 53,119 tok/s (纯训练 52,959) | 0h55m23s
+step   2680 | loss 1.9553 | lr 2.92e-05 | 53,114 tok/s (纯训练 52,960) | 0h55m47s
+step   2700 | loss 1.9246 | lr 2.86e-05 | 53,125 tok/s (纯训练 52,962) | 0h56m12s
+step   2720 | loss 1.9245 | lr 2.80e-05 | 53,111 tok/s (纯训练 52,963) | 0h56m37s
+step   2740 | loss 1.9316 | lr 2.74e-05 | 53,114 tok/s (纯训练 52,964) | 0h57m01s
+step   2750 | [val] loss 1.5686 | peak 12.05 GB | 0h57m15s
+step   2750 | [ckpt] last.pt
+step   2760 | loss 1.9440 | lr 2.68e-05 | 48,658 tok/s (纯训练 52,965) | 0h57m28s
+step   2780 | loss 1.9617 | lr 2.62e-05 | 53,116 tok/s (纯训练 52,966) | 0h57m53s
+step   2800 | loss 1.9160 | lr 2.56e-05 | 53,115 tok/s (纯训练 52,967) | 0h58m18s
+step   2820 | loss 1.9388 | lr 2.50e-05 | 53,115 tok/s (纯训练 52,968) | 0h58m42s
+step   2840 | loss 1.9358 | lr 2.45e-05 | 53,111 tok/s (纯训练 52,969) | 0h59m07s
+step   2860 | loss 1.9324 | lr 2.39e-05 | 53,127 tok/s (纯训练 52,970) | 0h59m32s
+step   2880 | loss 1.9397 | lr 2.34e-05 | 53,122 tok/s (纯训练 52,971) | 0h59m56s
+step   2900 | loss 1.8948 | lr 2.28e-05 | 53,112 tok/s (纯训练 52,972) | 1h00m21s
+step   2920 | loss 1.9091 | lr 2.23e-05 | 53,121 tok/s (纯训练 52,973) | 1h00m46s
+step   2940 | loss 1.9276 | lr 2.18e-05 | 53,105 tok/s (纯训练 52,974) | 1h01m10s
+step   2960 | loss 1.9375 | lr 2.13e-05 | 53,112 tok/s (纯训练 52,975) | 1h01m35s
+step   2980 | loss 1.9300 | lr 2.08e-05 | 53,120 tok/s (纯训练 52,976) | 1h02m00s
+step   3000 | loss 1.9168 | lr 2.03e-05 | 53,103 tok/s (纯训练 52,977) | 1h02m24s
+step   3000 | [val] loss 1.5639 | peak 12.05 GB | 1h02m25s
+step   3000 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我叫通义千问，由jingyaogong创建。
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是人工智能的一个分支，它使计算机能够通过数据学习和改进，而无需明确编程即可完成特定任务。通过训练模型，机器能够识别模式、预测未来趋势、识别图像和声音等信息，从而做出决策。机器学习在自然语言处理、计算机视觉、推荐系统、智能客服等领域有广泛的应用。
+  Q: What is the capital of France?
+  A: The capital of France is Paris. It is the largest city in the world, with a population of approximately 8.2 million people. It is a city with a rich history, culture, and history, with its many castles, palaces, and historic sites. The city is also known for its impressive architecture and its famous parades, which are often depicted in the media.
+  ----------------------------------------------
+step   3000 | [ckpt] last.pt
+step   3020 | loss 1.9191 | lr 1.98e-05 | 45,382 tok/s (纯训练 52,978) | 1h02m53s
+step   3040 | loss 1.9262 | lr 1.93e-05 | 53,115 tok/s (纯训练 52,979) | 1h03m18s
+step   3060 | loss 1.9136 | lr 1.89e-05 | 53,109 tok/s (纯训练 52,980) | 1h03m43s
+step   3080 | loss 1.9512 | lr 1.84e-05 | 53,120 tok/s (纯训练 52,981) | 1h04m07s
+step   3100 | loss 1.9103 | lr 1.80e-05 | 53,114 tok/s (纯训练 52,981) | 1h04m32s
+step   3120 | loss 1.8928 | lr 1.76e-05 | 53,117 tok/s (纯训练 52,982) | 1h04m57s
+step   3140 | loss 1.9236 | lr 1.72e-05 | 53,126 tok/s (纯训练 52,983) | 1h05m21s
+step   3160 | loss 1.9195 | lr 1.67e-05 | 53,104 tok/s (纯训练 52,984) | 1h05m46s
+step   3180 | loss 1.9226 | lr 1.64e-05 | 53,113 tok/s (纯训练 52,985) | 1h06m11s
+step   3200 | loss 1.9366 | lr 1.60e-05 | 53,123 tok/s (纯训练 52,986) | 1h06m35s
+step   3220 | loss 1.9259 | lr 1.56e-05 | 53,116 tok/s (纯训练 52,986) | 1h07m00s
+step   3240 | loss 1.9658 | lr 1.52e-05 | 53,110 tok/s (纯训练 52,987) | 1h07m25s
+step   3250 | [val] loss 1.5588 | peak 12.05 GB | 1h07m38s
+step   3250 | [ckpt] last.pt
+step   3260 | loss 1.9109 | lr 1.49e-05 | 48,724 tok/s (纯训练 52,988) | 1h07m52s
+step   3280 | loss 1.8953 | lr 1.45e-05 | 53,096 tok/s (纯训练 52,989) | 1h08m16s
+step   3300 | loss 1.9288 | lr 1.42e-05 | 53,117 tok/s (纯训练 52,990) | 1h08m41s
+step   3320 | loss 1.9100 | lr 1.39e-05 | 53,124 tok/s (纯训练 52,990) | 1h09m06s
+step   3340 | loss 1.9013 | lr 1.36e-05 | 53,115 tok/s (纯训练 52,991) | 1h09m30s
+step   3360 | loss 1.9244 | lr 1.33e-05 | 53,122 tok/s (纯训练 52,992) | 1h09m55s
+step   3380 | loss 1.9025 | lr 1.30e-05 | 53,114 tok/s (纯训练 52,993) | 1h10m20s
+step   3400 | loss 1.9394 | lr 1.28e-05 | 52,941 tok/s (纯训练 52,992) | 1h10m44s
+step   3420 | loss 1.9238 | lr 1.25e-05 | 53,106 tok/s (纯训练 52,993) | 1h11m09s
+step   3440 | loss 1.9157 | lr 1.23e-05 | 53,092 tok/s (纯训练 52,993) | 1h11m34s
+step   3460 | loss 1.9361 | lr 1.20e-05 | 53,095 tok/s (纯训练 52,994) | 1h11m58s
+step   3480 | loss 1.9141 | lr 1.18e-05 | 53,103 tok/s (纯训练 52,995) | 1h12m23s
+step   3500 | loss 1.9198 | lr 1.16e-05 | 53,094 tok/s (纯训练 52,995) | 1h12m48s
+step   3500 | [val] loss 1.5548 | peak 12.05 GB | 1h12m49s
+step   3500 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 我的名字叫通义千问，专注于提供精准、高效的信息与帮助。
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种通过使用数据和统计学方法让计算机从数据中学习并改进其性能的技术。它允许计算机自动执行一系列任务，而无需明确编程。通过训练模型，机器学习系统能够从数据中提取知识并做出预测或决策。
+  Q: What is the capital of France?
+  A: The capital of France is Paris. It is a city in the French Empire. The city is located in the French capital of Paris, France. It is a metropolitan area that has a population of over 1.3 million people. The capital of France is Paris, France.
+
+The official language of France is French, but the official language of the United States is Pennsylvania. The U.S. state is the 13th most populous nation in the world, with the largest population in
+  ----------------------------------------------
+step   3500 | [ckpt] last.pt
+step   3520 | loss 1.9293 | lr 1.14e-05 | 45,052 tok/s (纯训练 52,996) | 1h13m17s
+step   3540 | loss 1.9100 | lr 1.12e-05 | 53,100 tok/s (纯训练 52,996) | 1h13m42s
+step   3560 | loss 1.9128 | lr 1.11e-05 | 53,103 tok/s (纯训练 52,997) | 1h14m06s
+step   3580 | loss 1.9293 | lr 1.09e-05 | 53,096 tok/s (纯训练 52,998) | 1h14m31s
+step   3600 | loss 1.8992 | lr 1.07e-05 | 53,109 tok/s (纯训练 52,998) | 1h14m56s
+step   3620 | loss 1.9324 | lr 1.06e-05 | 53,099 tok/s (纯训练 52,999) | 1h15m20s
+step   3640 | loss 1.9065 | lr 1.05e-05 | 53,099 tok/s (纯训练 52,999) | 1h15m45s
+step   3660 | loss 1.9252 | lr 1.04e-05 | 53,105 tok/s (纯训练 53,000) | 1h16m10s
+step   3680 | loss 1.9193 | lr 1.03e-05 | 53,108 tok/s (纯训练 53,001) | 1h16m34s
+step   3700 | loss 1.9407 | lr 1.02e-05 | 53,108 tok/s (纯训练 53,001) | 1h16m59s
+step   3720 | loss 1.9067 | lr 1.01e-05 | 53,102 tok/s (纯训练 53,002) | 1h17m24s
+step   3740 | loss 1.9245 | lr 1.01e-05 | 53,109 tok/s (纯训练 53,002) | 1h17m48s
+step   3750 | [val] loss 1.5517 | peak 12.05 GB | 1h18m02s
+step   3750 | [ckpt] last.pt
+step   3760 | loss 1.8920 | lr 1.01e-05 | 48,652 tok/s (纯训练 53,003) | 1h18m15s
+step   3780 | loss 1.9220 | lr 1.00e-05 | 53,085 tok/s (纯训练 53,003) | 1h18m40s
+step   3800 | loss 1.9344 | lr 1.00e-05 | 53,096 tok/s (纯训练 53,004) | 1h19m05s
+step   3815 | [val] loss 1.5515 | peak 12.05 GB | 1h19m24s
+step   3815 | [ckpt] last.pt
+[final] step 3815/3815 | val 1.5515 | 用时 1h19m26s | 纯训练 53,004 tok/s | peak 12.05 GB | stop=completed

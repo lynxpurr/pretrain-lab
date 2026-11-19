@@ -30,6 +30,7 @@
 | day3-50m last.pt | Day 3 50M 30min 预注册跑终版（d576/L8/H9 = 50,292,288；step 3292，val 3.6377，含 optimizer + 三路 RNG 态） | 603.6MB | `71fc274be289c3c2` | `out/day3-50m/last.pt`（`reports/2026-11-18-day3-50m-30min.md`） |
 | day3-140m-probe last.pt | Day 3 140M 探针（d768/L16/H12 = 137,847,552；step 40，val 8.9169；门①判定用） | 1.65GB | `df8fc7ac351415db` | `out/day3-140m-probe/last.pt`（`reports/2026-11-18-day3-140m-probe.md`） |
 | **main140m last.pt** | **Day 4~5 正式主训练终版**（d768/L16/H12 = 137,847,552；step 45,777 · 3,000,041,472 token · **val 2.7709** · 52,171 tok/s · 16h07m41s；含 optimizer + 三路 RNG 态） | 1.65GB | `0c0096cc172e8a58` | `out/main140m/last.pt` + **谱系 46 个 `ckpt-XXXXXXX.pt`**（step 1000…45777，共 73GB）（`reports/2026-11-19-day4-main140m.md`） |
+| **sft-v1 last.pt** | **Day 5 SFT v1 终版**（同架构 137,847,552；3,815 步 / 250M token / **SFT val 1.5515** / 1h19m26s；含 optimizer 态） | 1.65GB | `853322df4583bfa2` | `out/sft-v1/last.pt`（`reports/2026-11-19-day5-eval.md` · `...-sft-v1.log`） |
 
 ## Tokenizer（Day 2 产出）
 
