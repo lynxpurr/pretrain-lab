@@ -156,7 +156,7 @@ def main() -> None:
             d2, r4 = repetition_metrics(ans)
             outs.append((t["id"], t["tag"], ok, ans, d2, r4))
             rows.append([name, args.decode_name, t["id"], t["tag"], int(ok), round(d2, 3),
-                         round(r4, 3), ans.replace("\n", " ")[:200]])
+                         round(r4, 3), ans.replace("\n", " ")[:1000]])
         acc = passed / len(tests)
         d2_mean = sum(o[4] for o in outs) / len(outs)
         r4_mean = sum(o[5] for o in outs) / len(outs)
@@ -190,7 +190,7 @@ def main() -> None:
     csv_path = out.with_suffix(".csv")
     with csv_path.open("w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["model", "test_id", "tag", "pass", "answer"])
+        w.writerow(["model", "decode", "test_id", "tag", "pass", "distinct2", "rep4", "answer"])
         w.writerows(rows)
     print("\n".join(md[:12]))
     print(f"[done] {out} · {csv_path}")

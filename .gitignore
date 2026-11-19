@@ -21,6 +21,12 @@ data/tokenizer-32k/*
 !data/tokenizer-32k/SHA256SUMS
 data/sft-mix/*
 !data/sft-mix/SHA256SUMS
+data/sft-mix-v2/*
+!data/sft-mix-v2/SHA256SUMS
+data/sft-mix-v2b/*
+!data/sft-mix-v2b/SHA256SUMS
+data/sft-extra-v2/*
+!data/sft-extra-v2/SHA256SUMS
 data/bpe-smoke/
 data/*.bin
 data/*.idx

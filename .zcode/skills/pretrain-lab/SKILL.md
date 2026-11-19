@@ -51,24 +51,48 @@
 
 ## §3.2 SFT + 评测标准动作（Day 5~6 验证过）
 
-**SFT 跑批**（底座 = `out/main140m/last.pt`；数据 = `data/sft-mix/`）：
+**SFT 跑批**（底座 = `out/main140m/last.pt`；数据 = `data/sft-mix-v2/`，Day 7 起）：
 ```bash
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/sft.py \
-  --init-from out/main140m/last.pt --run-name sft-v2 --out-dir out/sft-v2 \
+  --init-from out/main140m/last.pt --data-dir data/sft-mix-v2 --run-name sft-v2 --out-dir out/sft-v2 \
   --batch-size 8 --grad-accum 8 --base-lr 1e-4 --warmup 100 --target-tokens 250e6 \
   --eval-every 250 --eval-iters 20 --eval-batch-size 8 --sample-every 500 --ckpt-every 250
 ```
 - 启动前自检：`--init-from none --device cpu --max-steps 3`（随机小模型，查数据/损失/ckpt 链路）；或 `--init-from out/day3-50m/last.pt --device cpu --max-steps 1`（查底座载入路径）。两者都应 `EXIT:0`。
 - 判据：SFT val 应显著低于"底座在 SFT val 上的 loss"（v1：9.82 → 4.60 PPL）；`EXIT:0`；采样里出现 chat 模板行为。
-- 显存：140M bs8×accum8 → 峰值 **12.09GB**（比预训练高 1.5GB：eval bs8 + 配对 labels）。
+- 显存：140M bs8×accum8 → v1 峰值 **12.09GB** / v2 **12.05GB**（比预训练高 ~1.5GB：eval bs8 + 配对 labels）。
 - **1 epoch 就饱和是常见形态**（v1：末 1,000 步只降 0.006）——先查数据质量再谈加 epoch。
+
+**SFT 数据 v2/v2b 构建（Day 7 验证）**：
+```bash
+.venv-pre/bin/python -I tools/gen_sft_v2_extra.py
+.venv-pre/bin/python -I tools/build_sft_v2.py --listy-keep-den 5 --calib-repeat 3 --format-repeat 2 --helpful-repeat 3
+# 数学保护消融（v2b；rep-4 会升高到 0.117，见 Day 7 报告）：加 --protect-math
+```
+- 判据：250,001,408 token / 244,142 blocks / 列表类 ≤15%（v2 9.33% / v2b 13.53%）/ mask 300 块 3,000+ 段 0 违规 / val 与 v1 同 sha（复用 v1 val）。
+- **采样按能力域保护**：数学/推理样本（用户句数学关键词+数字或答案含公式）在 v2b 豁免列表降采样；但会抬 rep-4——Day 8 改"只保护短算术/截断长步骤"。
+
+**LoRA（Day 7 验证，`tools/lora.py`）**：
+```bash
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/sft.py \
+  --init-from out/main140m/last.pt --data-dir data/sft-mix-v2 --run-name sft-lora-r8-5e4 \
+  --out-dir out/sft-lora-r8-5e4 --batch-size 8 --grad-accum 8 --base-lr 5e-4 --warmup 100 \
+  --target-tokens 250e6 --eval-every 250 --eval-iters 20 --eval-batch-size 8 \
+  --sample-every 500 --ckpt-every 250 --lora-rank 8 --lora-alpha 16
+```
+- 可训练 **1.20%**（r=8，qkv/proj/gate/up/down）；peak **9.74GB**（比全参 -2.3GB）；ckpt **571MB**；`last.pt` 已 merge（eval/deploy 直接用），`adapter.pt` 单独存。
+- **lr**：2e-4 首跑 1000 步 val 1.8839 且采样退化；5e-4 同 step 更好（500 步 1.8974）。r=8 1 epoch 可能仍欠拟合；Day 8 试 r=12（≈1.80%）/ 2 epochs。
+- 冒烟：`--max-steps 50 --eval-every 0 --sample-every 0 --ckpt-every 0`，loss 应下降（实测 2.7086 → 2.5235）。
 
 **评测协议（Day 10 三版对比沿用）**：
 ```bash
 .venv-pre/bin/python -I tools/eval.py --ckpt base=out/main140m/last.pt --ckpt sft=out/sft-v1/last.pt \
   --out reports/<日期>-eval.md
+.venv-pre/bin/python -I tools/eval_format.py --csv reports/<日期>-eval.csv --out reports/<日期>-eval-rubric.md
 ```
 - **统一 greedy**（可复现）+ 关键词判分 + **distinct-2 / rep-4** 退化指标 + 人工 rubric 抽样；
+- **关键词判分有假阴/假阳**：v2 的正确回答"2027 年没有世界杯"因 `expect_any` 缺"没有"被判 ❌；v1 的"没有官方…1958"会命中但在编造。rubric 已加"没有/不存在"合法承认 + "1958/2028"编造检查；**关键词分与 rubric 分并列**，不要只看一个。
+- CSV 自检：表头 8 列（model,decode,test_id,tag,pass,distinct2,rep4,answer）；答案截断 1000（列表 rubric 需要完整行）。
 - **规则分会高估质量**（v1：规则 89% vs 质性 ~60%），报告必须并列质性复核；
 - 解码参数（T/top-p/repetition penalty）是**质量变量**，demo 端可换但需单独声明，不混进对比表；
 - 复读优先查数据（采样几乎不改善：0.131→0.123），repetition penalty 是"用事实换多样性"（1.3 压复读到 0.032 但题库 16→13）。
@@ -116,13 +140,22 @@ cd data/shards && sha256sum -c SHA256SUMS
 | 模型复读"文化、艺术、交通…" | 先做解码对照：采样是否改善 | 采样几乎不改善 → 数据罗列癖；rp 调参只是权宜（1.3 伤事实） |
 | SFT 后底座语言能力退化 | 预训练 PPL 是否上升 | v1 +6.2% 属可接受；>10% 再考虑提高预训练混入比例或降 lr/步数 |
 | `--init-from` 探针打印 `[anchor] … vs ln(V)` 偏差巨大 | 底座初始化时不是随机分布 | 正常（探针代码已加 `[init-anchor]` 分支，不再误报） |
+| GGUF 能加载但输出"前几个词正常、随后复读" | q/k 权重未按 llama.cpp 的 RoPE 布局重排 | `tools/export_gguf.py` 的 `permute_qk()`（对齐 llama.cpp `LlamaModel.permute`：`[n_head,2,head_dim/2,in]` → `swapaxes(1,2)`） |
+| Ollama 导入 safetensors 后 run 报 `MLX not available` | Ollama 的 experimental safetensors 路径在 Linux 走 MLX runner | 改走 GGUF：`tools/export_gguf.py` → `ollama create FROM *.gguf`（不要用 `--experimental` safetensors） |
+| `ollama create -q q4_K_M` 报 unsupported（safetensors 源） | 该路径只支持 int4/int8/nvfp4 等 | 先用 GGUF 源，再 `-q q4_K_M`；GGUF 路径实测支持 Q4_K_M/Q8_0 |
+| Gradio 安装卡在 31.4MB wheel（镜像 0.3% CPU） | 镜像限速 | 用 `tools/app_stdlib.py`（零依赖本地页）；`tools/app.py` Gradio 版保留备用 |
+| rubric 读 CSV 全空 | `eval.py` 表头 5 列 vs 行 8 列，DictReader 静默错列 | 已修 8 列表头；写完 CSV 做 `head -1` + 行字段数断言 |
+| 正确回答"2027 年没有世界杯"被判 ❌ | `expect_any` 缺"没有" | rubric 加"没有/不存在"+编造检查；关键词分与语义分并列 |
+| LoRA 采样出特殊 token/乱码、val 落后全参 | r=8/lr 2e-4 在 1 epoch 内欠拟合 | 先试 lr 5e-4（500 步探针）；仍欠拟合则 r=12（≈1.80%）或 2 epochs |
+| `F.linear` LoRA 报 mat2 在 CPU | `apply_lora` 在 model.to(cuda) 后创建 A/B，默认 CPU | A/B 用 `device=base.weight.device, dtype=base.weight.dtype`（Day 7 已修） |
 
 ## §5 红线
 
 - `reports/` 只增不改；改错走勘误追加。
 - 每份数据落位即录指纹（raw 层 17 条 Day 0 已立、字符级 3 条 Day 1 已立、tokenizer 3 条 + 分片 7 条 Day 2 已立；SFT 数据 Day 4 续录）。
 - 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**）**已判定 PASS（52,250 tok/s，2026-11-18）**；②（Day 6 loss 仍陡降→加训）**已判定不触发（最后 10% 0.0134 + 恒定 lr 探针 0.0051，2026-11-19）**，重开条件见 PLAN §4.1——两者跑前未改口径。
-- SFT/评测协议（Day 6 定档）：SFT 数据 25% 预训练混入 + assistant-only mask；评测统一 greedy + 关键词判分 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。
+- SFT/评测协议（Day 6 定档，Day 7 扩展）：SFT 数据 25% 预训练混入 + assistant-only mask；评测统一 greedy + 关键词判分 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。评测 CSV 固定 8 列（model,decode,test_id,tag,pass,distinct2,rep4,answer）、答案截断 1000；关键词分与 rubric 分并列报告。
+- **数据采样按能力域保护**（Day 7）：列表类降采样前先识别数学/推理样本（用户句数学关键词+数字，或答案含公式/等式）并豁免；v2 一刀切把长数学推理砍掉导致 `math-add 15 / math-mul 72`，v2b 豁免后修回 `8/42`（代价 rep-4 0.117）。Day 8 改"只保护短算术/截断长步骤"。
 - 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。
 - 边界：nl2fem / finetune-lab 是知识上游非资产上游（PLAN §7），只引用知识不改其档案。

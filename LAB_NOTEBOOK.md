@@ -68,6 +68,19 @@
 - 读数：解码对照 5 配置（greedy 16/18 · sample 15/18 · rp1.1 15/18 · rp1.2 15/18 · rp1.3 13/18；rep-4 0.131 / 0.123 / 0.087 / 0.057 / 0.032）。证据 = [reports/2026-11-19-day6-decode.md](reports/2026-11-19-day6-decode.md) + `2026-11-19-day6-decode.csv`（90 行）。评测工具已加 `--temperature/--top-k/--top-p/--rep-penalty/--decode-name/--skip-ppl` 与字符级 distinct-2/rep-4。
 - 疑问：①罗列癖要压到什么程度（降采样 vs 改写）？改写要 LLM，成本与收益怎么算？②校准样本从哪来（现有数据筛选 vs 手写 200 条）？③rp1.2 的"调参上限"读数要不要进 Day 10 主表（我倾向只作附录，避免用调参掩盖数据问题）？——Day 7 前定。
 
+## Day 7 · 2026-11-19 · SFT 数据 v2/v2b + LoRA + GGUF/Ollama demo
+
+- 决策：①**数据 v2** = 校准注入（1,630 唯一 ×3）+ 格式样本（989×2）+ 列表类保留 1/5（新目录 `data/sft-mix-v2/`，不动 v1；val 直接复用 v1 保证可比）；②**v2b** = 数学/推理样本豁免列表降采样（消融，不部署）；③**部署 = SFT v2 Q4_K_M**（rep-4/校准/翻译综合最佳），v2b 保留为"数学保护 ↔ 复读代价"证据；④**LoRA r=8 / 1.20%**：lr 2e-4 首跑 1000 步欠拟合 → 5e-4 全量 1 epoch；⑤**demo = stdlib 聊天页**（Gradio 镜像下载卡死 31.4MB wheel 5 分钟 0.3% CPU），Ollama 用用户级服务 11435（系统服务无模型目录写权限）。
+- 现象：①**供给粗口径修正**：HANDOFF 的"列表 28.5% / 只回答 1,703"是会话级 grep；assistant 侧实测列表 34.2%（前 40 万条 46%）、"只回答"仅 46 条 → 50% 降采样不够，改 1/5；②**v2 压列表误伤数学**（math-add 15、math-mul 72），v2b 保护后修回（8/42）但 rep-4 0.117、translate/capability 回归；③**eval.py CSV 头 5 列 vs 行 8 列** → rubric 静默空表；④**GGUF 漏 q/k permute** → 前几个词正常、随后复读（F16/Q4 同病），补 `LlamaModel.permute` 后恢复；⑤**T0.7 身份采样波动**（通义千问/小玲），greedy 稳定 minimind/jingyaogong（精确 prompt 数据 82.7% MiniMind）；⑥**en-fluency 拒答**三版都在（数据侧过泛化，系统提示未修好）。
+- 读数：**v2** val **1.6038**（3,815 步 / 1h19m46s / 52,825 tok/s / peak 12.05GB）· 题库 15/18 关键词（语义 16/18）· **rep-4 0.066**（v1 0.131）· 预训练 PPL 16.185（+5.4%，优于 v1 +6.2%）；**v2b** val 1.5981 · 15/18 · rep-4 0.117 · 数学修回（3+5=8、7×6=42）· 1h19m23s；**LoRA** 1.20% 可训练 · 冒烟 loss 2.7086→2.5235 · peak **9.74GB（-2.3GB）** · 2e-4 1000 步 val 1.8839、5e-4 500 步 1.8974 · ckpt 571MB（全参 1.65GB）；**GGUF** F16 326MB / Q4_K_M 103MB / Q8_0 173MB · raw 与 PyTorch 输出一致；**Q4 demo** identity/ML/2027 正确、math-mul 63（错）、en-fluency 拒答。
+- 疑问：①r=8 LoRA 1 epoch 学不稳 chat 模板，主因是容量、步数还是 lr？②en-fluency 拒答需要多少英文正例/通用拒答降采样才能修好？③v2c "选择性数学保护"（只保护短算术/截断长步骤）能否同时保住 rep-4 <0.08？——qa-day-7 与 Day 8 题池。
+
+**补记（同日 23:00 · LoRA 收官 + GPU demo）**
+
+- 读数：LoRA r8 5e-4 1 epoch = **val 1.8253 / 1h17m50s / 54,124 tok/s / peak 9.74GB / ckpt 526MB + adapter 6.5MB**；eval 预训练 PPL **15.690**（比 v2 16.185 更少遗忘）、SFT PPL 6.090、题库 15/18、**rep-4 0.260**；失败 math-mul 28 / translate 英文 / refuse 编造"德国队"。结论 = 1 epoch 欠拟合，不部署；Day 8 试 r=12/2 epochs。
+- 现象：LoRA 的显存/磁盘/速度/遗忘优势明确，但 SFT fit/复读/校准落后；**低秩容量在 1 epoch 内不足以同时学会模板+校准+格式**（同 step 1000：全参 1.7005 vs LoRA 1.8574）。
+- GPU demo：v2 Q4 **100% GPU / 157MB**，identity 21 token 0.023s ≈ 910 tok/s、ML 23 token 0.016s ≈ 1434 tok/s；identity "MiniMind, jingyaogong"、ML 单句。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）

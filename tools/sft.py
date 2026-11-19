@@ -36,6 +36,7 @@ from tokenizers import Tokenizer
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from model import GPT, GPTConfig  # noqa: E402
+from lora import adapter_state_dict, apply_lora, merge_lora  # noqa: E402
 from train import fmt_dur, lr_at, make_optimizer  # noqa: E402
 
 PROMPTS = [
@@ -115,6 +116,10 @@ def main() -> None:
     ap.add_argument("--log-dir", default="logs")
     ap.add_argument("--tokenizer", default="data/tokenizer-32k/tokenizer.json")
     ap.add_argument("--device", default="cuda")
+    # LoRA（0 = 全参 SFT；>0 = 冻结底座，只训低秩增量）
+    ap.add_argument("--lora-rank", type=int, default=0)
+    ap.add_argument("--lora-alpha", type=float, default=16.0)
+    ap.add_argument("--lora-targets", default="attn.qkv,attn.proj,ffn.w_gate,ffn.w_up,ffn.w_down")
     # 随机小模型（--init-from none 时生效，仅管线自检）
     ap.add_argument("--n-embd", type=int, default=128)
     ap.add_argument("--n-layer", type=int, default=2)
@@ -202,6 +207,16 @@ def main() -> None:
             model.load_state_dict(ckpt["model"])
             log(f"[init] 底座 {ckpt_path}（step={ckpt.get('step')}）→ SFT 重新开优化器")
 
+        lora_info = None
+        if args.lora_rank > 0:
+            targets = tuple(s.strip() for s in args.lora_targets.split(",") if s.strip())
+            lora_info = apply_lora(model, args.lora_rank, args.lora_alpha, targets)
+            log(f"[lora] r={lora_info['rank']} alpha={lora_info['alpha']:.0f} "
+                f"scaling={lora_info['scaling']:.2f} targets={','.join(lora_info['targets'])} "
+                f"replaced={len(lora_info['replaced'])}")
+            log(f"[lora] trainable {lora_info['trainable']:,} / {lora_info['total']:,} "
+                f"= {lora_info['ratio']:.2%}")
+
         if args.resume:
             rp = out_dir / "last.pt" if args.resume == "auto" else Path(args.resume)
             rck = torch.load(rp, map_location=device, weights_only=False)
@@ -265,7 +280,7 @@ def main() -> None:
             torch.save({"step": step, "config": asdict(cfg), "tokens_seen": tokens_seen,
                         "model": model.state_dict(), "optimizer": optimizer.state_dict(),
                         "data": {"dir": args.data_dir, "meta": data_meta},
-                        "init_from": args.init_from}, out_dir / "last.pt")
+                        "init_from": args.init_from, "lora": lora_info}, out_dir / "last.pt")
             log(f"step {step:6d} | [ckpt] last.pt")
             overhead_s += time.time() - tc
 
@@ -321,6 +336,15 @@ def main() -> None:
         final_step = step + 1
         v = do_eval(final_step, lr_at(final_step, args.base_lr, args.warmup, total_steps, args.min_lr_frac))
         do_ckpt(final_step)
+        if lora_info:
+            ap_path = out_dir / "adapter.pt"
+            torch.save({"lora": adapter_state_dict(model), "info": lora_info}, ap_path)
+            log(f"[lora] adapter → {ap_path}")
+            n_merged = merge_lora(model)
+            torch.save({"step": final_step, "config": asdict(cfg), "tokens_seen": tokens_seen,
+                        "model": model.state_dict(), "init_from": args.init_from,
+                        "lora": lora_info, "lora_merged": True}, out_dir / "last.pt")
+            log(f"[lora] merged {n_merged} layers → {out_dir / 'last.pt'}（eval/deploy 用）")
         elapsed = time.time() - t0
         train_tps = (tokens_seen - start_step * tokens_per_step) / max(elapsed - overhead_s, 1e-9)
         log(f"[final] step {final_step}/{total_steps} | val {v:.4f} | 用时 {fmt_dur(elapsed)} "

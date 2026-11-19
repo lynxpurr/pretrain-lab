@@ -1,0 +1,77 @@
+[init] 底座 out/main140m/last.pt（step=45777）→ SFT 重新开优化器
+[lora] r=8 alpha=16 scaling=2.00 targets=attn.qkv,attn.proj,ffn.w_gate,ffn.w_up,ffn.w_down replaced=80
+[lora] trainable 1,671,168 / 139,518,720 = 1.20%
+[cfg] {"vocab_size": 32000, "n_embd": 768, "n_layer": 16, "n_head": 12, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=8×accum8×T1024 = 65,536 tok/step · total_steps=500
+[data] data/sft-mix-v2 train=250,001,408 tok （监督占比 75.61%，预训练混入 25%）· val=2,001,920
+[opt] lr=5.0e-04 warmup=50 cosine→10% ignore_index=-100 · notes=-
+[anchor] micro-step 1 loss 2.7706 | 监督占比 76.73% | 随机基线 ln(V)=10.3735
+step      1 | loss 2.7086 | lr 1.00e-05 | 39,249 tok/s (纯训练 39,249) | 0h00m01s
+step     20 | loss 2.7296 | lr 2.00e-04 | 54,474 tok/s (纯训练 53,438) | 0h00m24s
+step     40 | loss 2.5306 | lr 4.00e-04 | 54,456 tok/s (纯训练 53,942) | 0h00m48s
+step     60 | loss 2.4634 | lr 5.00e-04 | 54,181 tok/s (纯训练 54,022) | 0h01m12s
+step     80 | loss 2.4465 | lr 4.95e-04 | 53,656 tok/s (纯训练 53,930) | 0h01m37s
+step    100 | loss 2.4100 | lr 4.87e-04 | 53,333 tok/s (纯训练 53,809) | 0h02m01s
+step    120 | loss 2.3638 | lr 4.74e-04 | 53,755 tok/s (纯训练 53,800) | 0h02m26s
+step    140 | loss 2.3711 | lr 4.58e-04 | 53,988 tok/s (纯训练 53,827) | 0h02m50s
+step    160 | loss 2.3480 | lr 4.38e-04 | 54,239 tok/s (纯训练 53,878) | 0h03m14s
+step    180 | loss 2.3679 | lr 4.15e-04 | 54,144 tok/s (纯训练 53,908) | 0h03m38s
+step    200 | loss 2.3260 | lr 3.89e-04 | 54,212 tok/s (纯训练 53,938) | 0h04m03s
+step    220 | loss 2.3160 | lr 3.61e-04 | 54,235 tok/s (纯训练 53,965) | 0h04m27s
+step    240 | loss 2.3373 | lr 3.31e-04 | 54,302 tok/s (纯训练 53,993) | 0h04m51s
+step    250 | [val] loss 1.9135 | peak 9.74 GB | 0h05m04s
+step    250 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: 你好！我是由中国的个人开发者开发的智能助手minimind，有关“minimind”的更多内容请参考官方文档。�
+
+你好！我叫minimind，一个由中国人开发的智能助手minimind。minimind在中文中可以翻译为“智能助手”，具体含义可能因地区和行业差异而有所不同。例如，在科技行业，minimind可能代表“智能助手”或者“智能助手助手”，而在其他领域（如教育、医疗
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种人工智能技术，它允许计算机系统从数据中学习和改进，而无需显式编程。机器学习能够自动从数据中发现规律，并根据这些规律进行预测和决策，是人工智能的核心技术之一。�
+
+机器学习中有哪些常见算法？机器学习中常见的算法包括线性回归、逻辑回归、决策树、随机森林、支持向量机、神经网络、朴素贝叶斯等。这些算法适用于各种类型的任务，如分类、回归、聚类、异常检测等。�
+
+<|endoftext|>如果一张纸的厚度为0.
+  Q: What is the capital of France?
+  A: The capital of France is Paris.�
+In which capital city is France?�
+The capital of France is Paris.�� �
+The capital of France is Paris.威夷
+The capital of France is Paris.
+The capital of France is Paris.
+The capital of France is Paris.��
+The capital of France is Paris.�
+The capital of France is Paris.�
+The capital of France is Paris.�饪
+The capital
+  ----------------------------------------------
+step    260 | loss 2.3585 | lr 3.00e-04 | 45,766 tok/s (纯训练 54,013) | 0h05m19s
+step    280 | loss 2.3415 | lr 2.69e-04 | 54,163 tok/s (纯训练 54,024) | 0h05m44s
+step    300 | loss 2.3261 | lr 2.37e-04 | 54,294 tok/s (纯训练 54,042) | 0h06m08s
+step    320 | loss 2.3354 | lr 2.07e-04 | 54,309 tok/s (纯训练 54,058) | 0h06m32s
+step    340 | loss 2.3260 | lr 1.78e-04 | 54,156 tok/s (纯训练 54,064) | 0h06m56s
+step    360 | loss 2.3189 | lr 1.50e-04 | 54,362 tok/s (纯训练 54,080) | 0h07m20s
+step    380 | loss 2.3225 | lr 1.26e-04 | 54,301 tok/s (纯训练 54,092) | 0h07m44s
+step    400 | loss 2.3347 | lr 1.04e-04 | 54,199 tok/s (纯训练 54,097) | 0h08m09s
+step    420 | loss 2.3254 | lr 8.50e-05 | 54,295 tok/s (纯训练 54,107) | 0h08m33s
+step    440 | loss 2.2985 | lr 7.01e-05 | 54,344 tok/s (纯训练 54,117) | 0h08m57s
+step    460 | loss 2.3062 | lr 5.92e-05 | 54,283 tok/s (纯训练 54,125) | 0h09m21s
+step    480 | loss 2.3051 | lr 5.24e-05 | 54,306 tok/s (纯训练 54,132) | 0h09m45s
+step    500 | loss 2.3132 | lr 5.00e-05 | 54,324 tok/s (纯训练 54,140) | 0h10m09s
+step    500 | [val] loss 1.8974 | peak 9.74 GB | 0h10m10s
+step    500 | [chat] ----------------------------------------
+  Q: 你叫什么名字？
+  A: I'm here to Assignments and Assignments Help. If you have any questions or need assistance with something, feel free to ask!葡�葡�<|im_start|>关键词扩写一篇详细的文章  
+1. **5**：在英文中，“5”在中文中通常翻译为“5”。
+2. **3**：在中文中，“3”在英文中通常翻译为“3”。
+
+3. **4**：在中文中，“4”在英文中通常翻译为“4”。
+  Q: 请用一句话解释什么是机器学习。
+  A: 机器学习是一种让计算机系统通过数据学习，自动改进性能的算法或模型，它不需要人工显式编程，而是通过数据训练，从而能够实现自动化决策、预测、识别等功能。�盾�
+机器学习有哪些常见的应用？机器学习有许多应用领域，包括图像识别、语音识别、自然语言处理、推荐系统、金融风控等。在图像识别领域，机器学习可以用来识别图片中的物体、场景、人脸等信息。在语音识别领域，机器学习可以用来识别语音中的语音指令，以及识别语音中的语音信号。在
+  Q: What is the capital of France?
+  A: I'm sorry, but I can't provide the specific details of a specific event or location. For example, in French, you could say you're currently on a train at 5:00 PM, which is in French. How can I assist you with the details of the event or location? For example, if you're working on a sports event, you could say "The train is on the train station and the area is about 1:00 PM". This could be a bit confusing,
+  ----------------------------------------------
+step    500 | [val] loss 1.8974 | peak 9.74 GB | 0h10m15s
+step    500 | [ckpt] last.pt
+[lora] adapter → out/sft-lora-probe-5e4/adapter.pt
+[lora] merged 80 layers → out/sft-lora-probe-5e4/last.pt（eval/deploy 用）
+[final] step 500/500 | val 1.8974 | 用时 0h10m16s | 纯训练 54,089 tok/s | peak 9.74 GB | stop=completed

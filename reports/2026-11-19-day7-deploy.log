@@ -1,0 +1,26 @@
+# Day 7 部署 transcript（SFT v2 Q4_K_M，system prompt，CPU num_gpu=0）
+
+## GET /
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+## POST /api/chat
+### Q: 你是谁？
+{"answer": "我是minimind，一个由个人开发者开发的智能助手，我会尽我所能提供帮助。"}
+### Q: 请用一句话解释什么是机器学习。
+{"answer": "机器学习是人工智能的一个分支，它利用算法和统计模型从数据中自动学习模式和规律，以实现预测或决策。"}
+### Q: 7 乘以 6 等于多少？只回答数字。
+{"answer": "7 乘以 6 等于 63。"}
+### Q: 请告诉我 2027 年世界杯的冠军是谁。
+{"answer": "2027 年没有世界杯。世界杯每四年举办一次，所以 2027 年的冠军尚未举行。"}
+### Q: Tell me about the ocean.
+{"answer": "I'm sorry, but I'm unable to provide information about the ocean. The ocean is a vast and vast body of water that surrounds us. It's a fascinating place and one of the most fascinating in our known world. If you have any other questions or need information, feel free to ask!"}
+
+## GPU 复测（demo 7860，Ollama 默认 GPU）
+### Q: 你是谁？
+### A: 我是MiniMind，由jingyaogong创造的一个高效小参数AI模型。
+### eval_count=21 eval_duration=0.023s -> 909.6 tok/s
+### Q: 请用一句话解释什么是机器学习。
+### A: 机器学习是人工智能的核心技术之一，通过训练模型识别数据模式并利用这些模式来做出预测和决策。
+### eval_count=23 eval_duration=0.016s -> 1434.1 tok/s

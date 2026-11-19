@@ -31,6 +31,9 @@
 | day3-140m-probe last.pt | Day 3 140M 探针（d768/L16/H12 = 137,847,552；step 40，val 8.9169；门①判定用） | 1.65GB | `df8fc7ac351415db` | `out/day3-140m-probe/last.pt`（`reports/2026-11-18-day3-140m-probe.md`） |
 | **main140m last.pt** | **Day 4~5 正式主训练终版**（d768/L16/H12 = 137,847,552；step 45,777 · 3,000,041,472 token · **val 2.7709** · 52,171 tok/s · 16h07m41s；含 optimizer + 三路 RNG 态） | 1.65GB | `0c0096cc172e8a58` | `out/main140m/last.pt` + **谱系 46 个 `ckpt-XXXXXXX.pt`**（step 1000…45777，共 73GB）（`reports/2026-11-19-day4-main140m.md`） |
 | **sft-v1 last.pt** | **Day 5 SFT v1 终版**（同架构 137,847,552；3,815 步 / 250M token / **SFT val 1.5515** / 1h19m26s；含 optimizer 态） | 1.65GB | `853322df4583bfa2` | `out/sft-v1/last.pt`（`reports/2026-11-19-day5-eval.md` · `...-sft-v1.log`） |
+| **sft-v2 last.pt** | **Day 7 SFT v2 终版（部署）**（`data/sft-mix-v2`；3,815 步 / 250M token / **SFT val 1.6038** / 1h19m46s / 52,825 tok/s；含 optimizer 态） | 1.65GB | `a81c3480f4b63366` | `out/sft-v2/last.pt`（`reports/2026-11-19-day7-sft-v2.{log,csv}` · `...-eval-v2b.md`） |
+| **sft-v2b last.pt** | **Day 7 SFT v2b（数学保护消融，不部署）**（`data/sft-mix-v2b`；3,815 步 / 250M token / **SFT val 1.5981** / 1h19m23s；含 optimizer 态） | 1.65GB | `44856617008a1e10` | `out/sft-v2b/last.pt`（`reports/2026-11-19-day7-sft-v2b.{log,csv}`） |
+| **sft-lora-r8-5e4 last.pt** | **Day 7 LoRA r=8 终版（v2 数据，merged；1.20% 可训练；val 1.8253 / 题库 15-18 / rep-4 0.260；1 epoch 欠拟合，不部署）** | 526MB（model-only）+ adapter 6.5MB | `81fbbf0840ed56c1`（adapter `94ce1732659ec48c`） | `out/sft-lora-r8-5e4/last.pt` / `adapter.pt`（`reports/2026-11-19-day7-lora-5e4.log` · `...-eval-lora.md`） |
 
 ## Tokenizer（Day 2 产出）
 
@@ -55,6 +58,34 @@
 | `val.bin` + `val.labels.bin` | 同分布的文档级留出（`blake2b64(line) % 100 == 0`，4,281 条对话） | 2,001,920 token（监督占比 71.05%） | `8287b49028dd2f58` / `1a5184449637176b` |
 
 > 构建 4.0 min · `block_size` 1024 · 长会话截断 1,012 条（0.11%）· 分段编码 vs 整段编码抽样自检 30 例全过 · 全量 `data/sft-mix/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft.py --max-tokens 250e6 --val-tokens 2e6 --pretrain-ratio 0.25`。
+
+### SFT v2 补充样本 `data/sft-extra-v2/`（Day 7 生成，`tools/gen_sft_v2_extra.py`）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `calibration.jsonl` | 校准/拒答：未来事件 / **错误前提**（如"2027 年世界杯"）/ 实时信息 / 隐私 / 不可验证 / 已知事实对比（同对话先答已知再拒答未知） | **1,630** 条唯一对话（构建时重复 3× → 4,890 条曝光） | `ebcbd1f56c780a55` |
+| `format.jsonl` | 格式硬约束：只回答数字算术（2..12 全组合）/ 一句话 / 不超过 N 字 / 列出 3 条 | **989** 条唯一对话（构建时重复 2× → 1,978） | `a8e625c8b3066326` |
+| `helpful.jsonl` | 中英良性问题正例（描述海洋/解释概念/翻译/写代码），对冲 v1 英文拒答模板泄漏 | **60** 条唯一对话（重复 3× → 180） | `633d388050df4b9c` |
+
+> 生成器确定性（seed 20261119；`zlib.crc32` 替代 Python 内置 hash）· 全量 `data/sft-extra-v2/SHA256SUMS`（3 条）· 生成读数 `logs/day7-sft-extra.log`。**只进 train，不进 val。**
+
+### SFT v2 训练集 `data/sft-mix-v2/`（Day 7 构建，`tools/build_sft_v2.py`）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `train.bin` + `train.labels.bin` | 同 v1 模板/掩码/25% 预训练混入，但采样改为：校准样本注入 + 格式样本 2× + **列表类（assistant 任一段 ≥5 编号行）保留 1/5**；共 616,836 条对话（含补充样本 7,048 条） | **250,001,408 token**（244,142 块 × 1024；监督 token 189,032,362 = 75.61%；列表类占比 **9.33%** ≤15%） | `0f14875b7d5d3ff8` / `b7d822c1e18c9ba4` |
+| `val.bin` + `val.labels.bin` | **直接复用 v1 val**（同一 `blake2b64(line)%100` 留出、4,281 条对话 / 2,001,920 token）——v2 因降采样读得更远，重建 val 会破坏 v1/v2 可比性 | 2,001,920 token（监督占比 71.05%） | `8287b49028dd2f58` / `1a5184449637176b`（**与 v1 逐字节相同**） |
+
+> 构建 5.2 min · 段级 mask 自检 **300 块 / 3,155 段 / 0 违规** · 长会话截断 850 条 · 全量 `data/sft-mix-v2/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --listy-keep-den 5 --calib-repeat 3 --format-repeat 2 --helpful-repeat 3`。**供给实测修正**：HANDOFF 原会话级 grep 的"列表类 28.5%"是 `"5."` 粗口径；assistant 侧 ≥5 编号行实测 **34.2% 全库 / 前 40 万条 46%**，故 50% 降采样不足以到 ≤15%，改保留 1/5（列表类 9.33%）。
+
+### SFT v2b 训练集 `data/sft-mix-v2b/`（Day 7 二次修正：数学保护）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `train.bin` + `train.labels.bin` | 与 v2 同模板/掩码/25% 混入/补充样本；**数学/推理样本豁免列表降采样**（用户句含数学关键词+数字，或答案含公式/等式），非数学列表类仍保留 1/5 | **250,001,408 token**（244,142 块 × 1024；监督 token 191,451,932 = 76.58%；列表类占比 **13.53%** ≤15%；共 557,651 条对话） | `87afa4320a3057fb` / `e493d29ded892e38` |
+| `val.bin` + `val.labels.bin` | **复用 v1 val**（与 v1/v2 逐字节相同） | 2,001,920 token（4,281 条对话） | `8287b49028dd2f58` / `1a5184449637176b` |
+
+> 构建 4.7 min · 段级 mask 自检 **300 块 / 2,755 段 / 0 违规** · 数学列表类保留 23,253 条 · 全量 `data/sft-mix-v2b/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2b --listy-keep-den 5 --protect-math --calib-repeat 3 --format-repeat 2 --helpful-repeat 3`。**动机**：v2 评测发现 `math-add`/`math-mul` 算术回归（3+5=15、7×6=72）——列表降采样误伤长数学推理；v2b 保留数学样本、仍压非数学列表癖。
 
 ### 评测集 `data/eval/tests.json`（Day 5 立，Day 6 定档）
 

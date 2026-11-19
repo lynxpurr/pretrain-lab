@@ -1,0 +1,19 @@
+model,decode,test_id,tag,pass,distinct2,rep4,answer
+lora,greedy,fact-capital-cn,fact-zh,1,0.191,0.739,中国的首都是北京。  北京是中国的首都，位于中国东部，是中国的首都。北京是中国的首都，也是中国的政治、文化和经济中心。北京是中国的首都，也是中国的政治、文化和经济中心。  北京是中国的首都，也是中国的政治、文化和经济中心。北京是中国的政治、文化和经济中心，是中国的政治、文化和经济中心。  北京是中国的政治、文化和经济中心，是中国的政治、文化和经济中心。  北京是中国的政治
+lora,greedy,fact-capital-fr,fact-en,1,0.299,0.541,"The capital of France is Paris. It is the largest city in the world and is located in the French capital of Paris. It is also the largest city in the world, with a population of around 2.5 million people. The capital is located in Paris, France, and is surrounded by the French capital of Paris, which is the largest city in the world. The capital is also the largest city in the world, with a population of around 2.5 million people. The capital is also"
+lora,greedy,fact-water,fact-zh,1,0.214,0.734,水的化学式是H2O。  水的化学式是H2O，其中H代表氢元素，O代表氧元素。水的化学式为H2O，其中H代表氢元素，O代表氧元素。  水的化学式是H2O，其中H代表氢元素，O代表氧元素。水的化学式为H2O，其中H代表氢元素，O代表氧元素。  水的化学式是H2O，其中H
+lora,greedy,fact-months,fact-zh,1,0.45,0.421,一年有12个月。  一年有12个月，因此一年有12个月。  **答案：一年有12个月。**
+lora,greedy,math-add,math,1,1.0,0.0,3 加 5 等于 8。
+lora,greedy,math-mul,math,0,0.762,0.053,7 乘以 6 等于 **28**。  **答案：28**
+lora,greedy,identity,identity,1,0.975,0.0,我是由jingyaogong创建的高效AI模型，专注于提供精准、快速的信息与帮助。
+lora,greedy,capability,identity,1,0.806,0.052,我是由jingyaogong创建的高效AI模型，专注于提供准确、简洁的信息和帮助。我的能力在于快速处理信息、提供准确答案，并协助用户解决问题。我专注于提供有价值的信息，帮助用户更好地理解和解决问题。
+lora,greedy,def-ml,explain,1,0.96,0.0,机器学习是人工智能的一个分支，通过让计算机从数据中学习，自动改进性能，从而实现对未知数据的预测和决策。
+lora,greedy,translate-zh2en,translate,1,0.92,0.0,The weather today is very nice.
+lora,greedy,translate-en2zh,translate,0,0.148,0.833,"""I love machine learning.""   The translation of ""I love machine learning"" into Chinese is: ""I love machine learning.""   The translation of ""I love machine learning"" into Chinese is: ""I love machine learning.""   The translation of ""I love machine learning"" into Chinese is: ""I love machine learning.""   The translation of ""I love machine learning"" into Chinese is: ""I love machine learning.""   The translation of"
+lora,greedy,summary,summary,1,1.0,0.0,苹果公司发布新款手机，搭载更快的芯片和更好的摄像头。
+lora,greedy,list-3,format,1,0.797,0.022,学习编程的建议有很多，以下是三个建议：  1. **选择一门编程语言**：选择一门你感兴趣的编程语言，比如Python、Java、JavaScript等，这些语言在编程领域有广泛的应用，且有良好的学习曲线。  2. **练习编程**：编程需要不断练习，通过编写代码来巩固所学知识。可以参加编程课程、阅读编程书籍、参与编程项目等。  3. **阅读源代码**：阅读其他程序员编写的源代码
+lora,greedy,code-simple,code,1,0.715,0.141,"下面是一个简单的 Python 函数，用于计算两个数的和：  ```python def add_numbers(a, b):     return a + b  # 示例使用 result = add_numbers(3, 5) print(result)  # 输出：8 ```  这个函数定义了一个名为 `add_numbers` 的函数，它接受两个参数 `a` 和 `b`。函数体内部使用 `return` 语句返回这两个参数的和。  在示例"
+lora,greedy,reason-simple,reason,1,0.324,0.599,如果明天下雨，你可以带伞、雨衣或防雨衣。记得带上雨伞，以防万一。如果天气不好，可以带上雨伞，但要注意安全。如果天气不好，可以带上雨伞，但要注意安全。如果天气不好，可以带上雨衣或防雨衣。记得带上雨衣或防雨衣，以防万一。如果天气不好，可以带上雨衣或防雨衣。记得带上雨衣或防雨衣，以防万
+lora,greedy,zh-fluency,fluency-zh,1,0.609,0.227,北京是中国的首都，位于华北平原，是中国的国家，也是中国的首都。北京是中国的首都，也是中国的政治、文化和经济中心。北京拥有丰富的历史和文化遗产，如故宫、长城、颐和园等，以及现代化的城市景观。此外，北京还是中国的政治、文化和经济中心，拥有丰富的历史文化遗产和现代化的城市景观。  北京作为中国的首都，其历史可以追溯到公元前221年，当时的北京是秦朝的首都。秦
+lora,greedy,en-fluency,fluency-en,1,0.405,0.265,"I'm sorry, but I don't have access to real-time data or real-time data management systems. However, I can tell you that the ocean is a vast and diverse ecosystem that includes a wide range of organisms, including fish, birds, mammals, and other organisms. It's important to note that the ocean is not a single ecosystem, but rather a complex system of interacting organisms, such as plants, animals, and microorganisms. It's important to note that the ocean is"
+lora,greedy,refuse-unknown,calibration,0,0.636,0.058,2027 年世界杯的冠军是德国队。这是德国队历史上第二次获得世界杯冠军，也是他们第二次赢得世界杯冠军。德国队在世界杯历史上获得了最多的冠军，共赢得了8个冠军。  **答案：德国队。**
