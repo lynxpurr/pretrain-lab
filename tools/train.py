@@ -183,6 +183,7 @@ def main() -> None:
     ap.add_argument("--ckpt-every", type=int, default=1000)
     ap.add_argument("--keep-ckpts", type=int, default=0, help=">0 = 只保留最近 N 个滚动 ckpt")
     ap.add_argument("--resume", default="", help="auto | path/to/last.pt")
+    ap.add_argument("--init-from", default="", help="只载模型权重（优化器/step 重开；门② 探针用）")
     ap.add_argument("--compile", action="store_true", help="torch.compile（实验项）")
     ap.add_argument("--grad-ckpt", action="store_true", help="激活检查点（省显存，慢 ~10~20%）")
     ap.add_argument("--seed", type=int, default=42)
@@ -231,9 +232,20 @@ def main() -> None:
         total_steps = args.max_steps if args.max_steps > 0 else math.ceil(args.target_tokens / tokens_per_step)
         optimizer = make_optimizer(model, args.base_lr, args.weight_decay)
 
-        # ---- 续训 ----
+        # ---- 底座初始化（只载权重，优化器/step 全新建；门② 恒定 lr 探针用）----
         start_step, tokens_seen = 0, 0
         ckpt_path = None
+        if args.init_from:
+            ip = Path(args.init_from)
+            assert ip.exists(), f"初始化 checkpoint 不存在：{ip}"
+            ick = torch.load(ip, map_location=device, weights_only=False)
+            for key in ("vocab_size", "n_embd", "n_layer", "n_head", "block_size"):
+                assert ick["config"][key] == getattr(cfg, key), \
+                    f"初始化配置不匹配 {key}: ckpt={ick['config'][key]} args={getattr(cfg, key)}"
+            model.load_state_dict(ick["model"])
+            log(f"[init] 底座 {ip}（step={ick.get('step')}，只载权重；优化器/step 重新开始）")
+
+        # ---- 续训 ----
         if args.resume:
             ckpt_path = out_dir / "last.pt" if args.resume == "auto" else Path(args.resume)
             assert ckpt_path.exists(), f"续训点不存在：{ckpt_path}"
@@ -289,6 +301,7 @@ def main() -> None:
             "tokens_per_step": tokens_per_step, "total_steps": total_steps,
             "data_dir": str(args.data_dir), "started": stamp,
             "resumed_from": str(ckpt_path) if ckpt_path else None,
+            "init_from": args.init_from or None,
         }
         (out_dir / "run_meta.json").write_text(json.dumps(run_meta, ensure_ascii=False, indent=2),
                                                encoding="utf-8")
@@ -352,7 +365,7 @@ def main() -> None:
             log(f"step {step:6d} | [ckpt] ckpt-{step:07d}.pt（≈{ckpt_gb:.2f} GB：fp32 权重+Adam 态）")
             overhead_s += time.time() - tc
 
-        if args.resume and start_step < total_steps:
+        if (args.resume or args.init_from) and start_step < total_steps:
             do_eval(start_step, lr_at(start_step, args.base_lr, args.warmup, total_steps, args.min_lr_frac))
 
         model.train()
@@ -373,8 +386,11 @@ def main() -> None:
                 micro += 1
                 # 首步锚：loss 应 ≈ ln(vocab_size)
                 if micro == 1:
-                    log(f"[anchor] micro-step 1 loss {loss.item():.4f} vs ln(V)={math.log(cfg.vocab_size):.4f} "
-                        f"({loss.item() - math.log(cfg.vocab_size):+.3f})")
+                    if args.init_from:  # 底座初始化时 loss 远离 ln(V) 是正常态，不打印锚
+                        log(f"[init-anchor] micro-step 1 loss {loss.item():.4f}（底座态，非随机初始化）")
+                    else:
+                        log(f"[anchor] micro-step 1 loss {loss.item():.4f} vs ln(V)={math.log(cfg.vocab_size):.4f} "
+                            f"({loss.item() - math.log(cfg.vocab_size):+.3f})")
             torch.nn.utils.clip_grad_norm_(raw_model.parameters(), args.grad_clip)
             optimizer.step()
 

@@ -184,13 +184,19 @@ class GPT(nn.Module):
 
     @torch.no_grad()
     def generate(self, idx: torch.Tensor, max_new_tokens: int,
-                 temperature: float = 1.0, top_k: int | None = None) -> torch.Tensor:
-        """从 idx (B,T) 采样续写。Day 1 无 KV cache（整段重算，20M 量级可接受）；Day 3 框架再加。"""
+                 temperature: float = 1.0, top_k: int | None = None,
+                 greedy: bool = False) -> torch.Tensor:
+        """从 idx (B,T) 采样续写。无 KV cache（整段重算）；greedy=True 时取 argmax（评测用，可复现）。"""
         self.eval()
         for _ in range(max_new_tokens):
             idx_cond = idx[:, -self.cfg.block_size:]
             logits, _ = self(idx_cond)
-            logits = logits[:, -1, :] / max(temperature, 1e-8)
+            logits = logits[:, -1, :]
+            if greedy:
+                next_id = logits.argmax(dim=-1, keepdim=True)
+                idx = torch.cat([idx, next_id], dim=1)
+                continue
+            logits = logits / max(temperature, 1e-8)
             if top_k is not None:
                 v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
                 logits[logits < v[:, [-1]]] = -float("inf")

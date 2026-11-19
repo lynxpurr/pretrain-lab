@@ -1,0 +1,27 @@
+[init] 底座 out/main140m/ckpt-0041000.pt（step=41000，只载权重；优化器/step 重新开始）
+[cfg] {"vocab_size": 32000, "n_embd": 768, "n_layer": 16, "n_head": 12, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=8×accum8×T1024 = 65,536 tok/step · total_steps=300 · target_tokens=3,000,000,000
+[model] params=137,847,552 (non-emb 113,271,552) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=6.0e-05 warmup=1 cosine→100% wd=0.1 clip=1.0 bf16 · max_minutes=∞ · notes=门② 辅助诊断：ckpt-0041000 起 300 步恒定 lr 6e-5
+step      0 | [val] loss 2.7869 | peak 7.25 GB | 0h00m04s
+[anchor] micro-step 1 loss 2.4440 vs ln(V)=10.3735 (-7.929)
+step      1 | loss 2.7330 | lr 6.00e-05 | 11,409 tok/s (纯训练 46,978) | 0h00m05s | ETA 0h28m37s
+step     20 | loss 2.7174 | lr 6.00e-05 | 52,124 tok/s (纯训练 51,840) | 0h00m29s | ETA 0h05m52s
+step     40 | loss 2.7115 | lr 6.00e-05 | 52,626 tok/s (纯训练 52,230) | 0h00m54s | ETA 0h05m23s
+step     60 | loss 2.6949 | lr 6.00e-05 | 52,349 tok/s (纯训练 52,269) | 0h01m19s | ETA 0h05m00s
+step     80 | loss 2.7241 | lr 6.00e-05 | 52,366 tok/s (纯训练 52,294) | 0h01m44s | ETA 0h04m35s
+step    100 | loss 2.7190 | lr 6.00e-05 | 52,333 tok/s (纯训练 52,301) | 0h02m09s | ETA 0h04m10s
+step    100 | [val] loss 2.7845 | peak 12.05 GB | 0h02m13s
+step    120 | loss 2.7247 | lr 6.00e-05 | 44,992 tok/s (纯训练 52,326) | 0h02m38s | ETA 0h04m22s
+step    140 | loss 2.7161 | lr 6.00e-05 | 52,415 tok/s (纯训练 52,339) | 0h03m03s | ETA 0h03m20s
+step    160 | loss 2.7151 | lr 6.00e-05 | 51,837 tok/s (纯训练 52,276) | 0h03m29s | ETA 0h02m56s
+step    180 | loss 2.7004 | lr 6.00e-05 | 52,456 tok/s (纯训练 52,296) | 0h03m54s | ETA 0h02m29s
+step    200 | loss 2.7200 | lr 6.00e-05 | 52,307 tok/s (纯训练 52,297) | 0h04m19s | ETA 0h02m05s
+step    200 | [val] loss 2.7831 | peak 12.05 GB | 0h04m23s
+step    220 | loss 2.6824 | lr 6.00e-05 | 44,924 tok/s (纯训练 52,303) | 0h04m48s | ETA 0h01m56s
+step    240 | loss 2.6984 | lr 6.00e-05 | 52,622 tok/s (纯训练 52,329) | 0h05m13s | ETA 0h01m14s
+step    260 | loss 2.6985 | lr 6.00e-05 | 52,273 tok/s (纯训练 52,325) | 0h05m38s | ETA 0h00m50s
+step    280 | loss 2.7344 | lr 6.00e-05 | 52,300 tok/s (纯训练 52,323) | 0h06m03s | ETA 0h00m25s
+step    300 | loss 2.7065 | lr 6.00e-05 | 52,093 tok/s (纯训练 52,308) | 0h06m28s | ETA 0h00m00s
+step    300 | [val] loss 2.7818 | peak 12.05 GB | 0h06m32s
+step    300 | [ckpt] ckpt-0000300.pt（≈1.54 GB：fp32 权重+Adam 态）
+[final] step 300/300 | val 2.7818 | 用时 0h06m35s (开销 0h00m19s) | 纯训练吞吐 52,307 tok/s | 总 token 19,660,800 | peak 12.05 GB | stop=completed

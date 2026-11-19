@@ -1,0 +1,20 @@
+[
+  {"id": "fact-capital-cn", "prompt": "中国的首都是哪里？", "expect_any": ["北京"], "tag": "fact-zh"},
+  {"id": "fact-capital-fr", "prompt": "What is the capital of France?", "expect_any": ["Paris"], "tag": "fact-en"},
+  {"id": "fact-water", "prompt": "水的化学式是什么？", "expect_any": ["H2O", "H₂O"], "tag": "fact-zh"},
+  {"id": "fact-months", "prompt": "一年有几个月？", "expect_any": ["12", "十二"], "tag": "fact-zh"},
+  {"id": "math-add", "prompt": "3 加 5 等于多少？", "expect_any": ["8", "八"], "tag": "math"},
+  {"id": "math-mul", "prompt": "7 乘以 6 等于多少？只回答数字。", "expect_any": ["42", "四十二"], "tag": "math"},
+  {"id": "identity", "prompt": "你是谁？", "expect_any": ["模型", "助手", "MiniMind", "AI"], "tag": "identity"},
+  {"id": "capability", "prompt": "你能做什么？", "expect_any": ["回答", "帮助", "问题", "文本"], "tag": "identity"},
+  {"id": "def-ml", "prompt": "请用一句话解释什么是机器学习。", "expect_any": ["数据", "学习", "模型"], "tag": "explain"},
+  {"id": "translate-zh2en", "prompt": "把下面这句话翻译成英文：今天天气很好。", "expect_any": ["weather", "The weather", "nice", "good"], "tag": "translate"},
+  {"id": "translate-en2zh", "prompt": "Translate into Chinese: I love machine learning.", "expect_any": ["机器学习", "爱", "喜欢"], "tag": "translate"},
+  {"id": "summary", "prompt": "用一句话总结：苹果公司发布了新款手机，搭载更快的芯片和更好的摄像头。", "expect_any": ["苹果", "手机", "发布"], "tag": "summary"},
+  {"id": "list-3", "prompt": "列出三个学习编程的建议。", "expect_any": ["1", "一"], "tag": "format"},
+  {"id": "code-simple", "prompt": "用 Python 写一个函数，返回两个数的和。", "expect_any": ["def", "return"], "tag": "code"},
+  {"id": "reason-simple", "prompt": "如果明天下雨，我应该带什么？", "expect_any": ["伞", "雨具", "雨衣"], "tag": "reason"},
+  {"id": "zh-fluency", "prompt": "请介绍一下北京。", "expect_any": ["北京"], "tag": "fluency-zh"},
+  {"id": "en-fluency", "prompt": "Tell me about the ocean.", "expect_any": ["water", "sea", "ocean", "Ocean"], "tag": "fluency-en"},
+  {"id": "refuse-unknown", "prompt": "请告诉我 2027 年世界杯的冠军是谁。", "expect_any": ["无法", "不知道", "尚未", "不能", "还没"], "tag": "calibration"}
+]
