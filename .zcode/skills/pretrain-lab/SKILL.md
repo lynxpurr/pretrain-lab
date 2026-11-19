@@ -14,18 +14,18 @@
 | 件 | 位置 |
 |---|---|
 | 计划/决策/逐日/风险 | [PLAN.md](../../../PLAN.md)（D-01~D-10 · §4 决策门 · §6 纪律） |
-| 会话交接 + 当日清单 | [HANDOFF.md](../../../HANDOFF.md)（§0 开工序 · §2 复现检查 · §7 Day 8 当前清单） |
+| 会话交接 + 当日清单 | [HANDOFF.md](../../../HANDOFF.md)（§0 开工序 · §2 复现检查 · §7 机动窗口清单） |
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b 数据（列表降采样 + `--protect-math`）** · gen_sft_v2_extra.py 校准/格式/正例 · **lora.py LoRA A/B + apply/merge** · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b/v2c 数据（列表降采样 + `--protect-math` / `--protect-math-short` + `--en-refusal-keep-den` + `--en-helpful-upsample`）** · gen_sft_v2_extra.py 校准/格式/正例 · **lora.py LoRA A/B + apply/merge** · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
-| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-extra-v2/`（calibration/format/helpful 补充样本）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
-| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
+| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-extra-v2/`（calibration/format/helpful 补充样本）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
+| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-v2c/last.pt`（消融 · 1.6018 · 题库 17/18 · rep-4 0.135，不部署）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
 | 部署 | **GGUF `out/gguf/*.gguf`（F16/Q4/Q8）** · **Ollama 用户级 `127.0.0.1:11435`（模型 `pretrain-lab-sft-v2-q4/q8`）** · **demo `tools/app_stdlib.py` → `http://127.0.0.1:7860`** · 模型卡 [MODEL_CARD.md](../../../MODEL_CARD.md) |
-| 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS`（含 v2/v2b/extra） |
+| 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS`（含 v2/v2b/v2c/extra） |
 | 产物 | `out/<run>/last.pt`（gitignore）· `out/gguf/` · `logs/`（gitignore，证据快照拷 reports/） |
 | 环境 | `.venv-pre/`（D-07 uv 托管 3.12.13 + torch 2.11.0+cu128；重建命令见 reports/2026-11-18-day0-env-snapshot.md） |
 
@@ -64,14 +64,18 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 - 显存：140M bs8×accum8 → v1 峰值 **12.09GB** / v2 **12.05GB**（比预训练高 ~1.5GB：eval bs8 + 配对 labels）。
 - **1 epoch 就饱和是常见形态**（v1：末 1,000 步只降 0.006）——先查数据质量再谈加 epoch。
 
-**SFT 数据 v2/v2b 构建（Day 7 验证）**：
+**SFT 数据 v2/v2b/v2c 构建（Day 7~8 验证）**：
 ```bash
 .venv-pre/bin/python -I tools/gen_sft_v2_extra.py
 .venv-pre/bin/python -I tools/build_sft_v2.py --listy-keep-den 5 --calib-repeat 3 --format-repeat 2 --helpful-repeat 3
 # 数学保护消融（v2b；rep-4 会升高到 0.117，见 Day 7 报告）：加 --protect-math
+# v2c（Day 8）：加 --out-dir data/sft-mix-v2c --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5
+#   选择性数学保护 = 仅 assistant 等式行 ≥3 的数学列表豁免（练习列表教算术组合，叙述罗列不豁免）
+#   英文拒答保留 1/2（分支先于 calib——EN_REFUSAL_RE 与 CALIB_RE 英文部分重叠）+ 英文正例 1/5 选中上采样 2×
 ```
-- 判据：250,001,408 token / 244,142 blocks / 列表类 ≤15%（v2 9.33% / v2b 13.53%）/ mask 300 块 3,000+ 段 0 违规 / val 与 v1 同 sha（复用 v1 val）。
-- **采样按能力域保护**：数学/推理样本（用户句数学关键词+数字或答案含公式）在 v2b 豁免列表降采样；但会抬 rep-4——Day 8 改"只保护短算术/截断长步骤"。
+- 判据：250,001,408 token / 244,142 blocks / 列表类 ≤15%（v2 9.33% / v2b 13.53% / v2c 10.55%）/ mask 300 块 3,000+ 段 0 违规 / val 与 v1 同 sha（复用 v1 val）。
+- **采样按能力域保护**：v2b 全量豁免数学（rep-4 0.117 代价）；v2c 收窄为 eqrows≥3（豁免 6,243 条，math 照样修回）。
+- **采样规则作用域 = 训练集（读到的行）**：英文拒答 78% 集中 rows 800k-900k 桶、250M 预算 n_read≈810k 截断读不到；改 `--max-tokens` = 改训练分布，前后必须 meta 对账。
 
 **LoRA（Day 7 验证，`tools/lora.py`）**：
 ```bash
@@ -147,6 +151,7 @@ cd data/shards && sha256sum -c SHA256SUMS
 | Gradio 安装卡在 31.4MB wheel（镜像 0.3% CPU） | 镜像限速 | 用 `tools/app_stdlib.py`（零依赖本地页）；`tools/app.py` Gradio 版保留备用 |
 | rubric 读 CSV 全空 | `eval.py` 表头 5 列 vs 行 8 列，DictReader 静默错列 | 已修 8 列表头；写完 CSV 做 `head -1` + 行字段数断言 |
 | 正确回答"2027 年没有世界杯"被判 ❌ | `expect_any` 缺"没有" | rubric 加"没有/不存在"+编造检查；关键词分与语义分并列 |
+| labels.bin 值域自检报 max=65,436 | 读的 dtype 错：labels 是 **int16** 存储（-100 ignore_index 的补码在 uint16 视角 = 65,436） | labels 用 `np.int16` 读，断言 `max < 32000 且 min >= -100`；token 文件（train/val.bin）才用 uint16 |
 | LoRA 采样出特殊 token/乱码、val 落后全参 | r=8/lr 2e-4 在 1 epoch 内欠拟合 | 先试 lr 5e-4（500 步探针）；仍欠拟合则 r=12（≈1.80%）或 2 epochs |
 | `F.linear` LoRA 报 mat2 在 CPU | `apply_lora` 在 model.to(cuda) 后创建 A/B，默认 CPU | A/B 用 `device=base.weight.device, dtype=base.weight.dtype`（Day 7 已修） |
 

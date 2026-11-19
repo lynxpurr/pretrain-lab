@@ -1,0 +1,98 @@
+{
+  "source": "data/raw/minimind_dataset/sft_t2t_mini.jsonl",
+  "extra_dir": "data/sft-extra-v2",
+  "template": "<|im_start|>{role}\\n{content}<|im_end|>\\n",
+  "specials": {
+    "endoftext": 0,
+    "im_start": 1,
+    "im_end": 2
+  },
+  "block_size": 1024,
+  "train": {
+    "tokens": 250001408,
+    "blocks": 244142,
+    "supervised_tokens": 190404355,
+    "supervised_ratio": 0.7616,
+    "conversations": 587344
+  },
+  "val": {
+    "tokens": 2001920,
+    "blocks": 1955,
+    "conversations": 4281,
+    "supervised_ratio": 0.7105,
+    "source": "data/sft-mix"
+  },
+  "pretrain_mix": {
+    "ratio_blocks": 0.25,
+    "every_n_blocks": 4,
+    "source": "data/shards"
+  },
+  "v2_changes": {
+    "calibration_extras": {
+      "file": "data/sft-extra-v2/calibration.jsonl",
+      "repeat": 3,
+      "unique": 1630,
+      "written": 4890,
+      "tokens": 288768
+    },
+    "format_extras": {
+      "file": "data/sft-extra-v2/format.jsonl",
+      "repeat": 2,
+      "unique": 989,
+      "written": 1978,
+      "tokens": 68608
+    },
+    "helpful_extras": {
+      "file": "data/sft-extra-v2/helpful.jsonl",
+      "repeat": 3,
+      "unique": 60,
+      "written": 180,
+      "tokens": 6144
+    },
+    "mined": {
+      "calib_kept": 3039,
+      "fmt_kept": 2040,
+      "listy_seen": 297111,
+      "listy_kept": 55744,
+      "math_listy_kept": 6243,
+      "math_short_kept": 6243,
+      "en_refusal_seen": 4722,
+      "en_refusal_kept": 2339,
+      "en_refusal_dropped": 2383,
+      "en_helpful_seen": 83187,
+      "en_helpful_upsampled": 16377,
+      "listy_dropped": 235124,
+      "plain_kept": 476102
+    },
+    "train_conv_by_cat": {
+      "calibration": 4890,
+      "format": 1978,
+      "helpful": 180,
+      "mined_plain": 476097,
+      "mined_calib": 3039,
+      "mined_fmt": 4080,
+      "mined_listy_kept": 55744,
+      "mined_math_listy": 6243,
+      "mined_en_helpful_up": 32754,
+      "mined_en_refusal": 2339
+    },
+    "listy_ratio_after": 0.1055,
+    "listy_rule": "assistant 任一段 ≥5 个编号/项目行 → blake2b64(line)%5==0 保留；仅等式行 ≥3 的数学列表豁免（v2c 选择性保护）",
+    "protect_math": false,
+    "protect_math_short": true,
+    "en_refusal_keep_den": 2,
+    "en_helpful_upsample": 5,
+    "en_rule": "英文为主样本（中文字符占比<5%）：拒答模板命中→保留 1/2（分支先于 calib，含 CALIB_RE 英文重叠部分）；良性正例按 hash 1/5 选中上采样 2×",
+    "fmt_upsample": 2
+  },
+  "val_split": "blake2b64(line) % 100 == 0（文档级）；v2 直接复用 v1 val 文件，训练流跳过全部留出记录（跳过 8,211 条）",
+  "skipped_long": 849,
+  "sample_checks": 30,
+  "mask_verify": {
+    "checked_blocks": 300,
+    "checked_segments": 2966,
+    "violations": 0
+  },
+  "elapsed_s": 285.1,
+  "created": "2026-11-19 23:34:18"
+}

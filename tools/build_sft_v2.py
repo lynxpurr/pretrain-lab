@@ -9,7 +9,13 @@
   3) **压罗列癖**：assistant 任一段含 ≥5 个编号/项目行 → 按 blake2b64(line)%3==0 保留（≈1/3），
      使列表类会话占比降到 ≤15%（v1 实测 34.2%）。
   4) **正例对冲**：注入 helpful 样本（中英良性问答），对冲 v1 的拒答模板泄漏（en-fluency 失败）。
-  5) 其余不变：25% 预训练块（按块节奏）/ assistant-only mask / block 1024 / val 2M 文档级留出。
+  5) **v2c（Day 8）三规则**（--protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5）：
+     ①选择性数学保护 = 只豁免 assistant 等式行 ≥3 的数学列表（等式密集练习列表教算术组合，
+       叙述型数学罗列不豁免；v2b 全量豁免的 rep-4 代价 0.117 由此收敛）；
+     ②英文拒答保留 1/den（默认关，2 = 50% 降采样；分支先于 calib，因 EN_REFUSAL_RE 与
+       CALIB_RE 英文部分重叠，v2 里 "I can't provide…" 模板被当校准保留 1×）；
+     ③英文正例按 hash 1/den 选中上采样 2×（对冲拒答模板泛化，en-fluency 修复）。
+  6) 其余不变：25% 预训练块（按块节奏）/ assistant-only mask / block 1024 / val 2M 文档级留出。
      **val 直接复用 v1 的 `data/sft-mix/{val.bin,val.labels.bin}`**——v2 因降采样会读得更远，
      若重建 val 会得到不同留出集、破坏 v1/v2 可比性；所有 hash 留出记录在 v2 训练流中一律跳过。
 
@@ -80,6 +86,40 @@ MATH_KW_RE = re.compile(
 )
 MATH_DIGIT_RE = re.compile(r"\d")
 MATH_ASST_RE = re.compile(r"\\times|\\frac|\$\$|=\s*\d")
+
+# v2c（Day 8）选择性数学保护：v2b 全量豁免把 rep-4 从 0.066 抬到 0.117——豁免太宽。
+# 侦察（/tmp 侦察脚本，2026-11-19）：数学列表 26,184 条里等式行 ≥3 的"练习列表"仅 9,693 条；
+# 教算术的具体组合（3+5=8、7×6=42）靠的是等式密集的练习题列表，叙述型数学罗列不承担此功能。
+# → 只豁免 assistant 最大段中等式/算式编号行 ≥3 的样本，其余数学列表仍走列表降采样。
+EQ_ROW_RE = re.compile(
+    r"(?:\d\s*[+\-×÷*/]\s*\d)|=\s*[-+]?\d|[乘加加减除以乘以]\s*\d|[一二三四五六七八九十]\s*[乘加加减]")
+
+# v2c（Day 8）英文拒答/正例：en-fluency 在 v1/v2/v2b 都触发拒答模板（数据侧过泛化）。
+# 侦察：主数据里 user+assistant 均英文且命中拒答模板 21,345 条（其中 95% 非列表）；
+# 英文良性正例 118,063 条 → 拒答降采样 50% + 正例按 1/5 选中上采样 2×。
+# 注意优先级：EN_REFUSAL_RE 与 CALIB_RE 的英文部分高度重叠（"I can't provide…"），
+# v2 里这类模板被 mined_calib 保留 1×，正是拒答泄漏的来源之一 → 拒答分支先于 calib 判定。
+ZH_CHAR_RE = re.compile(r"[\u4e00-\u9fff]")
+EN_REFUSAL_RE = re.compile(
+    r"\b(?:I cannot|I can't|I cannot provide|I can't provide|I am unable|I'm unable|"
+    r"I am sorry|I'm sorry|I won't|I will not|I do not have|I don't have|"
+    r"not able to|cannot answer|can't answer|cannot determine|can't determine|"
+    r"as an AI|I'm not able|I am not able)\b", re.I)
+
+
+def is_en(text: str) -> bool:
+    """英文为主：中文字符占比 <5%（排除中英夹杂的翻译/对照样本）。"""
+    if not text:
+        return False
+    return len(ZH_CHAR_RE.findall(text)) / max(len(text), 1) < 0.05
+
+
+def eq_rows_in(rec: dict) -> int:
+    """assistant 最大段中"等式/算式编号行"数——练习题列表的形状特征（v2c 豁免口径）。"""
+    convs = rec.get("conversations") or []
+    return max((sum(1 for ln in (m.get("content") or "").splitlines()
+                    if LIST_LINE_RE.match(ln) and EQ_ROW_RE.search(ln))
+                for m in convs if m.get("role") == "assistant"), default=0)
 
 
 def texts(rec: dict) -> tuple[str, str]:
@@ -244,6 +284,12 @@ def main() -> None:
     ap.add_argument("--listy-keep-den", type=int, default=3, help="列表类保留 1/den")
     ap.add_argument("--protect-math", action="store_true",
                     help="数学/推理样本豁免列表降采样（v2b；修复 math-add/math-mul 回归）")
+    ap.add_argument("--protect-math-short", action="store_true",
+                    help="v2c：仅等式行 ≥3 的数学列表豁免降采样（与 --protect-math 二选一）")
+    ap.add_argument("--en-refusal-keep-den", type=int, default=1,
+                    help="v2c：英文拒答样本保留 1/den（2 = 降采样 50%%；1 = 关）")
+    ap.add_argument("--en-helpful-upsample", type=int, default=1,
+                    help="v2c：英文正例按 hash 1/den 选中后上采样 2×（5 = 20%% 选中；1 = 关）")
     ap.add_argument("--mask-sample", type=int, default=300)
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
@@ -263,7 +309,10 @@ def main() -> None:
     t0 = time.time()
     stats = {
         "extras": {}, "mined": {"calib_kept": 0, "fmt_kept": 0, "listy_seen": 0,
-                                 "listy_kept": 0, "math_listy_kept": 0,
+                                 "listy_kept": 0, "math_listy_kept": 0, "math_short_kept": 0,
+                                 "en_refusal_seen": 0, "en_refusal_kept": 0,
+                                 "en_refusal_dropped": 0, "en_helpful_seen": 0,
+                                 "en_helpful_upsampled": 0,
                                  "listy_dropped": 0, "plain_kept": 0},
         "train_conv_by_cat": {}, "val_skipped": 0, "n_read": 0,
         "skipped_long": 0, "sample_checks": 0,
@@ -311,22 +360,42 @@ def main() -> None:
                 continue
 
             rec = json.loads(line)
-            # 先分类（不 tokenize），降采样掉的不再付 tokenize 成本
+            # 先分类（不 tokenize），降采样掉的不再付 tokenize 成本。
+            # v2c：英文判定先做——拒答分支置于 calib 之前（EN_REFUSAL_RE 与 CALIB_RE
+            # 英文部分重叠，v2 里 "I can't provide…" 型模板被 mined_calib 保留 1×，是泄漏源）。
+            en_kind = None
+            if args.en_refusal_keep_den > 1 or args.en_helpful_upsample > 1:
+                u_txt, a_txt = texts(rec)
+                if is_en(u_txt) and is_en(a_txt):
+                    en_kind = "refusal" if EN_REFUSAL_RE.search(a_txt) else "helpful"
             fmt = is_fmt(rec)
             calib = is_calib(rec)
             listy = is_listy(rec)
-            math = is_math(rec) if args.protect_math else False
             if fmt:
                 reps = args.fmt_upsample
                 cat = "mined_fmt"
                 stats["mined"]["fmt_kept"] += 1
+            elif en_kind == "refusal":
+                stats["mined"]["en_refusal_seen"] += 1
+                if args.en_refusal_keep_den > 1 and not keep_for_listy(line, args.en_refusal_keep_den):
+                    stats["mined"]["en_refusal_dropped"] += 1
+                    continue
+                reps = 1
+                cat = "mined_en_refusal"
+                stats["mined"]["en_refusal_kept"] += 1
             elif calib:
                 reps = 1
                 cat = "mined_calib"
                 stats["mined"]["calib_kept"] += 1
             elif listy:
                 stats["mined"]["listy_seen"] += 1
-                if math:   # v2b：数学/推理样本豁免降采样
+                if args.protect_math_short and is_math(rec) and eq_rows_in(rec) >= 3:
+                    # v2c：只豁免等式密集的数学练习列表（"只保护短算术，不保长叙述"）
+                    reps = 1
+                    cat = "mined_math_listy"
+                    stats["mined"]["math_listy_kept"] += 1
+                    stats["mined"]["math_short_kept"] += 1
+                elif args.protect_math and is_math(rec):   # v2b：数学/推理样本全量豁免
                     reps = 1
                     cat = "mined_math_listy"
                     stats["mined"]["math_listy_kept"] += 1
@@ -337,6 +406,17 @@ def main() -> None:
                     reps = 1
                     cat = "mined_listy_kept"
                     stats["mined"]["listy_kept"] += 1
+            elif en_kind == "helpful":
+                stats["mined"]["en_helpful_seen"] += 1
+                if args.en_helpful_upsample > 1 and keep_for_listy(line, args.en_helpful_upsample):
+                    # v2c：英文正例按 hash 1/den 选中 → 上采样 2×（对冲拒答模板泄漏）
+                    reps = 2
+                    cat = "mined_en_helpful_up"
+                    stats["mined"]["en_helpful_upsampled"] += 1
+                else:
+                    reps = 1
+                    cat = "mined_plain"
+                    stats["mined"]["plain_kept"] += 1
             else:
                 reps = 1
                 cat = "mined_plain"
@@ -409,8 +489,16 @@ def main() -> None:
             "train_conv_by_cat": stats["train_conv_by_cat"],
             "listy_ratio_after": round(listy_kept / max(chat_total, 1), 4),
             "listy_rule": (f"assistant 任一段 ≥5 个编号/项目行 → blake2b64(line)%{args.listy_keep_den}==0 保留"
-                           + ("；数学/推理样本豁免（v2b）" if args.protect_math else "")),
+                           + ("；数学/推理样本全量豁免（v2b）" if args.protect_math else "")
+                           + ("；仅等式行 ≥3 的数学列表豁免（v2c 选择性保护）" if args.protect_math_short else "")),
             "protect_math": args.protect_math,
+            "protect_math_short": args.protect_math_short,
+            "en_refusal_keep_den": args.en_refusal_keep_den,
+            "en_helpful_upsample": args.en_helpful_upsample,
+            "en_rule": (f"英文为主样本（中文字符占比<5%）：拒答模板命中→保留 1/{args.en_refusal_keep_den}"
+                        f"（分支先于 calib，含 CALIB_RE 英文重叠部分）；良性正例按 hash 1/{args.en_helpful_upsample}"
+                        " 选中上采样 2×" if (args.en_refusal_keep_den > 1 or args.en_helpful_upsample > 1)
+                        else "未启用"),
             "fmt_upsample": args.fmt_upsample,
         },
         "val_split": f"blake2b64(line) % {args.val_mod} == 0（文档级）；v2 直接复用 v1 val 文件，训练流跳过全部留出记录（跳过 {stats['val_skipped']:,} 条）",

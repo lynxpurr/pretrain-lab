@@ -87,6 +87,15 @@
 
 > 构建 4.7 min · 段级 mask 自检 **300 块 / 2,755 段 / 0 违规** · 数学列表类保留 23,253 条 · 全量 `data/sft-mix-v2b/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2b --listy-keep-den 5 --protect-math --calib-repeat 3 --format-repeat 2 --helpful-repeat 3`。**动机**：v2 评测发现 `math-add`/`math-mul` 算术回归（3+5=15、7×6=72）——列表降采样误伤长数学推理；v2b 保留数学样本、仍压非数学列表癖。
 
+### SFT v2c 训练集 `data/sft-mix-v2c/`（Day 8 三次修正：选择性数学保护 + 英文再平衡）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `train.bin` + `train.labels.bin` | v2 全部规则 + **①选择性数学保护**（仅 assistant 等式行 ≥3 的数学列表豁免降采样，写入 6,243 条）+ **②英文拒答保留 1/2**（seen 4,722 → 砍 2,383/留 2,339；分支先于 calib）+ **③英文正例 hash 1/5 选中上采样 2×**（写入 32,754 条） | **250,001,408 token**（244,142 块 × 1024；监督 token 190,404,355 = 76.16%；列表类占比 **10.55%**（v2 9.33% ↔ v2b 13.53%）；共 587,344 条对话） | `dd37d749e65624c2` / `929abe8a343ef6f4` |
+| `val.bin` + `val.labels.bin` | **复用 v1 val**（与 v1/v2/v2b 逐字节相同） | 2,001,920 token（4,281 条对话） | `8287b49028dd2f58` / `1a5184449637176b` |
+
+> 构建 4.8 min · 段级 mask 自检 **300 块 / 2,966 段 / 0 违规** · 全量 `data/sft-mix-v2c/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2c --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5 --calib-repeat 3 --format-repeat 2 --helpful-repeat 3`。**动机**：v2 遗留数学弱 + en-fluency 拒答，v2b 全量豁免的 rep-4 代价 0.117 → 收窄豁免口径（等式行 ≥3 才豁免，eqrows 侦察 9,693/26,184）；英文拒答全库 21,345 条中 16,601 条集中 rows 800k-900k 桶（预算 n_read≈810k 截断不读到）→ 训练集内拒答密度 1.16%→0.40%。预注册判据：math 正确且纯数字 / rep-4 <0.08 / en-fluency 不拒答 / 题库 ≥16/18 / 预训练 PPL ≤10%。
+
 ### 评测集 `data/eval/tests.json`（Day 5 立，Day 6 定档）
 
 | 件 | 构成 | 规模 | 指纹（sha256 前 16） |

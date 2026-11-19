@@ -14,20 +14,21 @@
 - **Day 5（11-19）**：**SFT v1 收官**（3,815 步 / 1h19m26s / SFT val **1.5515**）+ **base/SFT 对比评测**：题库 **6/18（33%）→ 16/18（89%）**、SFT PPL **9.82 → 4.60**、预训练 PPL 15.35 → 16.31（遗忘 +6.2%）——证据 [reports/2026-11-19-day5-eval.md](reports/2026-11-19-day5-eval.md)（质性缺陷：复读环/编造推理/拒答模板，规则分高估质量）。门② 双证据（最后 10% 降幅 0.0134 + 恒定 lr 探针 0.0051）→ **不加训**。
 - **Day 6（11-19）**：**门② 正式判定 = 不加训**（最后 10% 降幅 0.0134 + 恒定 lr 探针 0.0051 双证据）+ **解码对照**：证伪"greedy 放大复读"（采样 rep-4 0.123 vs greedy 0.131）、rp1.3 能压到 0.032 但题库 16→13——**复读来自数据罗列风格，校准/格式缺陷也与解码无关** → SFT v2 走数据侧；评测协议定档（greedy + distinct-2/rep-4 + rubric）——证据 [reports/2026-11-19-day6-decode.md](reports/2026-11-19-day6-decode.md) · [gate2](reports/2026-11-19-day6-gate2.md)。
 - **Day 7（11-19）**：**SFT 数据 v2/v2b + LoRA + GGUF/Ollama demo**。SFT v2 val **1.6038** / rep-4 **0.066** / 预训练 PPL +5.4% / 题库 15-18（语义 16-18）；校准（"2027 年没有世界杯"）、翻译方向、一句话、月份编造修好，但数学回归（3+5=15、7×6=72）；v2b 数学保护修回 **8/42** 但 rep-4 0.117（不部署，消融）；LoRA r=8 **1.20%** / peak **9.74GB（-2.3GB）** / ckpt 526MB+adapter 6.5MB / val 1.8253 / rep-4 0.260（1 epoch 欠拟合，不部署）；GGUF **Q4_K_M 103MB** + Ollama 用户级 11435 + demo **7860**——证据 [reports/2026-11-19-day7-sft-v2.md](reports/2026-11-19-day7-sft-v2.md) · [deploy.log](reports/2026-11-19-day7-deploy.log) · 模型卡 [MODEL_CARD.md](MODEL_CARD.md)。
-- **下一步（Day 8）**：v2c（选择性数学保护 + 英文正例/拒答降采样）/ DPO / LoRA 深化 三选一 + 报告开写——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) Day 7 段 · 概念题 [notes/qa-day-7.md](notes/qa-day-7.md)。
-- **路线**：Day 3 框架+门① ✅ → Day 4 140M 主训练 ✅ → Day 5/6 SFT v1 + 门② ✅ → Day 7 SFT v2/v2b + LoRA + 部署 ✅ → Day 8 深化 + 报告 → Day 9 缓冲 → Day 10 收尾。
+- **Day 8（11-19 晚 → 11-20 晨，提前开工）**：**v2c 选择性数学保护 + 英文再平衡 + 六版评测 + 报告开写**。侦察先行（等式行 ≥3 = 9,693 条练习列表）→ v2c 数据（列表 10.55%）→ **val 1.6018 / 题库 17/18 + rubric 5/8 双历史最高**：math 修回（8/42）、**en-fluency 四版全挂题首次修复**、refuse-unknown 双过；rep-4 0.135 未达 <0.08 判据 + translate-en2zh 回归 → **按预注册保持 v2 部署**，v2c 入档能力最优消融；**[REPORT.md](REPORT.md) 11 章起稿**——证据 [reports/2026-11-20-day8-v2c.md](reports/2026-11-20-day8-v2c.md) · [eval](reports/2026-11-20-day8-eval.md) · [rubric](reports/2026-11-20-day8-eval-rubric.md)。
+- **下一步（机动窗口）**：v2d（压长答案复读 + 修 translate 方向，默认）/ LoRA 深化 / DPO 任选 + 报告推进——清单见 HANDOFF §7 · 经验 [notes/lessons.md](notes/lessons.md) Day 8 段 · 概念题 [notes/qa-day-8.md](notes/qa-day-8.md)。
+- **路线**：Day 3 框架+门① ✅ → Day 4 140M 主训练 ✅ → Day 5/6 SFT v1 + 门② ✅ → Day 7 SFT v2/v2b + LoRA + 部署 ✅ → Day 8 v2c + 六版评测 + 报告开写 ✅ → 机动窗口（v2d/LoRA/DPO）→ Day 10 收尾。
 - 预期管理：140M/30 亿 token ≈ GPT-2 124M 水平（通顺、贫乏）——产出 = 经验 + 亲手训的模型 + 报告 + demo，非对标开源质量
 
-## 目标进度（G1~G6，2026-11-19）
+## 目标进度（G1~G6，2026-11-20）
 
 | 门 | 状态 | 关键读数 |
 |---|---|---|
 | G1 最小闭环 + 门① | ✅ | 140M 探针 **52,250 tok/s** ≥ 35k（门① PASS） |
 | G2 140M 底座 | ✅ | 3B token / 16h08m / **val 2.7709** / 46 ckpt 谱系 |
-| G3 SFT + LoRA | ✅ 主体完成 | SFT v2 val **1.6038** / rep-4 **0.066**；v2b 数学保护消融；LoRA r=8 **1.20% / peak 9.74GB / ckpt 526MB / val 1.8253 / rep-4 0.260（1 epoch 欠拟合，不部署）** |
+| G3 SFT + LoRA | ✅ 完成 | SFT v2 val **1.6038** / rep-4 **0.066**（部署）；v2b/v2c 消融（v2c 题库 **17/18** 双最高）；LoRA r=8 **1.20% / peak 9.74GB / ckpt 526MB / val 1.8253 / rep-4 0.260（1 epoch 欠拟合，不部署）** |
 | G4 本地 demo | ✅ 完成 | GGUF F16 326MB / **Q4_K_M 103MB** / Q8_0 173MB；Ollama 11435；本地页 **7860**（stdlib 替代 Gradio） |
-| G5 评测框架 + 对比 | ✅ 框架 + 四版对比 | base/v1/v2/v2b 同 val 同 18 题同 greedy + rubric；LoRA 最终读数待补 |
-| G6 报告 + repo | 🟡 已起 | [MODEL_CARD.md](MODEL_CARD.md) + Day 7 报告 + 证据三分；Day 8 开写、Day 10 收尾 |
+| G5 评测框架 + 对比 | ✅ 六版对比 | base/v1/v2/v2b/lora/v2c 同 val 同 18 题同 greedy + rubric + distinct-2/rep-4；en-fluency/calibration/translate 逐题可追溯 |
+| G6 报告 + repo | 🟡 报告起稿 | **[REPORT.md](REPORT.md) 11 章骨架（Day 0~8 素材）** + [MODEL_CARD.md](MODEL_CARD.md) + 各日报告/证据三分；§8 成本精确化 + loss 图 + 定稿待 Day 10 |
 
 ## 文档地图
 
@@ -46,4 +47,4 @@
 
 ## 工作方式
 
-develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 17 条 · 字符级 3 条 · tokenizer 3 条 · 分片 7 条 · SFT v1/v2/v2b 各 4 条 + 补充样本 3 条 · 评测集 1 条 · ckpt 8 条）。决策门①（**140M 等效 ≥35k tok/s**）**已判 PASS（52,250）**、②（加训判定）**已判不触发**（最后 10% 0.0134 + 恒定 lr 探针 0.0051），口径跑前未改。仓内操作规程见 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)；demo/Ollama 启动命令见 HANDOFF §2 与 [reports/2026-11-19-day7-deploy.log](reports/2026-11-19-day7-deploy.log)。
+develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 17 条 · 字符级 3 条 · tokenizer 3 条 · 分片 7 条 · SFT v1/v2/v2b/v2c 各 4 条 + 补充样本 3 条 · 评测集 1 条 · ckpt 9 条）。决策门①（**140M 等效 ≥35k tok/s**）**已判 PASS（52,250）**、②（加训判定）**已判不触发**（最后 10% 0.0134 + 恒定 lr 探针 0.0051），口径跑前未改。仓内操作规程见 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)；demo/Ollama 启动命令见 HANDOFF §2 与 [reports/2026-11-19-day7-deploy.log](reports/2026-11-19-day7-deploy.log)。
