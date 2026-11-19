@@ -33,6 +33,7 @@
 | **sft-v1 last.pt** | **Day 5 SFT v1 终版**（同架构 137,847,552；3,815 步 / 250M token / **SFT val 1.5515** / 1h19m26s；含 optimizer 态） | 1.65GB | `853322df4583bfa2` | `out/sft-v1/last.pt`（`reports/2026-11-19-day5-eval.md` · `...-sft-v1.log`） |
 | **sft-v2 last.pt** | **Day 7 SFT v2 终版（部署）**（`data/sft-mix-v2`；3,815 步 / 250M token / **SFT val 1.6038** / 1h19m46s / 52,825 tok/s；含 optimizer 态） | 1.65GB | `a81c3480f4b63366` | `out/sft-v2/last.pt`（`reports/2026-11-19-day7-sft-v2.{log,csv}` · `...-eval-v2b.md`） |
 | **sft-v2b last.pt** | **Day 7 SFT v2b（数学保护消融，不部署）**（`data/sft-mix-v2b`；3,815 步 / 250M token / **SFT val 1.5981** / 1h19m23s；含 optimizer 态） | 1.65GB | `44856617008a1e10` | `out/sft-v2b/last.pt`（`reports/2026-11-19-day7-sft-v2b.{log,csv}`） |
+| **sft-v2c last.pt** | **Day 8 SFT v2c（选择性数学保护 + 英文再平衡消融，不部署）**（`data/sft-mix-v2c`；3,815 步 / 250M token / **SFT val 1.6018** / 1h19m40s / 52,925 tok/s / 题库 17-18；含 optimizer 态） | 1.65GB | `6c12947bb3a56dd5` | `out/sft-v2c/last.pt`（`reports/2026-11-20-day8-sft-v2c.{log,csv}` · `...-day8-eval.md`） |
 | **sft-lora-r8-5e4 last.pt** | **Day 7 LoRA r=8 终版（v2 数据，merged；1.20% 可训练；val 1.8253 / 题库 15-18 / rep-4 0.260；1 epoch 欠拟合，不部署）** | 526MB（model-only）+ adapter 6.5MB | `81fbbf0840ed56c1`（adapter `94ce1732659ec48c`） | `out/sft-lora-r8-5e4/last.pt` / `adapter.pt`（`reports/2026-11-19-day7-lora-5e4.log` · `...-eval-lora.md`） |
 
 ## Tokenizer（Day 2 产出）

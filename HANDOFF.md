@@ -6,7 +6,7 @@
 
 1. **加载 skill + 读本件 + PLAN 三节**：`.zcode/skills/pretrain-lab/SKILL.md` → 本件 §1（状态）§5（日程）§7（当日清单）→ PLAN §3（D-01~D-10）§4（逐日 + 决策门①②原文）§4.1（门①／门② 判定）§6（纪律）。缺细节回 PLAN，不臆造。
 2. **跑 §2 复现检查**（约 1 分钟）——红项先修再开工，不盲目重装（50 系环境坑已全部压到 Day 0 解决，PLAN §5 风险表）。
-3. **读前情**：`LAB_NOTEBOOK.md` 最近一日段 + `notes/qa-day-8.md`（前日题仍空着的话顺手回填：自答暴露的疑问 = 今日选题池）+ `notes/lessons.md` 顶部「跨日回顾 13 条」+ Day 8 段。
+3. **读前情**：`LAB_NOTEBOOK.md` 最近一日段 + `notes/qa-day-8.md`（前日题仍空着的话顺手回填：自答暴露的疑问 = 今日选题池）+ `notes/lessons.md` 顶部「跨日回顾 13 条」+ Day 8 段 + `reports/2026-11-20-day8-review.md` 盘点。
 4. **执行当日清单**：按 §5 日程当日行 + §7 当日清单；决策门判定**跑前不改**（PLAN §4 预注册）。若用户要求提前/延后开工，先改 §5 实际日期再执行。
 5. **收波**（当日结束前）：`reports/` 证据三分 → LAB_NOTEBOOK 当日段 → lessons（有新教训才写）→ qa 题目池 → PLAN 变更记录 → README 状态 → 指纹补 PROVENANCE → `git commit -m "day-N: …"` + push。
 6. **边界提醒**：nl2fem / finetune-lab 是**知识上游非资产上游**（PLAN §7）——只引用知识不改其档案；本仓数据与代码全自建。
@@ -137,7 +137,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 | **Day 8（11-19 晚 → 11-20 晨，提前开工）** | 深化（v2c 数据）+ 六版评测 + 报告开写 | ✅ 完成（v2c 题库 17-18 双最高但 rep-4 未达 → 保持 v2 部署；REPORT.md 起稿） |
 | 机动（11-20 缓冲 / 11-22 ~ 11-25） | **v2d（压长答案复读 + 修 translate 方向）/ LoRA 深化（r=12 或 2 epochs）/ DPO** 任选 + 报告推进 | 未开工（下一动作） |
 | Day 9（11-26） | 硬缓冲（只在出事时用） | 未开工 |
-| Day 10（11-27） | 三版对比（base/SFT/LoRA）+ repo 整理 + 报告 | 未开工 |
+| Day 10（11-27） | 六版最终对比 + repo 整理 + 报告定稿 | 未开工 |
 
 **关键路径与缓冲（Day 8 实测重算）**：Day 3 框架 + 门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② 判定（不加训）+ 解码对照 ✅ → Day 7 **SFT v2/v2b + LoRA + GGUF/Ollama** ✅ → Day 8 **v2c + 六版评测 + 报告开写** ✅ → 机动窗口（v2d/LoRA/DPO 任选）→ Day 10 收尾。**缓冲 = 11-20 一天 + 11-22 ~ 11-25 机动 + Day 9（11-26）硬缓冲**——G3/G4/G5/G6 主体全部达成，机动窗口全是改进项而非救火；v2 部署可用（数学弱/英文拒答是已知限制，v2c 已证可修但 rep-4 代价未收敛）。
 
@@ -154,7 +154,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 
 ## 7. 机动窗口清单（Day 8 已收官；v2d / LoRA 深化 / DPO 任选）
 
-> Day 8 已收官：v2c（val 1.6018 / 题库 17-18 双最高 / math 修回 / en-fluency 首修）+ rep-4 0.135 未达判据 → **按预注册保持 v2 部署**；REPORT.md 11 章起稿。证据见 §3/§4 与 `reports/2026-11-20-day8-*`。**v2c 的三个新伤口 = 机动窗口选题池**：①rep-4 0.135（reason/en-fluency/zh-fluency 三题长答案复读）；②translate-en2zh 英答英回归；③math-mul 非纯数字格式。
+> Day 8 已收官：v2c（val 1.6018 / 题库 17-18 双最高 / math 修回 / en-fluency 首修）+ rep-4 0.135 未达判据 → **按预注册保持 v2 部署**；REPORT.md 11 章起稿。证据见 §3/§4 与 `reports/2026-11-20-day8-*`；**盘点/后续计划详版 = [reports/2026-11-20-day8-review.md](reports/2026-11-20-day8-review.md)（含 v2d 预注册判据与失败路径）**。**v2c 的三个新伤口 = 机动窗口选题池**：①rep-4 0.135（reason/en-fluency/zh-fluency 三题长答案复读）；②translate-en2zh 英答英回归；③math-mul 非纯数字格式。
 
 | # | 事项 | 判据 |
 |---|---|---|
