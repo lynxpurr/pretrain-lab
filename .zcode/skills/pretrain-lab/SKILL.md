@@ -14,18 +14,19 @@
 | 件 | 位置 |
 |---|---|
 | 计划/决策/逐日/风险 | [PLAN.md](../../../PLAN.md)（D-01~D-10 · §4 决策门 · §6 纪律） |
-| 会话交接 + 当日清单 | [HANDOFF.md](../../../HANDOFF.md)（§0 开工序 · §2 复现检查 · §7 Day 3+） |
+| 会话交接 + 当日清单 | [HANDOFF.md](../../../HANDOFF.md)（§0 开工序 · §2 复现检查 · §7 Day 8 当前清单） |
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT（配对 labels + ignore_index）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · build_sft.py SFT 数据 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b 数据（列表降采样 + `--protect-math`）** · gen_sft_v2_extra.py 校准/格式/正例 · **lora.py LoRA A/B + apply/merge** · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
-| SFT 数据 / 评测集 | `data/sft-mix/`（250,001,408 token = 404,210 会话 + 25% 预训练块 · assistant-only mask · 指纹 `SHA256SUMS`；重建 `tools/build_sft.py` 4min）· `data/eval/tests.json`（18 题 / 9 tag 题库） |
-| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（SFT v1 · val 1.5515）· 底座谱系 46 ckpt ≈73GB |
-| 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS` |
-| 产物 | `out/<run>/last.pt`（gitignore）· `logs/`（gitignore，证据快照拷 reports/） |
+| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-extra-v2/`（calibration/format/helpful 补充样本）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
+| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
+| 部署 | **GGUF `out/gguf/*.gguf`（F16/Q4/Q8）** · **Ollama 用户级 `127.0.0.1:11435`（模型 `pretrain-lab-sft-v2-q4/q8`）** · **demo `tools/app_stdlib.py` → `http://127.0.0.1:7860`** · 模型卡 [MODEL_CARD.md](../../../MODEL_CARD.md) |
+| 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS`（含 v2/v2b/extra） |
+| 产物 | `out/<run>/last.pt`（gitignore）· `out/gguf/` · `logs/`（gitignore，证据快照拷 reports/） |
 | 环境 | `.venv-pre/`（D-07 uv 托管 3.12.13 + torch 2.11.0+cu128；重建命令见 reports/2026-11-18-day0-env-snapshot.md） |
 
 ## §3 训练跑批标准动作（Day 1 最小闭环 → **Day 3 正式框架 `tools/train.py`**）
@@ -80,7 +81,7 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
   --target-tokens 250e6 --eval-every 250 --eval-iters 20 --eval-batch-size 8 \
   --sample-every 500 --ckpt-every 250 --lora-rank 8 --lora-alpha 16
 ```
-- 可训练 **1.20%**（r=8，qkv/proj/gate/up/down）；peak **9.74GB**（比全参 -2.3GB）；ckpt **571MB**；`last.pt` 已 merge（eval/deploy 直接用），`adapter.pt` 单独存。
+- 可训练 **1.20%**（r=8，qkv/proj/gate/up/down）；peak **9.74GB**（比全参 -2.3GB）；ckpt **526MB + adapter 6.5MB**；`last.pt` 已 merge（eval/deploy 直接用），`adapter.pt` 单独存。
 - **lr**：2e-4 首跑 1000 步 val 1.8839 且采样退化；5e-4 同 step 更好（500 步 1.8974）。r=8 1 epoch 可能仍欠拟合；Day 8 试 r=12（≈1.80%）/ 2 epochs。
 - 冒烟：`--max-steps 50 --eval-every 0 --sample-every 0 --ckpt-every 0`，loss 应下降（实测 2.7086 → 2.5235）。
 
@@ -167,3 +168,5 @@ cd data/shards && sha256sum -c SHA256SUMS
 3. **数字面**：当日读数回填 HANDOFF §4 锚点 + PLAN §8；`grep` 旧日期/旧数字残留（如 `Day 2（11-19）`）。
 4. **链接面**：README/HANDOFF/PLAN/notes/reports 相对链接 0 断链（盘点批扫描 14 份文档）。
 5. **状态面**：HANDOFF §1/§3/§5/§7、README 状态、LAB_NOTEBOOK 当日段、lessons/qa、PLAN 变更记录同步。
+6. **导出/评测链路面**（Day 7 起）：GGUF raw 与 PyTorch 同 prompt/greedy 对拍；`eval.py` CSV 表头 8 列 + 行字段数断言；rubric 与关键词分并列；demo `/health` + `ollama ps` 显示 100% GPU。
+7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；四版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分。

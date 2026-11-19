@@ -6,7 +6,7 @@
 
 1. **加载 skill + 读本件 + PLAN 三节**：`.zcode/skills/pretrain-lab/SKILL.md` → 本件 §1（状态）§5（日程）§7（当日清单）→ PLAN §3（D-01~D-10）§4（逐日 + 决策门①②原文）§4.1（门①／门② 判定）§6（纪律）。缺细节回 PLAN，不臆造。
 2. **跑 §2 复现检查**（约 1 分钟）——红项先修再开工，不盲目重装（50 系环境坑已全部压到 Day 0 解决，PLAN §5 风险表）。
-3. **读前情**：`LAB_NOTEBOOK.md` 最近一日段 + `notes/qa-day-6.md`（若无则读 qa-day-5：昨晚自答暴露的疑问 = 今日选题池）+ `notes/lessons.md` 顶部「跨日回顾 10 条」。
+3. **读前情**：`LAB_NOTEBOOK.md` 最近一日段 + `notes/qa-day-7.md`（前日题仍空着的话顺手回填 qa-day-5：自答暴露的疑问 = 今日选题池）+ `notes/lessons.md` 顶部「跨日回顾 12 条」+ Day 7 段。
 4. **执行当日清单**：按 §5 日程当日行 + §7 当日清单；决策门判定**跑前不改**（PLAN §4 预注册）。若用户要求提前/延后开工，先改 §5 实际日期再执行。
 5. **收波**（当日结束前）：`reports/` 证据三分 → LAB_NOTEBOOK 当日段 → lessons（有新教训才写）→ qa 题目池 → PLAN 变更记录 → README 状态 → 指纹补 PROVENANCE → `git commit -m "day-N: …"` + push。
 6. **边界提醒**：nl2fem / finetune-lab 是**知识上游非资产上游**（PLAN §7）——只引用知识不改其档案；本仓数据与代码全自建。
@@ -15,7 +15,7 @@
 
 **新会话首条消息（可直接粘贴）**：
 
-> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` Day 7 + `notes/qa-day-7.md` + lessons Day 7 段）→ 执行 §7 Day 8 清单（v2c 数据 / DPO / LoRA 深化 三选一 + 报告开写），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` Day 7 + `notes/qa-day-7.md` + lessons Day 7 段 + `reports/2026-11-19-day7-review.md` 盘点）→ 执行 §7 Day 8 清单（v2c 数据 / DPO / LoRA 深化 三选一 + 报告开写），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
 
 ## 1. 状态一段话
 
@@ -32,7 +32,7 @@
 - **脚本**：`tools/{model,train,sft,eval,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app}.py`
 - **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（不加训 15 亿，双证据 0.0134 / 0.0051）
 
-**Day 7 关键结论**：SFT v2 = **rep-4 0.131→0.066**、calibration/翻译/格式修好、预训练 PPL +5.4%（优于 v1 +6.2%）；但**列表降采样误伤数学**（v2b 证明"数学保护"能修回算术，代价是 rep-4 0.117 + 翻译/能力回归）。**en-fluency 拒答三版都在**（数据侧过泛化，系统提示未修好）。最终部署 v2 Q4_K_M；v2b 保留为消融证据。
+**Day 7 关键结论**：SFT v2 = **rep-4 0.131→0.066**、calibration/翻译/格式修好、预训练 PPL +5.4%（优于 v1 +6.2%）；但**列表降采样误伤数学**（v2b 证明"数学保护"能修回算术，代价是 rep-4 0.117 + 翻译/能力回归）。**en-fluency 拒答三版都在**（数据侧过泛化，系统提示未修好）。最终部署 v2 Q4_K_M；v2b 保留为消融证据。**Day 7 盘点（收获/进展/风险/文档校准）** = [reports/2026-11-19-day7-review.md](reports/2026-11-19-day7-review.md)。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -59,10 +59,11 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 ```
 
 - `bad interpreter` = venv 断链（D-07 uv 托管解释器免疫此坑）。
+- `ollama-user-missing` / `demo-missing`：启动命令见 [reports/2026-11-19-day7-deploy.md](reports/2026-11-19-day7-deploy.md) §2/§4——Ollama 用户级 `OLLAMA_MODELS=$HOME/.ollama/models OLLAMA_HOST=127.0.0.1:11435 ollama serve`；demo `.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2-q4 --port 7860`。
 - 分片 `sha256sum -c` 失败 = 数据被动过——**先查再训**（PROVENANCE 纪律）。
 - 检查不过 → PLAN §8 环境快照 / §5 风险表；重建命令见 `reports/2026-11-18-day0-env-snapshot.md`。
 
-## 3. 已完成摘要（Day 0~6，细节在证据与笔记，勿重复劳动）
+## 3. 已完成摘要（Day 0~7，细节在证据与笔记，勿重复劳动）
 
 | Day | 内容 | 结果 |
 |---|---|---|
@@ -138,7 +139,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 ## 6. 惯例与红线
 
 - **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（含 §3 预训练、§3.2 SFT+评测、§6 收波校准清单）。
-- **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。当前待自答：qa-day-2 ~ qa-day-5。
+- **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。当前待自答：qa-day-2 ~ qa-day-5、qa-day-7。
 - **证据纪律**：`reports/` 只增不改（改错走勘误追加）；每次 run 证据三分 = 摘要 md + 曲线 csv + 原始 log。
 - **指纹纪律**：每份数据/ckpt 落位即录（`SHA256SUMS` 例外入库；数据本体 gitignore）。
 - **git**：develop 直提为主（信息带 `day-N` 标签）；大改走 `feature/day-N-<slug>` → `--no-ff`；模型/checkpoint/语料/日志不入库。
