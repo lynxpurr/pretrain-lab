@@ -1,6 +1,6 @@
 # HANDOFF — 新会话交接
 
-> 更新：2026-11-18（Day 3 收官）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 当日清单 + 锚点。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、决策门、风险、纪律、边界），本件只指路不复述；**仓内操作规程（跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)，新会话优先加载**。
+> 更新：2026-11-19（Day 6 收官：主训练 3B + SFT v1 + 门② 判不加训）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 当日清单 + 锚点。知识本体在 [PLAN.md](PLAN.md)（决策 D-01~D-10、逐日方案、决策门、风险、纪律、边界），本件只指路不复述；**仓内操作规程（跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)，新会话优先加载**。
 
 ## 0. 新会话开工序（按序执行，不跳步）
 
@@ -45,16 +45,17 @@ ls data/tokenizer-32k/tokenizer.json data/tokenizer-32k/meta.json  # Day 2 token
 ls data/shards/meta.json data/shards/SHA256SUMS                    # Day 2 3B 分片清单/指纹
 (cd data/shards && sha256sum -c SHA256SUMS | tail -1)              # 应全 OK（~4s）
 ls data/bpe-smoke/train.bin                                        # 换轨冒烟切片（50M token）
-ls tools/train.py                                                  # Day 3 完整训练框架
-ls -la out/day3-50m/last.pt out/day3-140m-probe/last.pt            # Day 3 checkpoint（0.6GB / 1.65GB）
-tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练起跑后这里应看到 main140m
+ls tools/train.py tools/sft.py tools/eval.py                       # Day 3~5 主线脚本
+ls -la out/main140m/last.pt out/sft-v1/last.pt                     # 底座与 SFT v1（各 1.65GB）
+ls data/sft-mix/meta.json data/sft-mix/SHA256SUMS data/eval/tests.json  # SFT 数据 + 评测题库
+tmux ls | grep -E "sft|main140m|train" || echo no-running-training  # 有跑批时这里应看到对应会话
 ```
 
 - `bad interpreter` = venv 断链（D-07 uv 托管解释器免疫此坑；出现即建 venv 时违反 D-07）。
 - 分片 `sha256sum -c` 失败 = 数据被动过——先查再训，勿在坏分片上跑批（PROVENANCE 纪律）。
 - 检查不过 → 回 PLAN §8 环境快照 / §5 风险表；重建命令见 `reports/2026-11-18-day0-env-snapshot.md`。
 
-## 3. 已完成摘要（Day 0~3，细节在证据与笔记，勿重复劳动）
+## 3. 已完成摘要（Day 0~6，细节在证据与笔记，勿重复劳动）
 
 | Day | 内容 | 结果 |
 |---|---|---|
@@ -116,6 +117,16 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 
 **关键路径与缓冲（Day 6 实测重算）**：Day 3 框架 + 门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② 判定（**不加训**）+ 解码对照 ✅ → **Day 7 SFT v2 数据侧 + LoRA + 部署** → Day 8 深化 + 报告 → Day 10 收尾。**缓冲 = 11-20 ~ 11-22 三天 + Day 9（11-26）硬缓冲**——G3/G4/G6 都有充裕时间，不需要砍项；即使 SFT v2 失败，也可直接用 SFT v1 进 LoRA/部署（G1/G2/G5 是底线）。
 
+**剩余日程（2026-11-19 实测重排；原计划日期已不重要，按任务完成度走）**：
+
+| 实际日期 | 任务 | 判据 / 产出 |
+|---|---|---|
+| 11-19 晚 ~ 11-20 | **Day 7**：SFT 数据 v2（CPU）→ SFT v2（~1.3h）→ LoRA（~1h）→ GGUF/Ollama/Gradio | 题库 ≥16/18 且 rep-4 <0.08；`refuse-unknown`/`math-mul` 至少修好一个；LoRA 可训练参数 <2%；demo 能对话 |
+| 11-21 | **Day 8**：深化（lr 扫参 / tokenizer 消融 / DPO 三选一）+ 报告开写 | 报告骨架落盘（loss 曲线 + 数据决策 + 成本核算）+ 至少 1 个对照实验读数 |
+| 11-22 ~ 11-25 | **机动**（原 Day 9 提前置换） | 补实验 / 修质性缺陷 / 评测扩展 / 模型卡 |
+| 11-26 | **Day 9 硬缓冲** | 只在出事时用（训练发散重跑 / 数据返工） |
+| 11-27 | **Day 10 收尾**：三版对比（base / SFT / LoRA）+ repo 整理 + 报告 | G5/G6 达成：对比表 + README + 模型卡 + 复现步骤 |
+
 ## 6. 惯例与红线
 
 - **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（本件不重复；含 §3.1 数据管线标准动作、§6 收波校准清单）。
@@ -132,8 +143,8 @@ tmux ls | grep -E "main140m|day|train" || echo no-running-training  # 主训练�
 
 | # | 事项 | 判据 |
 |---|---|---|
-| 1 | **SFT 数据 v2（CPU）**：①补校准/拒答样本（"不知道/未发生/无法确认"）；②补格式硬约束样本（"只回答数字/一句话/3 条"）；③压罗列癖（≥5 条编号列表的答案降采样） | 新旧数据目视对比 + 统计（列表类占比、校准样本条数）；`SHA256SUMS` + PROVENANCE 更新；**v2 不动 25% 预训练混入** |
-| 2 | **SFT v2（GPU，~1.3h）**：同底座 `out/main140m/last.pt`、同超参 | 同题库 ≥16/18；**rep-4 明显下降**（目标 <0.08）；预训练 PPL 退化 ≤10%；`refuse-unknown` 与 `math-mul` 至少各修好一个 |
+| 1 | **SFT 数据 v2（CPU，新目录 `data/sft-mix-v2/`，不动 v1）**：①**校准/拒答**——从 404k 会话中筛含"不知道/无法/不确定/尚未/没有官方记录"的回答，目标 ≥3,000 条（≈1%），不足则手写 100~200 条补齐；②**格式硬约束**——"只回答…/一句话/不超过…/列出 3 条"类指令样本上采样 2×；③**压罗列癖**——答案含 ≥5 条编号列表的样本降采样 50%（或整条过滤），目标使列表类占比从当前水平降到 ≤15%；④其余不变（25% 预训练块、assistant-only mask、block 1024、val 2M 同口径） | **供给实测（2026-11-19 grep，会话级）**：不知道 9,438 · 不确定 23,564 · 尚未 5,786 · 没有官方 139 · 只回答 1,703 · 一句话 6,203 · 不超过 18,321 · **含"5."的列表类 258,468（28.5%）** → ①② 供给充足，③ 需砍掉约一半列表样本。其余判据：新旧数据统计对比落档；段级 mask 自检 0 违规；`SHA256SUMS` + PROVENANCE 更新；**v2 只改数据，不改 tokenizer/模板/混入比例** |
+| 2 | **SFT v2（GPU，~1.3h）**：同底座 `out/main140m/last.pt`、同超参（lr 1e-4 / warmup 100 / 1 epoch over 250M） | 同题库 **≥16/18** 且 **rep-4 <0.08**（v1 0.131）；`refuse-unknown` 与 `math-mul` **至少各修好一个**；预训练 PPL 退化 ≤10%；`EXIT:0` |
 | 3 | **LoRA（D-10 A 手写）**：同一底座 + 同一 SFT 数据，低秩增量（r=8/16，target = qkv/proj/gate/up/down） | 可训练参数 <2%；50 步冒烟 loss 下降；与全参 SFT 同题库对比（效果/显存/速度三读数） |
 | 4 | **GGUF 量化 → Ollama → Gradio**（G4，超期可砍） | `llama.cpp` 转 Q4_K_M/ Q8_0；Ollama 能对话；Gradio 页面可访问（本地 URL） |
 | 5 | 评测扩展：新指标进 `tools/eval.py` 默认输出 | distinct-2 / rep-4 已加；rubric 表（人工）落 reports/ |

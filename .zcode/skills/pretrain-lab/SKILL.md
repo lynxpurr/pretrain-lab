@@ -18,10 +18,12 @@
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 正式训练框架（Day 3，多分片/累积/续训/采样）** · train_char20m.py 字符级最小闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT（配对 labels + ignore_index）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · build_sft.py SFT 数据 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
+| SFT 数据 / 评测集 | `data/sft-mix/`（250,001,408 token = 404,210 会话 + 25% 预训练块 · assistant-only mask · 指纹 `SHA256SUMS`；重建 `tools/build_sft.py` 4min）· `data/eval/tests.json`（18 题 / 9 tag 题库） |
+| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（SFT v1 · val 1.5515）· 底座谱系 46 ckpt ≈73GB |
 | 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS` |
 | 产物 | `out/<run>/last.pt`（gitignore）· `logs/`（gitignore，证据快照拷 reports/） |
 | 环境 | `.venv-pre/`（D-07 uv 托管 3.12.13 + torch 2.11.0+cu128；重建命令见 reports/2026-11-18-day0-env-snapshot.md） |
@@ -46,6 +48,30 @@
 **崩溃续训**：`--resume auto`（读 `out/<run>/last.pt`，含 model/optimizer/step/tokens_seen/三路 RNG）。验证要点 = 恢复后同 step 的 val 应与 kill 前**完全相同**、`tokens_seen == step × tokens_per_step`。
 
 **收波**：证据三分 → `reports/`（md 摘要 + csv + log）→ LAB_NOTEBOOK 当日段 → lessons（有新教训才写）→ qa 题目池 → PLAN 变更记录（有决策/日期变更才写）→ README 状态 → checkpoint/数据指纹补 PROVENANCE → `git commit -m "day-N: …"` + push。
+
+## §3.2 SFT + 评测标准动作（Day 5~6 验证过）
+
+**SFT 跑批**（底座 = `out/main140m/last.pt`；数据 = `data/sft-mix/`）：
+```bash
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/sft.py \
+  --init-from out/main140m/last.pt --run-name sft-v2 --out-dir out/sft-v2 \
+  --batch-size 8 --grad-accum 8 --base-lr 1e-4 --warmup 100 --target-tokens 250e6 \
+  --eval-every 250 --eval-iters 20 --eval-batch-size 8 --sample-every 500 --ckpt-every 250
+```
+- 启动前自检：`--init-from none --device cpu --max-steps 3`（随机小模型，查数据/损失/ckpt 链路）；或 `--init-from out/day3-50m/last.pt --device cpu --max-steps 1`（查底座载入路径）。两者都应 `EXIT:0`。
+- 判据：SFT val 应显著低于"底座在 SFT val 上的 loss"（v1：9.82 → 4.60 PPL）；`EXIT:0`；采样里出现 chat 模板行为。
+- 显存：140M bs8×accum8 → 峰值 **12.09GB**（比预训练高 1.5GB：eval bs8 + 配对 labels）。
+- **1 epoch 就饱和是常见形态**（v1：末 1,000 步只降 0.006）——先查数据质量再谈加 epoch。
+
+**评测协议（Day 10 三版对比沿用）**：
+```bash
+.venv-pre/bin/python -I tools/eval.py --ckpt base=out/main140m/last.pt --ckpt sft=out/sft-v1/last.pt \
+  --out reports/<日期>-eval.md
+```
+- **统一 greedy**（可复现）+ 关键词判分 + **distinct-2 / rep-4** 退化指标 + 人工 rubric 抽样；
+- **规则分会高估质量**（v1：规则 89% vs 质性 ~60%），报告必须并列质性复核；
+- 解码参数（T/top-p/repetition penalty）是**质量变量**，demo 端可换但需单独声明，不混进对比表；
+- 复读优先查数据（采样几乎不改善：0.131→0.123），repetition penalty 是"用事实换多样性"（1.3 压复读到 0.032 但题库 16→13）。
 
 ## §3.1 数据管线标准动作（Day 2 验证过）
 
@@ -86,12 +112,17 @@ cd data/shards && sha256sum -c SHA256SUMS
 | 训练进程莫名 `BrokenPipeError` / EXIT:1 | 输出被 `| head`/`| tail` 截断（SIGPIPE） | 长任务一律 `> log 2>&1` 或 `| tee`，读文件不截管道 |
 | 想用 `torch.compile` 提速 | sm_120 上 inductor 未走快路径（Day 3 实测 4,077 vs 52,250 tok/s） | **默认关闭**；重试须做"40 步以上、先预热 20 步、同 seed 同数据"的证伪实验 |
 | 证据 log 未入库 | `.gitignore` 的 `*.log` | `!reports/*.log` 例外；收波 `git add -n .` 核对 md/csv/log 三件 |
+| 评测分数好看但读起来差 | 关键词判分只测"提到" | 加 distinct-2/rep-4 + 人工 rubric；拒答模板/复读环都会骗过关键词（Day 5~6） |
+| 模型复读"文化、艺术、交通…" | 先做解码对照：采样是否改善 | 采样几乎不改善 → 数据罗列癖；rp 调参只是权宜（1.3 伤事实） |
+| SFT 后底座语言能力退化 | 预训练 PPL 是否上升 | v1 +6.2% 属可接受；>10% 再考虑提高预训练混入比例或降 lr/步数 |
+| `--init-from` 探针打印 `[anchor] … vs ln(V)` 偏差巨大 | 底座初始化时不是随机分布 | 正常（探针代码已加 `[init-anchor]` 分支，不再误报） |
 
 ## §5 红线
 
 - `reports/` 只增不改；改错走勘误追加。
 - 每份数据落位即录指纹（raw 层 17 条 Day 0 已立、字符级 3 条 Day 1 已立、tokenizer 3 条 + 分片 7 条 Day 2 已立；SFT 数据 Day 4 续录）。
-- 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**；50M 需 ≥96k 折算或直接跑 140M 探针）**已判定 PASS（52,250 tok/s，2026-11-18）**；门②（Day 6 loss 仍陡降→加训）预注册于 PLAN §4/§4.1，跑前不改。
+- 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**）**已判定 PASS（52,250 tok/s，2026-11-18）**；②（Day 6 loss 仍陡降→加训）**已判定不触发（最后 10% 0.0134 + 恒定 lr 探针 0.0051，2026-11-19）**，重开条件见 PLAN §4.1——两者跑前未改口径。
+- SFT/评测协议（Day 6 定档）：SFT 数据 25% 预训练混入 + assistant-only mask；评测统一 greedy + 关键词判分 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。
 - 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。
 - 边界：nl2fem / finetune-lab 是知识上游非资产上游（PLAN §7），只引用知识不改其档案。

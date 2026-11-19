@@ -56,6 +56,14 @@
 
 > 构建 4.0 min · `block_size` 1024 · 长会话截断 1,012 条（0.11%）· 分段编码 vs 整段编码抽样自检 30 例全过 · 全量 `data/sft-mix/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft.py --max-tokens 250e6 --val-tokens 2e6 --pretrain-ratio 0.25`。
 
+### 评测集 `data/eval/tests.json`（Day 5 立，Day 6 定档）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `tests.json` | 自设计题库：事实 / 数学 / 身份 / 解释 / 翻译 / 总结 / 格式 / 代码 / 推理 / 校准 共 9 个 tag | 18 题（`expect_any` 规则判分） | `6c5bd1e92e4b4aba` |
+
+> 判分协议 = 统一 greedy + 关键词命中 + distinct-2/rep-4 + 人工 rubric 抽样（Day 6 定档，见 `reports/2026-11-19-day6-decode.md` §3）。
+
 ## 下载渠道备忘
 
 - HuggingFace：`HF_ENDPOINT=https://hf-mirror.com`（国内受阻预案，PLAN 风险表）

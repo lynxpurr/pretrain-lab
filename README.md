@@ -17,12 +17,23 @@
 - **路线**：Day 3 框架+门① ✅ → Day 4 140M 主训练起跑 → Day 5/6 收官 + SFT v2 → Day 7 LoRA/部署 → Day 8 深化 + 报告 → Day 9 缓冲 → Day 10 收尾。
 - 预期管理：140M/30 亿 token ≈ GPT-2 124M 水平（通顺、贫乏）——产出 = 经验 + 亲手训的模型 + 报告 + demo，非对标开源质量
 
+## 目标进度（G1~G6，2026-11-19）
+
+| 门 | 状态 | 关键读数 |
+|---|---|---|
+| G1 最小闭环 + 门① | ✅ | 140M 探针 **52,250 tok/s** ≥ 35k（门① PASS） |
+| G2 140M 底座 | ✅ | 3B token / 16h08m / **val 2.7709** / 46 ckpt 谱系 |
+| G3 SFT + LoRA | 🟡 SFT 完成、LoRA 待做 | SFT val **1.5515**；题库 33%→89%；SFT PPL 9.82→4.60 |
+| G4 本地 demo | ⬜ 待做（Day 7） | 依赖 GGUF/Ollama/Gradio |
+| G5 评测框架 + 对比 | 🟡 框架就绪、三版对比待做 | 双口径 PPL + 18 题题库 + distinct-2/rep-4 |
+| G6 报告 + repo | 🟡 证据链 6 日齐、报告待写 | Day 8 开写、Day 10 收尾 |
+
 ## 文档地图
 
 | 内容 | 位置 |
 |---|---|
 | 计划 / 决策 / 逐日方案 / 风险 / 素材索引（唯一计划文档） | [PLAN.md](PLAN.md) |
-| 会话交接（复现检查 + Day 0 清单 + 波次队列） | [HANDOFF.md](HANDOFF.md) |
+| 会话交接（复现检查 + 波次队列 + 当日清单） | [HANDOFF.md](HANDOFF.md) |
 | 逐日记账（决策与现象，每天写） | [LAB_NOTEBOOK.md](LAB_NOTEBOOK.md) |
 | 训练/评测/数据脚本（Day 1~7 逐步生长） | `tools/` |
 | run 证据（只增不改） | `reports/` |
@@ -33,4 +44,4 @@
 
 ## 工作方式
 
-develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 Day 0 已立、字符级切片 Day 1 已立、tokenizer/分片/val Day 2 已录，共 10 条入库）。决策门①（Day 3 吞吐，**140M 等效 ≥35k tok/s**）/②（Day 6 loss）预注册于 PLAN §4/§4.1，跑前不改。仓内操作规程见 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)。
+develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 17 条 · 字符级 3 条 · tokenizer 3 条 · 分片 7 条 · SFT 集 4 条 · 评测集 1 条 · ckpt 5 条）。决策门①（**140M 等效 ≥35k tok/s**）**已判 PASS（52,250）**、②（加训判定）**已判不触发**（最后 10% 0.0134 + 恒定 lr 探针 0.0051），口径跑前未改。仓内操作规程见 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)。
