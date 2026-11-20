@@ -1,12 +1,12 @@
 # HANDOFF — 新会话交接
 
-> 更新：2026-11-20 晨（Day 8 收官）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 当日清单 + 锚点。知识本体在 [PLAN.md](PLAN.md)（D-01~D-10 · 逐日方案 · 决策门 · 风险 · 纪律 · 边界），本件只指路不复述；**仓内操作规程（跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)，新会话优先加载**。
+> 更新：2026-11-20 晚（**部署已切 v2e-q8**；机动窗口 v2d/v2e + spec T1/T2 收官）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 当日清单 + 锚点。知识本体在 [PLAN.md](PLAN.md)（D-01~D-10 · 逐日方案 · 决策门 · 风险 · 纪律 · 边界），本件只指路不复述；**仓内操作规程（跑批/故障速查/红线）= [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)，新会话优先加载**。
 
 ## 0. 新会话开工序（按序执行，不跳步）
 
 1. **加载 skill + 读本件 + PLAN 三节**：`.zcode/skills/pretrain-lab/SKILL.md` → 本件 §1（状态）§5（日程）§7（当日清单）→ PLAN §3（D-01~D-10）§4（逐日 + 决策门①②原文）§4.1（门①／门② 判定）§6（纪律）。缺细节回 PLAN，不臆造。
 2. **跑 §2 复现检查**（约 1 分钟）——红项先修再开工，不盲目重装（50 系环境坑已全部压到 Day 0 解决，PLAN §5 风险表）。
-3. **读前情**：`LAB_NOTEBOOK.md` 最近一日段 + `notes/qa-day-8.md`（前日题仍空着的话顺手回填：自答暴露的疑问 = 今日选题池）+ `notes/lessons.md` 顶部「跨日回顾 13 条」+ Day 8 段 + `reports/2026-11-20-day8-review.md` 盘点。
+3. **读前情**：`LAB_NOTEBOOK.md` 最后两段（v2e / 最终阶段）+ `notes/lessons.md` 最终阶段三条（量化保真/对拍三同/spec 惯例）+ `reports/2026-11-20-v2e.md` + `reports/2026-11-20-deploy-v2e.md` + **`specs/2026-11-20-final-phase.md`（当前执行规范）** + `notes/qa-day-8.md`（题池）。
 4. **执行当日清单**：按 §5 日程当日行 + §7 当日清单；决策门判定**跑前不改**（PLAN §4 预注册）。若用户要求提前/延后开工，先改 §5 实际日期再执行。
 5. **收波**（当日结束前）：`reports/` 证据三分 → LAB_NOTEBOOK 当日段 → lessons（有新教训才写）→ qa 题目池 → PLAN 变更记录 → README 状态 → 指纹补 PROVENANCE → `git commit -m "day-N: …"` + push。
 6. **边界提醒**：nl2fem / finetune-lab 是**知识上游非资产上游**（PLAN §7）——只引用知识不改其档案；本仓数据与代码全自建。
@@ -15,11 +15,11 @@
 
 **新会话首条消息（可直接粘贴）**：
 
-> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` 机动窗口 v2d 段 + lessons 机动窗口四条 + `reports/2026-11-20-v2d.md` + `notes/qa-day-8.md`）→ 执行 §7 机动窗口清单（**v2e 第 2 轮 vs 锁定 v2 二选一**，默认 v2e），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查（含 demo 模型 = pretrain-lab-sft-v2e-q8）→ 读前情（`specs/2026-11-20-final-phase.md` + `LAB_NOTEBOOK.md` 最后两段 + lessons 最终阶段三条 + `reports/2026-11-20-v2e.md` + `reports/2026-11-20-deploy-v2e.md`）→ 执行 §7 Day 10 终检清单（T4：八版终表 + repo 整理 + REPORT/spec 置 COMPLETED；可选 LoRA r=12），全程按 §6 惯例与 skill §3.2/§3.3/§6 执行与收波。
 
 ## 1. 状态一段话
 
-**Day 0~8 + 机动窗口 v2d/v2e 已全部收官；v2e 五项判据全过（去污后 rep-4 0.055 / 题库 17-18 / translate 真译文 / math 8-42）→ 待拍板：部署是否切 v2e；不切则 v2 保持**。项目 = 本地 5070 Ti 16GB 上 10 天从零训一个 ~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo），**学习导向**；底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。
+**Day 0~8 + 机动窗口 v2d/v2e + 最终阶段 spec T1/T2 已收官；部署已切 `pretrain-lab-sft-v2e-q8`（五项判据全过、去污后干净读数）；剩余 = T4 Day 10 终检（11-27）**。项目 = 本地 5070 Ti 16GB 上 10 天从零训一个 ~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo），**学习导向**；底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。
 
 **当前手里有什么（都能直接跑）**：
 - **底座**：`out/main140m/last.pt`（137,847,552 参数 · 3B token · **val 2.7709** · sha `0c0096cc172e8a58`）+ 46 个等间隔 ckpt 谱系（≈73GB）
@@ -41,6 +41,8 @@
 **机动窗口 v2d 关键结论**（2026-11-20，用户拍板 v2d + 部署保持 v2）：长答案压制 + translate 方向 + concise 正例 + format 3× → **rep-4 0.135→0.084（砍 38%）+ rubric 5/8→6/8**、三题复读全面下降（reason 砍 88%）；未达判据 = rep-4（差 0.004）/ math-mul（回退 72=组合记忆脆弱）/ translate（英答中但字词解释）/ 关键词题库 15/18（两题假阴，语义 17/18）→ **不部署**。三条新教训：组合记忆小扰动翻转 / 方向池上采样 ≠ 指令行为 / 英文长答案缺席只能加正例。证据 = [reports/2026-11-20-v2d.md](reports/2026-11-20-v2d.md)。
 
 **机动窗口 v2e 关键结论**（2026-11-20 第 2 轮，用户"继续推进下一步"）：**开工发现评测污染**——v2 起 extras 与 18 题原句系统性撞车（2027 世界杯 / 7×6 / 水的化学式 / 学习编程列表 / ocean&北京，详见 v2e 报告 §1），v2~v2d 题库分含记忆成分、v1 的 16/18 反而是干净读数。v2e = 去污（12 处 + `assert_no_eval_leak` 硬断言）+ translate 精确对 180 条 + 数学豁免 ×2 + en_flu 降采样 → **五项判据全过**：rep-4 **0.055**（全系最低）/ 题库 **17/18（去污后）** / translate **"我热爱机器学习。"** / math **8+42（真泛化）** / PPL +5.5%；**全面优于 v2**（rep-4 0.066→0.055、题库 15→17、math 15/72→8/42、en-fluency 拒答→英文正文、PPL 持平）。**待拍板：部署是否切 v2e**。三条新教训：按评测缺陷造数据必须配评测集去重 / 去污后五项全过说明 v2 时代部分"能力不足"是记忆假象 / 精确指令对 ≠ 方向池（行为 vs 分布）。证据 = [reports/2026-11-20-v2e.md](reports/2026-11-20-v2e.md)。
+
+**最终阶段（2026-11-20 晚，spec 推进）**：`specs/2026-11-20-final-phase.md`（AC1~AC11 + T1~T4）——**T1 部署切 v2e-q8**（demo 7860 已切，旧 v2 tag 全保留回滚 <1min）；对拍发现 **Q4_K_M 量化吃掉新学能力**（math 42→72、translate 退回英文原句）→ 部署默认 **Q8_0** + 新增"量化保真度抽检"验收红线（skill §5）；**T2 报告扩写**（§5.1 评测污染独立章 + §10 复现→v2e + §0 成绩单 v2e 口径 + 五轮迭代）；AC2~AC8 命令级验收通过。证据 = [reports/2026-11-20-deploy-v2e.md](reports/2026-11-20-deploy-v2e.md) · commit `d0c973d`/`5fc4d2c`。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -65,7 +67,9 @@ ls out/sft-v2/last.pt out/sft-lora-r8-5e4/last.pt out/sft-v2c/last.pt out/sft-v2
 ls tools/{build_sft_v2,gen_sft_v2_extra,lora,export_gguf,eval_format,app_stdlib}.py  # Day 7 脚本
 tmux ls | grep -E "sft|main140m|train|lora|demo" || echo no-running-training
 curl -s --max-time 3 http://127.0.0.1:11435/api/tags >/dev/null && echo ollama-user-ok || echo ollama-user-missing
-curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-missing
+OLLAMA_HOST=127.0.0.1:11435 ollama list | grep -c v2e                     # 应 ≥3（v2e / v2e-q8 / v2e-q4）
+curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-missing   # demo 应指向 v2e-q8
+ls specs/2026-11-20-final-phase.md reports/2026-11-20-deploy-v2e.md out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf
 ```
 
 - `bad interpreter` = venv 断链（D-07 uv 托管解释器免疫此坑）。
@@ -120,7 +124,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 | **LoRA r8** | 1.20% 可训练 / peak **9.74GB（-2.3GB）** / **54,124 tok/s** / ckpt **526MB + adapter 6.5MB** / val **1.8253** / 题库 15-18 / **rep-4 0.260** / 1 epoch 欠拟合（不部署；Day 8 试 r=12/2 epochs） |
 | **SFT v2e（消融，机动窗口第 2 轮，五项全过）** | 数据 250,001,408 token（列表 11.47% / 会话 595,348 / 监督 75.99% / 去污 12 处 + translate 精确对 180 + math 豁免 ×2 12,500 + en_flu 1× 770）· 训练 **1h19m19s / 3,815 步 / 53,098 tok/s / val 1.6065 / peak 12.05GB** · 八版评测 **rep-4 0.055（全系最低）+ 题库 17/18（去污后）+ rubric 6/8 + distinct-2 0.860**、translate "我热爱机器学习。"、math 8/42（真泛化）、en-fluency 0.208 / zh-flu 0.224 / reason 0.095 → **五项判据全过，待拍板部署切换** |
 | **SFT v2d（消融，机动窗口）** | 数据 250,001,408 token（列表 10.15% / 会话 613,180 / 监督 75.65% / 长答案砍 6,507 留 6,296 + translate 写入 2,106 + concise 150 + fmt 3×）· 训练 **1h19m44s / 3,815 步 / 52,851 tok/s / val 1.6059 / peak 12.05GB** · 七版评测 **rep-4 0.084（SFT 最低档）+ rubric 6/8（最高）**、reason 0.728→0.088 / en-flu 0.708→0.371 / zh-flu 0.516→0.303 / math-add 纯数字「8」；未达 = rep-4 差 0.004 / math-mul 72 / translate 字词解释 / 关键词 15-18（语义 17-18）→ 不部署 |
-| **GGUF/Ollama** | **部署 = v2e-q8**；F16 对拍 5/5 逐字一致；Q8_0 保住新学能力（42/中文翻译）；**Q4_K_M 在 v2e 上不保真**（42→72）；demo 7860（系统提示 + T0.7） |
+| **GGUF/Ollama** | **部署 = v2e-q8（173MB）**；F16 对拍 5/5 逐字一致（sha `eee10822`）；Q8_0 保住新学能力（42/中文翻译）；**Q4_K_M 在 v2e 上不保真**（42→72 / translate 回英文）；demo 7860 → v2e-q8（系统提示 + T0.7）；回滚 tag v2-q4 保留 |
 
 **指纹与待办**
 
@@ -163,16 +167,21 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 - **评测协议**：统一 greedy + 关键词 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。
 - **上游知识指针**：finetune-lab `notes/lessons.md` · `ms-swift-finetune` skill（D-10 选 B 时）· nl2fem `notes/ref-*-concepts.md`。
 
-## 7. 机动窗口清单（v2d/v2e 均已收官；剩余 = 部署切换拍板 + Day 10 收尾）
+## 7. Day 10 终检清单（T4；spec = `specs/2026-11-20-final-phase.md`）
 
-> **v2e 已收官（2026-11-20 第 2 轮，两轮为限的最后一轮）**：**五项判据全过**——rep-4 **0.055**（全系最低）/ 题库 **17/18（去污后）** / translate **"我热爱机器学习。"** / math **8+42（真泛化）** / PPL +5.5%；**全面优于 v2**（rep-4 0.066→0.055、题库 15→17、math 15/72→8/42、en-fluency 拒答→英文正文）。**开工发现评测污染**：v2 起 extras 与 18 题原句系统性撞车（2027 世界杯 / 7×6 / 水的化学式 / 学习编程 / ocean&北京）→ v2~v2d 题库分含记忆成分、**v1 的 16/18 反而是干净读数**；v2e 已去污（12 处变体 + `assert_no_eval_leak` 断言，复扫 0 撞车）。证据 = [reports/2026-11-20-v2e.md](reports/2026-11-20-v2e.md)。
+> **当前进度：spec T1（部署切 v2e-q8）+ T2（报告扩写）已完成并验收；剩 T4 Day 10（11-27）终检。** 部署 = `pretrain-lab-sft-v2e-q8`（v2e 五项判据全过，去污后干净读数：rep-4 0.055 / 题库 17-18 / math 8-42 / translate 真译文）；Q4 量化不保真已入档为验收红线。**不再迭代数据版本（两轮为限已用完）。**
 
-| # | 事项 | 判据/状态 |
+| # | 事项 | 判据/验收 |
 |---|---|---|
-| 1 | ~~部署切换 v2e~~ | ✅ **完成（2026-11-20）**：默认 `pretrain-lab-sft-v2e-q8`，demo 已切；Q4 不保真（量化吃掉新学能力）→ 证据 `reports/2026-11-20-deploy-v2e.md` |
-| 2 | **不切换（备选）**：v2 保持部署，v2e 入档"能力全面最优"消融 | 预注册五项已全过，此路径仅因"不动部署"而选 |
-| 3 | 报告定稿准备：八版对比表 + §4.6 v2e + 评测污染方法学章节（§5 或新增）+ loss 图（day8-v2e） | Day 10 素材齐 |
-| 4 | LoRA 深化（r=12 / 2 epochs）/ DPO（视余力） | 题库差 ≤2 题 + 三读数 / refuse 保持 + 判据不降 |
-| 5 | Day 10（11-27）：最终对比表 + repo 整理 + REPORT 定稿 + 复现步骤核对 | — |
+| 1 | **八版最终对比表定稿**（§0 + 终表）：base/v1/v2/v2b/lora/v2c/v2d/v2e，**加"含记忆/干净"标注列**（v2~v2d 含评测记忆成分、v1/v2e 干净——评测污染是核心叙事） | 表齐 8 行 × 7 列 + 标注列；与 `reports/2026-11-20-v2e-eval.md` 对账 |
+| 2 | **repo 整理**：README 首屏状态、复现 §10 走查、`git add -n` 证据链核对（md/csv/log 三件齐）、断链扫描 | 0 断链；证据三件全在待提交/已提交面 |
+| 3 | **REPORT.md 状态置 FINAL**（头部"草稿"→"定稿"；§11 更新）；**spec 置 COMPLETED** | 两处状态字段 |
+| 4 | 复现步骤核对：§10 命令与实际产物一致（v2e build/sft/eval/deploy 四段） | 按 §10 走查一遍（至少 dry-run 关键路径） |
+| 5 | 收波：commit + push；LAB_NOTEBOOK Day 10 段 | `git log` 有 day-10 提交 |
 
-**待拍板项**：**部署是否从 v2 切到 v2e**——v2e 五项判据全过且全面优于 v2（唯一的"退"是 math-add 格式从纯数字变回算式，因为去污把 ARITH 的 (3,5) 组合排除了；格式瑕疵 list-3/math-mul 与历史同款）。切换是**对外可见动作**（GGUF/Ollama/demo/模型卡），需显式确认后执行。
+**可选项（11-22~25 余力，不阻塞 T4）**：
+- **LoRA r=12 / 2 epochs**（~1.5h）：G3 容量-效果曲线补完；判据 = 题库差 ≤2 题 + 显存/速度/磁盘三读数；产出进 REPORT §6。
+- **qa-day-2~5/7 回填**（学习项）：先自答再看 lessons；qa-day-8 预答卡已复核。
+- **DPO：不建议**（新方向 + 翻新伤口风险，挤占 Day 10）。
+
+**待拍板项**：①LoRA r=12 是否在 11-22~25 跑（默认：做一轮，余力充足且能补 G3 的完整度；时间不足则跳过，不阻塞 Day 10）；②八版终表的"含记忆/干净"标注是否保留在对外版 REPORT（建议保留——诚实的读数解释比"高分"更有价值）。

@@ -233,6 +233,7 @@ SFT 数据的每轮"修复"都是按评测暴露的缺陷造的补充样本（`d
 - 导出链路：`export_gguf.py`（**q/k 权重必须按 llama.cpp RoPE 布局 permute**——漏掉则"前几词正常、随后复读"，F16/Q4 同病）；导出后 raw GGUF 与 PyTorch greedy 输出对拍一致才算验收——**"能加载/能跑" ≠ "语义对"**。
 - 体积：F16 326MB / **Q4_K_M 103MB** / Q8_0 173MB；Ollama 用户级服务（11435，系统服务无模型目录写权限）；聊天页用 stdlib 实现（`app_stdlib.py`，7860；Gradio 镜像下载卡死弃装）。
 - GPU demo：Q4 100% GPU / 157MB；identity 21 token 0.023s ≈ 910 tok/s、ML 单句 0.016s ≈ 1,434 tok/s。
+- **量化保真度（2026-11-20 v2e 部署发现，★）**：同 prompt/chat 模板/greedy 三档对拍——F16 5/5 逐字一致（链路忠实）；**Q8_0 保住 v2e 新学能力**（math 42 / translate 中文）；**Q4_K_M 把 42 打回 72、translate 打回英文原句**——量化噪声冲掉"弱记忆"（新学能力与基座强先验冲突时先验反扑）。v2 时代"q4 与 PyTorch 一致"只因它的错误答案本身就是强先验。**部署默认因此选 Q8_0（173MB），验收协议 = F16 逐字对拍 + 目标量化的"新学能力抽检"**；细节 `reports/2026-11-20-deploy-v2e.md`。
 
 ## 8. 成本核算
 

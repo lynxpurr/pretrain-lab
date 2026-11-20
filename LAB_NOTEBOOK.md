@@ -102,6 +102,13 @@
 - 读数：数据 250,001,408 token / 244,142 块 / 监督 75.99% / 列表 11.47% / 会话 595,348 / mask 0 违规 / 构建 4.8 min；训练 **EXIT:0 / val 1.6065 / 1h19m19s / 53,098 tok/s / peak 12.05GB**；八版评测 = **rep-4 0.055（全系最低）+ 题库 17/18（去污后）+ rubric 6/8 + distinct-2 0.860（最高）+ translate 真译文 + math 8/42 + PPL +5.5%** → **五项判据全过**（首个全过版本）；格式瑕疵同历史（math-mul 加粗算式 / list-3 段落式编号）。证据 = [reports/2026-11-20-v2e.md](reports/2026-11-20-v2e.md) · `...-v2e-eval{,-rubric}.md` · `...-v2e-sft.{log,csv}`；ckpt sha `984a25c4d59e36a4`；图 [loss-curves-day8-v2e.png](reports/figs/loss-curves-day8-v2e.png)。
 - 疑问：①部署是否切 v2e（五项全过且全面优于 v2——rep-4/题库/math/en-fluency 全胜、PPL 持平；切换需重导 GGUF + Ollama/demo/模型卡联动，待用户拍板）；②list-3 段落式编号与 math-mul 加粗格式是否值得再做一轮（两轮为限已用完，默认不做了，留 Day 10 材料）；③评测污染的比例贡献能否量化（v2 含记忆 vs v2e 去污的差值 = 下界估计，可作报告亮点）；④qa-day-8 题 3 的"中文稀释"视角可补：去污后 zh 题全过 = 无稀释证据。——Day 9/10 题池。
 
+## 最终阶段 · 2026-11-20 · spec 推进（部署切 v2e-q8 + 报告定稿准备）
+
+- 决策：用户"按 spec coding 最佳实践存档计划然后推进"→ 立 `specs/2026-11-20-final-phase.md`（AC1~AC11 可验证 + T1~T4 勾选 + 回滚方案），归档后按 spec 执行。**部署从 v2-q4 切到 v2e-q8**（v2e 五项判据全过且全面优于 v2）；旧 v2 tag 全保留（回滚 <1min）。
+- 现象：①**对拍方法坑**：第一轮用裸 prompt（无 chat 模板）对拍，出现"你是谁空输出 / 7×6 答成 5×6 / translate 复读"的全量表观漂移，差点误判导出链路坏——换回与 eval.py 相同的 chat 模板 + greedy 后 F16 立即 5/5 逐字一致（**对拍三同原则**入 lessons/skill）；②**Q4_K_M 量化吃掉弱记忆**：math 42→72（基座 6×12 强先验反扑）、translate "我热爱机器学习"→英文原句；Q8_0 全保住、F16 逐字保真 → 部署默认 Q8_0 + 新增"量化保真度抽检（新学能力）"验收红线；③报告 §5.1 评测污染独立成章（这是全报告最有普适价值的方法学节）。
+- 读数：GGUF F16 326MB / 147 tensors（sha `eee10822`）；Ollama 三 tag（F16/Q8/Q4）；demo 切 v2e-q8 后 /health {"ok":true}、translate 返回"我喜爱机器学习。"（T0.7 采样）；AC2~AC8 命令级验收全过；commit `d0c973d`（spec）+ `5fc4d2c`（部署+报告）。
+- 疑问：①LoRA r=12 一轮（~1.5h）值不值得在 Day 10 前补（G3 容量-效果曲线完整度 vs 时间）；②八版终表要不要把"含记忆/干净"做成显式列（建议做，评测污染是核心叙事）；③qa-day-2~5/7 回填的优先级（学习项，可与 Day 10 并行）。——Day 10 题池。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）
