@@ -30,24 +30,25 @@
 |---|---|---|
 | AC1 | v2e GGUF 三件导出（F16/Q4_K_M/Q8_0） | `ls out/gguf/pretrain-lab-140m-sft-v2e-*.gguf` 3 个文件 |
 | AC2 | Ollama 三个新 tag 可列 | `OLLAMA_HOST=127.0.0.1:11435 ollama list \| grep v2e` 含 v2e / -q4 / -q8 |
-| AC3 | GGUF↔PyTorch greedy 对拍一致（4 条固定 prompt，含 translate-en2zh "我热爱机器学习。"） | 对拍输出并排比对（同 `reports/2026-11-19-day7-deploy.md` §3 方法） |
+| AC3 | GGUF↔PyTorch greedy 对拍：**F16 5/5 逐字一致**；Q8_0 3/5 逐字 + 2 同义变体（新学能力保住）；Q4 4/5 偏离（42→72、translate 回退）→ 部署档 = Q8_0 | 见 `reports/2026-11-20-deploy-v2e.md` §2 三档对拍表 |
 | AC4 | demo 指向 v2e 且健康 | `curl -s http://127.0.0.1:7860/health` → `{"ok":true}`；页面问 translate-en2zh 命中"机器学习" |
 | AC5 | 旧 v2 tag 保留（可回滚） | `ollama list` 仍含 pretrain-lab-sft-v2-q4 |
-| AC6 | MODEL_CARD/README/HANDOFF/REPORT 部署行 = v2e | `grep -rn "sft-v2e-q4" MODEL_CARD.md README.md REPORT.md HANDOFF.md` 均有 |
+| AC6 | MODEL_CARD/README/HANDOFF/REPORT 部署行 = v2e（默认 **q8**） | `grep -rn "sft-v2e-q8" MODEL_CARD.md README.md REPORT.md HANDOFF.md` 均有 |
 | AC7 | REPORT 独立小节"评测污染"（撞车清单 + 12 处去污 + 断言 + v1/v2e 干净读数结论） | `grep -n "评测污染" REPORT.md` 且小节含 `assert_no_eval_leak` |
 | AC8 | REPORT §10 复现命令含 v2e 参数与 v2e 数据目录 | `sed -n '/## 10/,/## 11/p' REPORT.md \| grep v2e` |
 | AC9 | REPORT §0 成绩单为 v2e 口径 + 八版表 | 人工核对（SFT 行、评测表行） |
 | AC10 | 证据链完整入库 | `git add -n .` 含 reports/2026-11-20-v2e* + 部署证据；`git status` clean |
+| AC11 | **量化保真度条款**：部署量化档必须通过"新学能力抽检"（本轮 = math-mul 42 / translate 中文）；Q4_K_M 未通过 → 不入部署 | `reports/2026-11-20-deploy-v2e.md` §2/§3；Ollama tag 抽检 |
 
 ## 5. Task Breakdown
 
-- [ ] **T1 部署切换 v2e**（依赖：无；~30min）
-  - T1.1 `tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf --name pretrain-lab-140m-sft-v2e`
-  - T1.2 Modelfile 复制为 `out/Modelfile-sft-v2e`（TEMPLATE/参数沿用 sft-v2 版）
-  - T1.3 `ollama create pretrain-lab-sft-v2e` / `-q4` / `-q8`（GGUF 源，**勿走 safetensors experimental**）
-  - T1.4 GGUF↔PyTorch 对拍 4 条 prompt（AC3）
-  - T1.5 重启 demo 指向 `pretrain-lab-sft-v2e-q4`（tmux demo 会话：kill 旧 → 起新）
-  - T1.6 部署证据落 reports（`2026-11-20-deploy-v2e.md` + 对拍表）
+- [x] **T1 部署切换 v2e**（完成 2026-11-20；证据 `reports/2026-11-20-deploy-v2e.md`）
+  - T1.1 [x] `tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf --name pretrain-lab-140m-sft-v2e`
+  - T1.2 [x] Modelfile 复制为 `out/Modelfile-sft-v2e`（TEMPLATE/参数沿用 sft-v2 版）
+  - T1.3 [x] `ollama create pretrain-lab-sft-v2e` / `-q4` / `-q8`（GGUF 源，**勿走 safetensors experimental**）
+  - T1.4 [x] GGUF↔PyTorch 对拍 4 条 prompt（AC3）
+  - T1.5 [x] 重启 demo 指向 `pretrain-lab-sft-v2e-q4`（tmux demo 会话：kill 旧 → 起新）
+  - T1.6 [x] 部署证据落 reports（`2026-11-20-deploy-v2e.md` + 对拍表）
 - [ ] **T2 报告定稿推进**（依赖：T1.6；今天/明天）
   - T2.1 新增"评测污染"小节（建议并入 §5 评测章或独立 §5.5）
   - T2.2 §10 复现命令 v2c → v2e（build/sft/eval/deploy 四段）

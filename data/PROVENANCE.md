@@ -38,6 +38,14 @@
 | **sft-v2e last.pt** | **Day 8 机动窗口第 2 轮 SFT v2e（去污 + translate 精确对 + math ×2 + en_flu 降采样；五项判据全过，部署切换待拍板）**（`data/sft-mix-v2e`；3,815 步 / 250M token / **SFT val 1.6065** / 1h19m19s / 53,098 tok/s / **rep-4 0.055 全系最低 + 题库 17/18 去污后**；含 optimizer 态） | 1.65GB | `984a25c4d59e36a4` | `out/sft-v2e/last.pt`（`reports/2026-11-20-v2e-sft.{log,csv}` · `...-v2e-eval{,-rubric}.md` · `...-v2e.md`） |
 | **sft-lora-r8-5e4 last.pt** | **Day 7 LoRA r=8 终版（v2 数据，merged；1.20% 可训练；val 1.8253 / 题库 15-18 / rep-4 0.260；1 epoch 欠拟合，不部署）** | 526MB（model-only）+ adapter 6.5MB | `81fbbf0840ed56c1`（adapter `94ce1732659ec48c`） | `out/sft-lora-r8-5e4/last.pt` / `adapter.pt`（`reports/2026-11-19-day7-lora-5e4.log` · `...-eval-lora.md`） |
 
+## 部署产物（GGUF，本地产物 gitignore；指纹用于对拍/回滚）
+
+| 件 | 来源 | 规模 | 指纹（sha256 前 16） | 落位 |
+|---|---|---|---|---|
+| `pretrain-lab-140m-sft-v2e-f16.gguf` | **v2e 部署导出**（q/k permute 同 Day 7；Ollama q8/q4 均由此量化） | 326MB / 147 tensors | `eee108223b9c0278` | `out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf`（对拍表 = `reports/2026-11-20-deploy-v2e.md` §2） |
+
+> 量化档：`pretrain-lab-sft-v2e`（F16）· **`pretrain-lab-sft-v2e-q8`（Q8_0，部署默认）** · `pretrain-lab-sft-v2e-q4`（Q4_K_M，**不推荐**——吃掉 math 42/translate 新学能力）。旧 v2 tag 全部保留（回滚 <1min）。
+
 ## Tokenizer（Day 2 产出）
 
 | 件 | 训练语料 | 词表 | 指纹 | 落位 |

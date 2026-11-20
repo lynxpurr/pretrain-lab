@@ -12,7 +12,7 @@
 | 预训练 | 3,000,000,000 token（FineWeb-Edu 60% + minimind pretrain_t2t 40%）· 46 个 ckpt 谱系 |
 | SFT | `data/sft-mix-v2` 250,001,408 token（minimind sft_t2t_mini + 合成校准/格式/正例；assistant-only mask；25% 预训练混入） |
 | 底座 / SFT ckpt | `out/main140m/last.pt`（val 2.7709）→ `out/sft-v2/last.pt`（SFT val 1.6038） |
-| 量化 | GGUF F16 312MB / Q4_K_M 103MB / Q8_0 173MB（Ollama 用户级服务 11435） |
+| 量化 | **部署默认 Q8_0（173MB）**——Q4_K_M 在 v2e 上会吃掉新学能力（math 42→72 / translate 回退），见 `reports/2026-11-20-deploy-v2e.md`；F16 326MB 可选。Ollama 用户级 11435 |
 | 训练环境 | 本地 RTX 5070 Ti 16GB · `.venv-pre` torch 2.11.0+cu128 · 预训练 16h08m / SFT v2 1h20m |
 
 ## 2. 预期用途
@@ -63,9 +63,9 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 .venv-pre/bin/python -I tools/eval.py --ckpt sft=out/sft-v2/last.pt --out reports/eval.md
 # GGUF / Ollama
 .venv-pre/bin/python -I tools/export_gguf.py --ckpt out/sft-v2/last.pt --out out/gguf/sft-v2-f16.gguf
-OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2-q4 -f out/Modelfile-sft-v2 -q q4_K_M
+OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfile-sft-v2e -q q8_0
 # demo
-.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2-q4 --port 7860
+.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860
 ```
 
 ## 7. 引用/出处

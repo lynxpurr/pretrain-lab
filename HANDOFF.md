@@ -31,7 +31,7 @@
 - **SFT v2d（消融，不部署，机动窗口）**：`out/sft-v2d/last.pt`（val 1.6059 · sha `fe972eed11aa599b`）——**rep-4 0.084（SFT 最低档）+ rubric 6/8（最高）**、reason 0.728→**0.088** / en-fluency 0.708→0.371 / zh-fluency 0.516→0.303、math-add 纯数字"8"；未达 = rep-4 差 0.004 / math-mul 回退 72 / translate 字词解释 / 关键词题库 15/18（语义 17/18）
 - **LoRA r=8 5e-4**：`out/sft-lora-r8-5e4/last.pt`（merged；1.20% 可训练；peak 9.74GB；**val 1.8253 / 题库 15-18 / rep-4 0.260**；1 epoch 欠拟合，不部署）
 - **数据**：`data/shards/`（3B 预训练）· `data/sft-mix/`（v1）· `data/sft-mix-v2/`（部署）· `data/sft-mix-v2b/v2c/v2d/`（消融）· `data/sft-extra-v2/`（校准/格式/正例/**concise**）· `data/eval/tests.json`（18 题 / 9 tag）
-- **部署**：GGUF F16 326MB / Q4_K_M 103MB / Q8_0 173MB · Ollama 用户级 11435 · `tools/app_stdlib.py`（7860）
+- **部署（2026-11-20 已切 v2e）**：Ollama 用户级 11435 默认 **`pretrain-lab-sft-v2e-q8`**（GGUF F16 326MB / Q8_0 173MB / Q4_K_M 103MB 保留但不保真）· `tools/app_stdlib.py`（7860）· 旧 v2 tag 全保留（回滚 <1min）· 证据 `reports/2026-11-20-deploy-v2e.md`
 - **报告（G6）**：**[REPORT.md](REPORT.md)**（七版素材 + loss 图 + §4.5 v2d；Day 10 定稿）· 图 = `tools/plot_loss.py`（`reports/figs/loss-curves-day8-v2d.png`）
 - **脚本**：`tools/{model,train,sft,eval,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app,plot_loss}.py`
 - **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（不加训 15 亿，双证据 0.0134 / 0.0051）
@@ -69,7 +69,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 ```
 
 - `bad interpreter` = venv 断链（D-07 uv 托管解释器免疫此坑）。
-- `ollama-user-missing` / `demo-missing`：启动命令见 [reports/2026-11-19-day7-deploy.md](reports/2026-11-19-day7-deploy.md) §2/§4——Ollama 用户级 `OLLAMA_MODELS=$HOME/.ollama/models OLLAMA_HOST=127.0.0.1:11435 ollama serve`；demo `.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2-q4 --port 7860`。
+- `ollama-user-missing` / `demo-missing`：启动命令见 [reports/2026-11-19-day7-deploy.md](reports/2026-11-19-day7-deploy.md) §2/§4——Ollama 用户级 `OLLAMA_MODELS=$HOME/.ollama/models OLLAMA_HOST=127.0.0.1:11435 ollama serve`；demo `.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860`（2026-11-20 已切 v2e-q8）。
 - 分片 `sha256sum -c` 失败 = 数据被动过——**先查再训**（PROVENANCE 纪律）。
 - 检查不过 → PLAN §8 环境快照 / §5 风险表；重建命令见 `reports/2026-11-18-day0-env-snapshot.md`。
 
@@ -120,7 +120,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 | **LoRA r8** | 1.20% 可训练 / peak **9.74GB（-2.3GB）** / **54,124 tok/s** / ckpt **526MB + adapter 6.5MB** / val **1.8253** / 题库 15-18 / **rep-4 0.260** / 1 epoch 欠拟合（不部署；Day 8 试 r=12/2 epochs） |
 | **SFT v2e（消融，机动窗口第 2 轮，五项全过）** | 数据 250,001,408 token（列表 11.47% / 会话 595,348 / 监督 75.99% / 去污 12 处 + translate 精确对 180 + math 豁免 ×2 12,500 + en_flu 1× 770）· 训练 **1h19m19s / 3,815 步 / 53,098 tok/s / val 1.6065 / peak 12.05GB** · 八版评测 **rep-4 0.055（全系最低）+ 题库 17/18（去污后）+ rubric 6/8 + distinct-2 0.860**、translate "我热爱机器学习。"、math 8/42（真泛化）、en-fluency 0.208 / zh-flu 0.224 / reason 0.095 → **五项判据全过，待拍板部署切换** |
 | **SFT v2d（消融，机动窗口）** | 数据 250,001,408 token（列表 10.15% / 会话 613,180 / 监督 75.65% / 长答案砍 6,507 留 6,296 + translate 写入 2,106 + concise 150 + fmt 3×）· 训练 **1h19m44s / 3,815 步 / 52,851 tok/s / val 1.6059 / peak 12.05GB** · 七版评测 **rep-4 0.084（SFT 最低档）+ rubric 6/8（最高）**、reason 0.728→0.088 / en-flu 0.708→0.371 / zh-flu 0.516→0.303 / math-add 纯数字「8」；未达 = rep-4 差 0.004 / math-mul 72 / translate 字词解释 / 关键词 15-18（语义 17-18）→ 不部署 |
-| **GGUF/Ollama** | F16 326MB / Q4_K_M **103MB** / Q8_0 173MB；raw 与 PyTorch 输出一致；demo 7860（系统提示 + T0.7） |
+| **GGUF/Ollama** | **部署 = v2e-q8**；F16 对拍 5/5 逐字一致；Q8_0 保住新学能力（42/中文翻译）；**Q4_K_M 在 v2e 上不保真**（42→72）；demo 7860（系统提示 + T0.7） |
 
 **指纹与待办**
 
@@ -169,7 +169,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 
 | # | 事项 | 判据/状态 |
 |---|---|---|
-| 1 | **部署切换 v2e（待拍板）**：重导 GGUF（Q4_K_M/Q8_0）→ Ollama `pretrain-lab-sft-v2e-q4/q8` → demo 指向新模型 → MODEL_CARD/README/REPORT 联动 | 参照 Day 7 部署链路（`reports/2026-11-19-day7-deploy.md` §2/§4）；规模 ~30 min |
+| 1 | ~~部署切换 v2e~~ | ✅ **完成（2026-11-20）**：默认 `pretrain-lab-sft-v2e-q8`，demo 已切；Q4 不保真（量化吃掉新学能力）→ 证据 `reports/2026-11-20-deploy-v2e.md` |
 | 2 | **不切换（备选）**：v2 保持部署，v2e 入档"能力全面最优"消融 | 预注册五项已全过，此路径仅因"不动部署"而选 |
 | 3 | 报告定稿准备：八版对比表 + §4.6 v2e + 评测污染方法学章节（§5 或新增）+ loss 图（day8-v2e） | Day 10 素材齐 |
 | 4 | LoRA 深化（r=12 / 2 epochs）/ DPO（视余力） | 题库差 ≤2 题 + 三读数 / refuse 保持 + 判据不降 |

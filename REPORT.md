@@ -12,12 +12,12 @@
 | 预训练 | 3.0B token（中 40% / 英 60%）· 16h07m41s · 52,171 tok/s · val **2.7709** · 0 尖峰 0 中断 · 单卡 RTX 5070 Ti 16GB |
 | 吞吐门① | 140M 探针 **52,250 tok/s ≥ 35k**（超 49%），预注册口径跑前未改 |
 | 加训门② | 最后 10% val 降幅 0.0134 + 恒定 lr 探针 0.0051 → **不加训**（双证据） |
-| SFT | 250M token / assistant-only mask / 1 epoch ≈1h20m；**v2 部署版**：val 1.6038、rep-4 0.131→**0.066**、题库 6/18→15/18（语义 16）；**v2c 消融**：题库 **17/18（最高）** + en-fluency/math 修复，rep-4 0.135（判据未过不部署，§4.4） |
+| SFT | 250M token / assistant-only mask / 1 epoch ≈1h20m × 6 版；**v2e（部署）**：**val 1.6065、rep-4 0.055（全系最低）、题库 17/18（去污后干净读数）、math 8/42 真泛化、translate 真译文**；v2/v2b/v2c/v2d 为过程消融（§4.2~§4.5），v1 为基线 |
 | LoRA | r=8（1.20% 可训练）· 峰值显存 **9.74GB（−2.3GB）** · ckpt 526MB+adapter 6.5MB · 1 epoch 欠拟合（val 1.8253） |
-| 部署 | GGUF **Q4_K_M 103MB** · Ollama 11435 · 本地聊天页 7860 · GPU 推理 ~910–1,434 tok/s |
+| 部署 | **v2e-q8（Q8_0 173MB，2026-11-20 切换）** · Ollama 11435 · 本地聊天页 7860 · GPU 推理 ~910–1,434 tok/s |
 | 成本 | 全本地：电费 ~¥4–5/天 + 磁盘 ~120GB；GPU 累计 ~25h（§8 细账） |
 
-**一句话结论**：16GB 消费级显卡上 10 天，从 tokenizer 到可对话 demo 的完整闭环是可行的；决定最终质量的不是训练技巧，而是 **SFT 数据的三轮迭代**（§4）——每轮都由"评测暴露缺陷 → 侦察归因 → 数据侧修复 → 单变量对照"驱动。
+**一句话结论**：16GB 消费级显卡上 10 天，从 tokenizer 到可对话 demo 的完整闭环是可行的；决定最终质量的不是训练技巧，而是 **SFT 数据的五轮迭代**（§4）——每轮都由"评测暴露缺陷 → 侦察归因 → 数据侧修复 → 单变量对照"驱动；而比所有单版读数更重要的一条是**评测集去重**（§5.1）：不配去重的"修复"会把指标变成记忆测试。
 
 **八版评测对比**（Day 8 + 机动窗口，同 val / 同 18 题题库 / 统一 greedy；**v2e 起为去污后的干净读数**；详见 §4.4~§4.6 与 `reports/2026-11-20-day8-eval.md` · `...-v2d-eval.md` · `...-v2e-eval.md`）：
 
@@ -80,7 +80,7 @@
 
 左：主训练曲线（anchor ln(V)=10.37 锚定、门② 判定区间高亮）。右：同底座同预算下 v1/v2/v2b/v2c/v2d/v2e 六版 val 曲线几乎重合（final 1.55~1.61，同 step 差 ≤0.005）——**四轮数据迭代的质量收益在评测维度，不在 loss 维度**（§4）。图 = `tools/plot_loss.py`（素材 = 各 run 的证据 csv）。
 
-## 4. SFT 数据的三轮迭代（Day 5~8）★ 本报告的核心章节
+## 4. SFT 数据的五轮迭代（Day 5~8 + 机动窗口）★ 本报告的核心章节
 
 SFT 本身只有 ~1h20m（250M token / assistant-only mask / 25% 预训练块混入 / 1 epoch / lr 1e-4）。**真正的故事在数据**：四版数据、每组只改采样规则、同一底座同一评测——把"数据侧修复"的假设-实验-结论链完整记录。
 
@@ -197,6 +197,23 @@ greedy rep-4 0.131 vs 采样 0.123——**"greedy 放大复读"证伪**；rp1.3 
 - **单次温度采样不能做数据归因**：v2 训练中采样说"通义千问"，精确 prompt 统计 82.7% 是 MiniMind——身份/风格是随机变量，用固定解码或统计口径。
 - **"按评测缺陷造数据"必须配评测集去重**（v2e 开工发现）：v2 起为修缺陷造的 extras 直接引用了评测原句（2027 世界杯 / 7×6 / 水的化学式…），使题库分含记忆成分。**修复数据要按"能力/行为"写（同型变体），不能按"题目"写**；构建侧加 `assert_no_eval_leak` 硬断言；报告要标注哪些版本的读数是"含记忆"的（v2~v2d）与哪些是干净的（v1、v2e）。
 
+### 5.1 评测集污染（v2e 开工发现与去污）★ 方法学
+
+SFT 数据的每轮"修复"都是按评测暴露的缺陷造的补充样本（`data/sft-extra-v2/`）——**造着造着就把评测原句带进了训练集**：
+
+| 评测题 | 撞车样本（引入版本） | 后果 |
+|---|---|---|
+| refuse-unknown "2027 世界杯冠军" | calibration **完全一致**（v2 起） | v2~v2d 的 refuse "过" = 记忆原题 |
+| math-mul "7 乘以 6…只回答数字" | format ARITH 模板生成原句（v2 起） | math 42 的修复 = 部分记忆 |
+| fact-water / fact-capital-cn / list-3 / def-ml / reason | format brevity/list3/one_sentence、helpful（v2 起） | 对应题"过"含记忆 |
+| en-fluency / zh-fluency | concise 原句/近句（v2d 起） | v2d 三题复读改善含记忆成分 |
+
+**结论：v2~v2d 的题库分含记忆成分；v1 的 16/18 与 v2e 的 17/18 才是干净读数。**
+
+**修法（v2e）**：①造数据按"能力/行为"写同型变体（换年份/数字/知识点/场景），不按"题目"写；②构建侧硬断言 `assert_no_eval_leak()`——extras 的 user 原句 norm 后不得与 `data/eval/tests.json` prompt 相同或互相包含，撞车即 AssertionError（12 处去污后复扫 0 撞车）；③报告并列"含记忆/干净"读数并标注版本。
+
+**净化后的证据**：v2e 在无记忆样本下五项判据全过（rep-4 0.055 / 题库 17/18 / math 42 真泛化 / translate "我热爱机器学习。"）——说明真正的修复机制（数学豁免 ×2、精确指令对、长答案压制）**泛化得动**，而记忆样本只能"修指标"。**有评测集的项目，应把"extras vs 测试集去重"做成构建硬门，和"值域断言"同级。**
+
 ## 6. LoRA vs 全参（Day 7）
 
 | 维度 | 全参 SFT | LoRA r=8 |
@@ -259,12 +276,15 @@ greedy rep-4 0.131 vs 采样 0.123——**"greedy 放大复读"证伪**；rp1.3 
 python tools/train_tokenizer.py                    # 32k BPE
 python tools/build_shards.py                       # 3B 分片
 python tools/train.py --run-name main140m ...      # 预训练（命令见 reports/2026-11-18-day3-140m-probe.md §6）
-python tools/build_sft_v2.py --listy-keep-den 5 --calib-repeat 3 --format-repeat 2 --helpful-repeat 3 \
-    --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5 --out-dir data/sft-mix-v2c
-python tools/sft.py --init-from out/main140m/last.pt --data-dir data/sft-mix-v2c --run-name sft-v2c ...  # 见 skill §3.2
-python tools/eval.py --ckpt base=out/main140m/last.pt --ckpt sft=out/sft-v2/last.pt --out reports/<date>-eval.md
-python tools/export_gguf.py && ollama create pretrain-lab-sft-v2-q4 -f Modelfile   # 部署
-python tools/app_stdlib.py --model pretrain-lab-sft-v2-q4 --port 7860              # demo
+python tools/build_sft_v2.py --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 \
+    --en-helpful-upsample 5 --concise-repeat 3 --translate-upsample 3 --long-answer-keep-den 2 \
+    --format-repeat 3 --translate-ex-repeat 6 --math-upsample 2 --en-flu-no-upsample \
+    --out-dir data/sft-mix-v2e                     # 最终数据（v2e，含 extras 评测去污断言）
+python tools/sft.py --init-from out/main140m/last.pt --data-dir data/sft-mix-v2e --run-name sft-v2e ...  # 见 skill §3.2
+python tools/eval.py --ckpt base=out/main140m/last.pt --ckpt v2e=out/sft-v2e/last.pt --out reports/<date>-eval.md
+python tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf  # GGUF
+ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfile-sft-v2e -q q8_0            # 部署（Q8_0）
+python tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860             # demo
 ```
 
 ## 11. 已知限制与下一步

@@ -27,7 +27,7 @@
 | G1 最小闭环 + 门① | ✅ | 140M 探针 **52,250 tok/s** ≥ 35k（门① PASS） |
 | G2 140M 底座 | ✅ | 3B token / 16h08m / **val 2.7709** / 46 ckpt 谱系 |
 | G3 SFT + LoRA | ✅ 完成 | SFT v2 val **1.6038** / rep-4 **0.066**（部署）；v2b/v2c/v2d/v2e 消融（**v2e 五项判据全过：rep-4 0.055 / 题库 17/18 去污后 / math 8-42，待部署拍板**）；LoRA r=8 **1.20% / peak 9.74GB / ckpt 526MB / val 1.8253 / rep-4 0.260（1 epoch 欠拟合，不部署）** |
-| G4 本地 demo | ✅ 完成 | GGUF F16 326MB / **Q4_K_M 103MB** / Q8_0 173MB；Ollama 11435；本地页 **7860**（stdlib 替代 Gradio） |
+| G4 本地 demo | ✅ 完成（**部署已切 v2e-q8**） | GGUF F16 326MB / Q8_0 173MB（部署默认）/ Q4_K_M 103MB（v2e 上不保真）；Ollama 11435 默认 **`pretrain-lab-sft-v2e-q8`**；本地页 **7860**（stdlib 替代 Gradio） |
 | G5 评测框架 + 对比 | ✅ 八版对比 | base/v1/v2/v2b/lora/v2c/v2d/v2e 同 val 同 18 题同 greedy + rubric + distinct-2/rep-4；**评测污染已识别并去污**（v2e 起为干净读数） |
 | G6 报告 + repo | 🟡 报告起稿 | **[REPORT.md](REPORT.md) 11 章骨架（Day 0~8 素材）** + [MODEL_CARD.md](MODEL_CARD.md) + 各日报告/证据三分；§8 成本精确化 + loss 图 + 定稿待 Day 10 |
 
