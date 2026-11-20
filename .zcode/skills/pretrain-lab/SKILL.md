@@ -86,10 +86,10 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
   --sample-every 500 --ckpt-every 250 --lora-rank 8 --lora-alpha 16
 ```
 - 可训练 **1.20%**（r=8，qkv/proj/gate/up/down）；peak **9.74GB**（比全参 -2.3GB）；ckpt **526MB + adapter 6.5MB**；`last.pt` 已 merge（eval/deploy 直接用），`adapter.pt` 单独存。
-- **lr**：2e-4 首跑 1000 步 val 1.8839 且采样退化；5e-4 同 step 更好（500 步 1.8974）。r=8 1 epoch 可能仍欠拟合；Day 8 试 r=12（≈1.80%）/ 2 epochs。
+- **lr**：2e-4 首跑 1000 步 val 1.8839 且采样退化；5e-4 同 step 更好（500 步 1.8974）。r=8 1 epoch 可能仍欠拟合；机动窗口试 r=12（≈1.80%）/ 2 epochs。
 - 冒烟：`--max-steps 50 --eval-every 0 --sample-every 0 --ckpt-every 0`，loss 应下降（实测 2.7086 → 2.5235）。
 
-**评测协议（Day 10 三版对比沿用）**：
+**评测协议（Day 10 六版对比沿用）**：
 ```bash
 .venv-pre/bin/python -I tools/eval.py --ckpt base=out/main140m/last.pt --ckpt sft=out/sft-v1/last.pt \
   --out reports/<日期>-eval.md
@@ -161,7 +161,7 @@ cd data/shards && sha256sum -c SHA256SUMS
 - 每份数据落位即录指纹（raw 层 17 条 Day 0 已立、字符级 3 条 Day 1 已立、tokenizer 3 条 + 分片 7 条 Day 2 已立；SFT 数据 Day 4 续录）。
 - 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**）**已判定 PASS（52,250 tok/s，2026-11-18）**；②（Day 6 loss 仍陡降→加训）**已判定不触发（最后 10% 0.0134 + 恒定 lr 探针 0.0051，2026-11-19）**，重开条件见 PLAN §4.1——两者跑前未改口径。
 - SFT/评测协议（Day 6 定档，Day 7 扩展）：SFT 数据 25% 预训练混入 + assistant-only mask；评测统一 greedy + 关键词判分 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。评测 CSV 固定 8 列（model,decode,test_id,tag,pass,distinct2,rep4,answer）、答案截断 1000；关键词分与 rubric 分并列报告。
-- **数据采样按能力域保护**（Day 7）：列表类降采样前先识别数学/推理样本（用户句数学关键词+数字，或答案含公式/等式）并豁免；v2 一刀切把长数学推理砍掉导致 `math-add 15 / math-mul 72`，v2b 豁免后修回 `8/42`（代价 rep-4 0.117）。Day 8 改"只保护短算术/截断长步骤"。
+- **数据采样按能力域保护**（Day 7 立，Day 8 收窄）：v2 一刀切列表降采样误伤数学（`math-add 15 / math-mul 72`）；v2b 全量豁免数学修回 `8/42` 但 rep-4 0.117；**v2c 定稿口径 = 仅 assistant 等式行 ≥3 的数学列表豁免**（练习列表教算术组合，写入 6,243 条，math 照样修回且列表占比 10.55%）——豁免口径按"功能特征"而非"领域标签"，改口径先做 assistant 侧分桶侦察。
 - 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。
 - 边界：nl2fem / finetune-lab 是知识上游非资产上游（PLAN §7），只引用知识不改其档案。
@@ -174,4 +174,4 @@ cd data/shards && sha256sum -c SHA256SUMS
 4. **链接面**：README/HANDOFF/PLAN/notes/reports 相对链接 0 断链（盘点批扫描 14 份文档）。
 5. **状态面**：HANDOFF §1/§3/§5/§7、README 状态、LAB_NOTEBOOK 当日段、lessons/qa、PLAN 变更记录同步。
 6. **导出/评测链路面**（Day 7 起）：GGUF raw 与 PyTorch 同 prompt/greedy 对拍；`eval.py` CSV 表头 8 列 + 行字段数断言；rubric 与关键词分并列；demo `/health` + `ollama ps` 显示 100% GPU。
-7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；四版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分。
+7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；六版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分；**修复项要连着查相邻能力域**（Day 8：en-fluency 修复伴随英文复读 + translate 方向回归）。

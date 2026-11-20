@@ -15,11 +15,11 @@
 
 **新会话首条消息（可直接粘贴）**：
 
-> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` Day 8 + `notes/qa-day-8.md` + lessons Day 8 段 + `reports/2026-11-20-day8-v2c.md`）→ 执行 §7 机动窗口清单（v2d / LoRA 深化 / DPO 三选一 + 报告推进），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` Day 8 + `notes/qa-day-8.md` + lessons Day 8 段 + `reports/2026-11-20-day8-{v2c,review}.md` 运行与盘点）→ 执行 §7 机动窗口清单（v2d / LoRA 深化 / DPO 三选一 + 报告推进），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
 
 ## 1. 状态一段话
 
-**Day 0~8 已全部收官，下一动作 = 机动窗口 11-22~25（v2d / LoRA 深化 / DPO 任选）+ 报告推进（REPORT.md 已起）**。项目 = 本地 5070 Ti 16GB 上 10 天从零训一个 ~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo），**学习导向**；底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。
+**Day 0~8 已全部收官，下一动作 = 机动窗口（11-20 缓冲 / 11-22~25：v2d / LoRA 深化 / DPO 任选）+ 报告推进（REPORT.md 已起）**。项目 = 本地 5070 Ti 16GB 上 10 天从零训一个 ~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo），**学习导向**；底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。
 
 **当前手里有什么（都能直接跑）**：
 - **底座**：`out/main140m/last.pt`（137,847,552 参数 · 3B token · **val 2.7709** · sha `0c0096cc172e8a58`）+ 46 个等间隔 ckpt 谱系（≈73GB）
@@ -144,7 +144,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 ## 6. 惯例与红线
 
 - **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（含 §3 预训练、§3.2 SFT+评测、§6 收波校准清单）。
-- **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。当前待自答：qa-day-2 ~ qa-day-5、qa-day-7、qa-day-8。
+- **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。当前待自答：qa-day-2 ~ qa-day-5、qa-day-7；qa-day-8 已有 agent 预答卡（本会话回填，可复核/改写）。
 - **证据纪律**：`reports/` 只增不改（改错走勘误追加）；每次 run 证据三分 = 摘要 md + 曲线 csv + 原始 log。
 - **指纹纪律**：每份数据/ckpt 落位即录（`SHA256SUMS` 例外入库；数据本体 gitignore）。
 - **git**：develop 直提为主（信息带 `day-N` 标签）；大改走 `feature/day-N-<slug>` → `--no-ff`；模型/checkpoint/语料/日志不入库。
