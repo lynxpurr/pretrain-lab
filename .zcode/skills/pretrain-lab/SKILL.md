@@ -94,7 +94,7 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 - **lr**：2e-4 首跑 1000 步 val 1.8839 且采样退化；5e-4 同 step 更好（500 步 1.8974）。r=8 1 epoch 可能仍欠拟合；机动窗口试 r=12（≈1.80%）/ 2 epochs。
 - 冒烟：`--max-steps 50 --eval-every 0 --sample-every 0 --ckpt-every 0`，loss 应下降（实测 2.7086 → 2.5235）。
 
-**评测协议（Day 10 六版对比沿用）**：
+**评测协议（Day 10 七版对比沿用）**：
 ```bash
 .venv-pre/bin/python -I tools/eval.py --ckpt base=out/main140m/last.pt --ckpt sft=out/sft-v1/last.pt \
   --out reports/<日期>-eval.md
@@ -179,4 +179,4 @@ cd data/shards && sha256sum -c SHA256SUMS
 4. **链接面**：README/HANDOFF/PLAN/notes/reports 相对链接 0 断链（盘点批扫描 14 份文档）。
 5. **状态面**：HANDOFF §1/§3/§5/§7、README 状态、LAB_NOTEBOOK 当日段、lessons/qa、PLAN 变更记录同步。
 6. **导出/评测链路面**（Day 7 起）：GGUF raw 与 PyTorch 同 prompt/greedy 对拍；`eval.py` CSV 表头 8 列 + 行字段数断言；rubric 与关键词分并列；demo `/health` + `ollama ps` 显示 100% GPU。
-7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；六版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分；**修复项要连着查相邻能力域**（Day 8：en-fluency 修复伴随英文复读 + translate 方向回归）。
+7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；七版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分；**修复项要连着查相邻能力域**（Day 8：en-fluency 修复伴随英文复读 + translate 方向回归）。
