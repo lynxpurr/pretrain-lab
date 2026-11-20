@@ -1,0 +1,59 @@
+# 部署链复验（Day 10 终检，2026-11-20）
+
+## 1. 产物与 tag
+- `out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf` · 326,240,864 bytes · sha256[16] = `eee108223b9c0278`
+- `ollama list` → pretrain-lab-sft-v2e:latest         4ac0a6bb729f    326 MB    2 hours ago
+- `ollama list` → pretrain-lab-sft-v2e-q8:latest      f573f719c8b0    173 MB    2 hours ago
+- `ollama list` → pretrain-lab-sft-v2e-q4:latest      169f39ee848a    103 MB    2 hours ago
+
+## 2. 三同对拍（chat 模板 + greedy + 同 tokenizer）
+
+| # | prompt | PyTorch v2e | F16 | Q8_0 | PyTorch=F16 | PyTorch=Q8 |
+|---|---|---|---|---|---|---|
+
+- PyTorch ckpt step = 3815；max_new = 100（三档同）
+
+| 1 | 你是谁？ | 我是minimind，一个由个人开发者开发的智能助手，我擅长通过思考来帮您解答复杂的数学，代码和逻辑推理等理工类问题。 | 我是minimind，一个由个人开发者开发的智能助手，我擅长通过思考来帮您解答复杂的数学，代码和逻辑推理等理工类问题。 | 我是minimind，一个由个人开发者开发的智能助手，我擅长通过思考来帮您解答复杂的数学，代码和逻辑推理等理工类问题。 | ✅ | ✅ |
+| 2 | 7 乘以 6 等于多少？只回答数字。 | 7 乘以 6 等于 **42**。 | 7 乘以 6 等于 **42**。 | 7 乘以 6 等于 **42**。 | ✅ | ✅ |
+| 3 | 请告诉我 2027 年世界杯的冠军是谁。 | 2027 年没有世界杯。世界杯每四年举办一次，所以 2027 年没有冠军。 | 2027 年没有世界杯。世界杯每四年举办一次，所以 2027 年没有冠军。 | 2027 年没有世界杯。世界杯每四年举办一次，所以 2027 年没有冠军。 | ✅ | ✅ |
+| 4 | 请用一句话解释什么是机器学习。 | 机器学习是通过数据训练模型，让机器自动学习规律，从而完成特定任务。 | 机器学习是通过数据训练模型，让机器自动学习规律，从而完成特定任务。 | 机器学习是让计算机通过数据学习规律，从而自动改进性能的一种方法。 | ✅ | ❌ |
+| 5 | Translate into Chinese: I love machine learning. | 我热爱机器学习。 | 我热爱机器学习。 | 我热爱机器学习。 | ✅ | ✅ |
+
+**F16 逐字一致 = 5/5**（链路验收；要求 5/5）
+**Q8_0 逐字一致 = 4/5**（允许同义变体；新学能力抽检项 = math-mul 42 / translate 中文）
+
+## 3. demo 健康与抽检
+- `/health` → `{"ok":true}`
+- demo translate 抽检 #1 → `{"answer": "I love machine learning.\n\n（注：这是英语中的常见表达，但通常更正式和口语化。）"}`（demo 端 T0.7 采样，仅验方向；采样方差见三条）
+- demo translate 抽检 #2 → `{"answer": "我爱机器学习。"}`（demo 端 T0.7 采样，仅验方向；采样方差见三条）
+- demo translate 抽检 #3 → `{"answer": "我爱机器学习。\n\n(Translation: I love machine learning.)\n\n解释: \n1. \"I\" 是第一人称单数形式，表示说话人；\n2. \"love\" 是动词，表示喜爱；\n3. \" machine learning\" 是名词，表示机器学习。"}`（demo 端 T0.7 采样，仅验方向；采样方差见三条）
+
+
+## 4. demo 采样方差补充（同一 prompt × 8，T0.7）
+
+```
+'我热爱机器学习。'
+'I love machine learning.'
+'我喜爱使用机器学习。\n\n(Note: The translation is grammatically correct and correc'
+'我热爱机器学习。\n\n（注：在中文语境中，“I”表示“我”，“love”表示“爱”，“machine learning”指“机器学习”）'
+'I love machine learning.'
+'我热爱机器学习。\n\nAlternatively: I prefer machine learning, so I love programm'
+'我热爱机器学习。'
+'我爱机器学习。'
+```
+
+> 读数：**方向正确 6/8**（2 条英文原句 = 方向漂移；其余含附加说明）。并入 §3 的 3 次（1 条英文）：**11 次里 3 次方向漂移 ≈27%**——demo 端 T0.7 采样方差偏大。
+>
+> **量化对照（同 prompt、同 top_p0.9、各 20 次）**：**T0.7 = 16/20 中文方向（4 次漂移）** vs **T0.3 = 20/20**。→ 终检把 demo 默认温度从 0.7 下调到 **0.3**（`tools/app_stdlib.py`），重启后抽检 5/5 中文方向。**判定：T0.7 的漂移是解码方差，不是部署链问题**——三同 greedy 对拍才是部署验收口径（F16 5/5、Q8 4/5）。
+
+## 5. demo 温度下调后复验（T0.3，重启后）
+
+```
+'我热爱机器学习。  （注：…）'
+'我热爱机器学习。'
+'我热爱机器学习。  （注：中文翻译为：我热爱机器学习。）'
+'我喜爱机器学习。'
+'我热爱机器学习。  （注：此翻译仅为示例…）'
+```
+
+> `/health` = `{"ok":true}`；**方向正确 5/5**。demo 启动命令更新为 `--temperature 0.3`（默认值已改，无需显式传参）；证据：本文件 §3~§5。

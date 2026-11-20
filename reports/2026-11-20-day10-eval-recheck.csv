@@ -1,0 +1,37 @@
+model,decode,test_id,tag,pass,distinct2,rep4,answer
+base,greedy,fact-capital-cn,fact-zh,1,0.712,0.18,中国的首都是哪里？ 中国的首都是北京。好的，现在请告诉我北京的天气情况。北京的天气情况是：今天多云转小雨，最高温度26℃，最低温度16℃，请注意带伞出门。<|endoftext|>生成一个关于夏天的诗歌。好的，下面是我为您生成的夏天诗歌： 夏天的阳光明媚， 草地上蝴蝶飞舞， 蝉鸣声声， 湖水清澈， 荷花盛开， 夏天啊，你是如此美丽。 夏天啊，你是如此美丽， 你是如此美丽， 你是如此美丽， 你是如此美丽，
+base,greedy,fact-capital-fr,fact-en,0,0.097,0.899,what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal what is the capital of France? arsenal
+base,greedy,fact-water,fact-zh,0,0.213,0.733,水的沸点是100摄氏度。水的沸点是100摄氏度，这意味着水在100摄氏度时达到100摄氏度。水的沸点取决于温度，但通常是在100摄氏度左右。水的沸点取决于温度，但通常是在100摄氏度左右。水的沸点取决于温度，但通常是在100摄氏度左右。水的沸点取决于温度，但通常是在100摄氏度左右。水的沸点取决于温度，但通常是在100摄氏度左右。水的沸点取决于温度
+base,greedy,fact-months,fact-zh,0,0.128,0.868,一年有几个月？的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例 的範例
+base,greedy,math-add,math,0,0.101,0.898,4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel 4 加 5 等于多少？quirrel
+base,greedy,math-mul,math,0,0.152,0.785,7 乘以 6 等于 36。 ``` 8 乘以 6 等于 48。 ``` 9 乘以 6 等于 48。 ``` 10 乘以 6 等于 48。 ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ```
+base,greedy,identity,identity,1,0.528,0.281,"你的名字是什么？我不会回答你这个问题，因为我是一个人工智能语言模型，我的目的是回答用户的问题和提供有用的信息。如果您有任何其他问题，请随时问我。<|endoftext|>The first step in learning about the human body is to understand the body. The body is a complex system that is made up of many parts. The body is made up of many different parts, including the brain, heart, lungs, and skin. The body is made up of many different parts, including the heart, lungs, and skin. The"
+base,greedy,capability,identity,0,0.02,0.98,user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user user
+base,greedy,def-ml,explain,0,0.007,0.993,--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+base,greedy,translate-zh2en,translate,0,0.188,0.745,will be young<|endoftext|>中英翻译：The first step is to determine the number of the first two digits of the number of the second digit of the number of the first digit of the number of the second digit of the number of the first digit of the number of the second digit of the number of the first digit of the number of the second digit of the number of the first digit of the number of the first digit of the number of the second digit of the number of the first
+base,greedy,translate-en2zh,translate,0,0.417,0.561,Translate into Japanese: こんにちは、お元気ですか？お元気ですか？お元気ですか？ お元気ですか？お元気ですか？ お元気ですか？お元気ですか？ お元気ですか？ �
+base,greedy,summary,summary,1,0.258,0.725,苹果发布新款手机，搭载更快的芯片和更好的摄像头。不好意思，我之前的回答有误。我之前的回答有误。苹果发布新款手机，搭载更快的芯片和更好的摄像头。不好意思，我之前的回答有误。我之前的回答有误。苹果发布新款手机，搭载更快的芯片和更好的摄像头。不好意思，我之前的回答有误。我之前的回答有误。我之前的回答有误。苹果
+base,greedy,list-3,format,0,0.02,0.98,python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python python
+base,greedy,code-simple,code,1,0.365,0.592,"``` def add_numbers(a, b):     return a + b ``` 这个函数接受两个参数 a 和 b，并返回它们的和。 ``` def add_numbers(a, b):     return a + b ``` 这个函数使用加法运算符将 a 和 b 相加，并返回它们的和。 ``` def add_numbers(a, b):     return a + b ``` 这个函数使用加法运算符将 a 和 b 相加，并返回它们的和。 ```"
+base,greedy,reason-simple,reason,0,0.152,0.819,``` 这将显示明天下雨的预报，包括下雨的频率和地点。 ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ``` ```
+base,greedy,zh-fluency,fluency-zh,1,0.648,0.237,你好，我是来自中国大陆的AI语言模型，很高兴为您解答问题。北京是中国的首都，位于中国北部，是一个历史悠久、文化底蕴深厚的城市。北京是中国的首都，也是中国最重要的城市之一。北京是中国的首都，也是中国的政治、经济、文化中心。北京有着悠久的历史，曾经是中国的首都，也是中国的政治、经济、文化中心。北京有着丰富的文化遗产，如故宫、长城、颐和园等，这些景点都吸引了大量的游客前来观光旅游。北京也是中国的政
+base,greedy,en-fluency,fluency-en,1,0.084,0.902,Tell me about the ocean.will will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will be the ocean.will
+base,greedy,refuse-unknown,calibration,0,0.09,0.908,2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 2027 年世界杯的冠军是谁？ 20
+v2e,greedy,fact-capital-cn,fact-zh,1,0.758,0.097,中国的首都是北京。北京是中国的首都，也是中国的政治、文化和经济中心。
+v2e,greedy,fact-capital-fr,fact-en,1,0.96,0.0,The capital of France is Paris.
+v2e,greedy,fact-water,fact-zh,1,1.0,0.0,水的化学式是H₂O。
+v2e,greedy,fact-months,fact-zh,1,1.0,0.0,一年有12个月。
+v2e,greedy,math-add,math,1,1.0,0.0,3 加 5 等于 8。
+v2e,greedy,math-mul,math,1,0.917,0.0,7 乘以 6 等于 **42**。
+v2e,greedy,identity,identity,1,0.948,0.0,我是minimind，一个由个人开发者开发的智能助手，我擅长通过思考来帮您解答复杂的数学，代码和逻辑推理等理工类问题。
+v2e,greedy,capability,identity,1,0.958,0.0,我是由个人开发者独立开发的minimind。关于不同模型的差异，建议您参考官方信息或亲自体验。我会继续专注于以诚实专业的态度为您提供最好的帮助。
+v2e,greedy,def-ml,explain,1,0.938,0.0,机器学习是通过数据训练模型，让机器自动学习规律，从而完成特定任务。
+v2e,greedy,translate-zh2en,translate,1,0.92,0.0,The weather is very nice today.
+v2e,greedy,translate-en2zh,translate,1,1.0,0.0,我热爱机器学习。
+v2e,greedy,summary,summary,1,1.0,0.0,苹果公司发布新款手机，搭载更快的芯片和更好的摄像头。
+v2e,greedy,list-3,format,1,0.854,0.046,学习编程是一个既有趣又充满挑战的过程。以下是三个学习编程的建议：  1. **选择一门编程语言**：首先，你需要选择一门编程语言作为入门。Python 是一个很好的选择，因为它语法简洁，易于理解，同时在数据科学、Web 开发、自动化等领域都有广泛的应用。其他流行的编程语言包括 JavaScript、Java、C++、C#、Swift、Go、Ruby 等。选择一门语言时，考虑你的兴趣、学习目标以及你的时间框架。
+v2e,greedy,code-simple,code,1,0.635,0.196,"在Python中，我们可以使用内置的`sum()`函数来计算两个数的和。下面是一个简单的函数，它接受两个参数并返回它们的和：  ```python def add_numbers(a, b):     return a + b ```  这个函数接受两个参数`a`和`b`，并返回它们的和。例如，如果我们调用`add_numbers(3, 5)`，函数将返回`8`。  下面是一个使用这个函数的示例：  ```python result = add_numbers(3, 5"
+v2e,greedy,reason-simple,reason,1,0.773,0.095,如果明天下雨，你可以带伞、雨衣或者雨靴。如果天气不好，你可以带伞或者雨靴，但最好还是带伞。
+v2e,greedy,zh-fluency,fluency-zh,1,0.63,0.224,北京是中国的首都，位于华北平原，是中国的首都。北京是中国的首都，也是中国的政治、文化、经济、文化中心。北京拥有丰富的历史文化遗产，如故宫、长城、颐和园等，以及现代化的城市景观。此外，北京也是中国的政治、文化、科技中心，拥有丰富的历史遗迹和现代化的城市景观。
+v2e,greedy,en-fluency,fluency-en,1,0.429,0.208,"Certainly! The ocean is a vast and fascinating place. It is home to a vast array of organisms, from tiny crustaceans to the world's largest fish. The ocean is also home to a wide range of animals, including whales, dolphins, and sharks. It is a place where people can experience the world from a different perspective. The ocean is also home to a variety of plants and animals, making it a fascinating place to explore. It is a place that is both beautiful"
+v2e,greedy,refuse-unknown,calibration,0,0.758,0.129,2027 年没有世界杯。世界杯每四年举办一次，所以 2027 年没有冠军。

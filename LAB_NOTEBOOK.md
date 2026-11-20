@@ -109,6 +109,13 @@
 - 读数：GGUF F16 326MB / 147 tensors（sha `eee10822`）；Ollama 三 tag（F16/Q8/Q4）；demo 切 v2e-q8 后 /health {"ok":true}、translate 返回"我喜爱机器学习。"（T0.7 采样）；AC2~AC8 命令级验收全过；commit `d0c973d`（spec）+ `5fc4d2c`（部署+报告）。
 - 疑问：①LoRA r=12 一轮（~1.5h）值不值得在 Day 10 前补（G3 容量-效果曲线完整度 vs 时间）；②八版终表要不要把"含记忆/干净"做成显式列（建议做，评测污染是核心叙事）；③qa-day-2~5/7 回填的优先级（学习项，可与 Day 10 并行）。——Day 10 题池。
 
+## Day 10 · 2026-11-20（提前 7 天）· 终检 + 收官（八版终表 / 复现走查 / LoRA r12 / REPORT 定稿）
+
+- 决策：用户持卡"执行 §7 Day 10 终检清单（T4）"——按 §0-4 先把 §5 实际日期改为 **Day 10 = 11-20**（原定 11-27，提前 7 天），再执行 T4 五项；可选 LoRA r=12 按 HANDOFF 默认**做一轮**（补齐 G3 容量-效果曲线）；"含记忆/干净"标注列**保留**进对外版 REPORT（诚实读数解释优先于高分）。
+- 现象：①**v2e 数据重建 bit-for-bit 一致**——§10 原命令重跑到 `/tmp`，4/4 sha256 与生产数据逐条相同、meta 除时间戳外全字段相同（5.0 min）→ 数据流水线确定性可复现；②**eval 逐题可复现**——§10 评测命令重跑，v2e 18/18 行**逐字节相同**（含 answer 全文）；③**部署链复验**：F16 与 PyTorch **5/5 逐字一致**、Q8_0 **4/5 逐字 + 1 同义变体**且 math 42 / translate 中文全保住；④**终检新发现**：demo 端 T0.7 下 translate 方向漂移偏高（11 次 3 次英文）→ 量化对照 T0.7 **16/20** vs T0.3 **20/20** → demo 默认温度下调 **0.7→0.3**（重启后 5/5 中文方向）；⑤**LoRA r=12**（1.79%）val **1.8054**（r8 1.8253）、rubric 4→**5/8**、rep-4 0.260→**0.249**，但距全参 1.6038 仍差 0.20——**rank↑ 不是瓶颈主因，1 epoch 内低秩适配器学不会"模板+校准+格式"**；⑥文档校准：MODEL_CARD 主体从 v2 口径全面转 v2e（架构/限制/复现段）+ README 首屏收官态 + PLAN G3~G6 全绿 + PROVENANCE 补 lora-r12 指纹。
+- 读数：LoRA r12 = EXIT:0 / 3,815 步 / **val 1.8054** / 1h18m49s / 53,472 tok/s / peak 9.76GB / ckpt 551MB + adapter 10MB / 预训练 PPL 15.730 / SFT PPL 5.969 / 题库 15-18 / rubric 5-8 / rep-4 0.249；终检 = 八版表 8×7+标注（对账 v2e-eval）/ 54 份 md 152 链接 **0 断链** / 证据三分齐 / REPORT FINAL + spec COMPLETED；GPU 累计重算 **≈30.3h**、磁盘 **~145GB**。证据 = [reports/2026-11-20-day10-repro-check.md](reports/2026-11-20-day10-repro-check.md) · `...-deploy-v2e-recheck.log` · `...-lora-r12-eval{,-rubric}.md` · `...-lora-r12-sft.{log,csv}`；ckpt sha lora-r12 `4d57b10cb7bcf169`。
+- 疑问：①LoRA 2 epochs 能否把 val 从 1.80 压到 1.70 档（当前只差 0.20，值得一轮验证"epochs vs rank"谁是主因）？②demo 端 T0.3 仍带"（注：…）"尾巴——是否该在 demo 层加"只输出译文"的 system 提示，还是这属于数据/指令行为问题？③评测集 18 题在八版对比后已接近"开发集"（多轮按题修数据）——若要对外发布，是否应留一套从未看过的 holdout 题？——qa-day-10 三题。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）

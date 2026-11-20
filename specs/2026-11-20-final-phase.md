@@ -1,6 +1,6 @@
 # SPEC · 最终阶段（Day 9~10 收尾）— 部署切换 v2e + 报告定稿
 
-- **Status**: ACTIVE（2026-11-20 立，Day 10 定稿时置 COMPLETED）
+- **Status**: **COMPLETED**（2026-11-20 立；同日 T1/T2/T3 + T4 Day 10 终检全部完成，提前 7 天收官——终检记录见 §9）
 - **Owner**: 用户拍板方向（2026-11-20："按 spec 存档计划并推进"）· agent 执行
 - **Scope 一句话**：把已完成的实验成果交付出去——部署切到能力最优的 v2e，报告把 10 天工作写清楚。**不再做新实验。**
 
@@ -49,19 +49,21 @@
   - T1.4 [x] GGUF↔PyTorch 对拍 4 条 prompt（AC3）
   - T1.5 [x] 重启 demo 指向 `pretrain-lab-sft-v2e-q4`（tmux demo 会话：kill 旧 → 起新）
   - T1.6 [x] 部署证据落 reports（`2026-11-20-deploy-v2e.md` + 对拍表）
-- [ ] **T2 报告定稿推进**（依赖：T1.6；今天/明天）
-  - T2.1 新增"评测污染"小节（建议并入 §5 评测章或独立 §5.5）
-  - T2.2 §10 复现命令 v2c → v2e（build/sft/eval/deploy 四段）
-  - T2.3 §0 成绩单 v2e 口径 + 八版表核对；§11 限制更新（部署已切 v2e）
-  - T2.4 图引用确认 day8-v2e
-- [ ] **T3 状态同步与收波**（依赖：T1/T2）
-  - T3.1 HANDOFF §1/§2/§7（部署行 = v2e；§7 切 Day 10 终检卡）
-  - T3.2 README/MODEL_CARD 部署节 = v2e；PROVENANCE 补 GGUF 指纹
-  - T3.3 `git commit -m "day-8: 部署切 v2e + 报告扩写（评测污染章）"` + push
-- [ ] **T4 Day 10（11-27）终检**（依赖：T1~T3）
-  - T4.1 八版最终对比表定稿（含"干净/含记忆"标注）
-  - T4.2 repo 整理（README 首屏、复现步骤走查）
-  - T4.3 REPORT 状态置 COMPLETED；本 spec 置 COMPLETED
+- [x] **T2 报告定稿推进**（完成 2026-11-20；§5.1 评测污染章 + §10→v2e + §0 v2e 口径 + 八版终表/§4.7）
+  - T2.1 [x] 新增"评测污染"小节（§5.1 独立成章）
+  - T2.2 [x] §10 复现命令 v2c → v2e（build/sft/eval/deploy 四段）
+  - T2.3 [x] §0 成绩单 v2e 口径 + 八版表核对；§11 限制更新
+  - T2.4 [x] 图引用确认 day8-v2e + day8-v2d
+- [x] **T3 状态同步与收波**（完成 2026-11-20）
+  - T3.1 [x] HANDOFF §1/§2/§7（部署行 = v2e；§7 切 Day 10 终检卡）
+  - T3.2 [x] README/MODEL_CARD 部署节 = v2e；PROVENANCE 补 GGUF 指纹
+  - T3.3 [x] `git commit -m "day-8: 部署切 v2e + 报告扩写（评测污染章）"` + push（`5fc4d2c`）
+- [x] **T4 Day 10（2026-11-20 提前执行）终检**
+  - T4.1 [x] 八版最终对比表定稿（§0 八版表 + §4.7 裁决表，含"含记忆/干净"标注列；与 v2e-eval 对账）
+  - T4.2 [x] repo 整理（README 首屏收官态、MODEL_CARD v2e 口径、证据三分核对、54 份 md/152 链接 0 断链）
+  - T4.3 [x] REPORT 状态置 FINAL；本 spec 置 COMPLETED
+  - T4.4 [x] §10 复现走查（v2e build bit-for-bit 4/4 sha + eval 18/18 行逐字 + deploy F16 5/5）——[reports/2026-11-20-day10-repro-check.md](../reports/2026-11-20-day10-repro-check.md)
+  - T4.5 [x] 收波（LAB_NOTEBOOK Day 10 段 + commit + push）
 
 ## 6. Rollback Plan
 
@@ -83,3 +85,20 @@
 - 判据与结果：`reports/2026-11-20-v2e.md` · `...-v2e-eval{,-rubric}.md`
 - 部署链路：`reports/2026-11-19-day7-deploy.md`（GGUF 导出 / Ollama 用户级 / 对拍方法）
 - 状态卡：`HANDOFF.md` §7 · 决策与纪律：`PLAN.md` §6 · 操作规程：`.zcode/skills/pretrain-lab/SKILL.md` §3.2/§5
+## 9. 终检记录（Day 10，2026-11-20 提前执行）
+
+| AC | 结果 | 验证/证据 |
+|---|---|---|
+| AC1 | ⚠️ **口径勘误** | 实际机制 = **1 个 F16 GGUF**（`out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf`）+ Ollama `-q` 生成 Q8_0/Q4_K_M 两档（在 Ollama 模型库内，不落 .gguf 文件）——不是 3 个 .gguf。三档均可用由 AC2/AC3 验证。 |
+| AC2 | ✅ | `ollama list` 含 `pretrain-lab-sft-v2e`（F16）/ `-q8`（173MB）/ `-q4`（103MB） |
+| AC3 | ✅ | F16 与 PyTorch **5/5 逐字一致**；Q8_0 **4/5 逐字 + 1 同义变体**且新学能力保住（math 42 / translate 中文）；Q4 不保真（42→72 / translate 英文）→ 部署 = Q8_0——[reports/2026-11-20-deploy-v2e-recheck.log](../reports/2026-11-20-deploy-v2e-recheck.log) |
+| AC4 | ✅ | `/health` `{"ok":true}`；translate 抽检方向正确（demo 温度终检下调 0.7→0.3：T0.7 16/20 → T0.3 20/20） |
+| AC5 | ✅ | `ollama list` 仍含 `pretrain-lab-sft-v2-q4`（回滚 <1min） |
+| AC6 | ✅ | `grep -l sft-v2e-q8 MODEL_CARD.md README.md REPORT.md HANDOFF.md` = 4/4 |
+| AC7 | ✅ | REPORT §5.1 评测污染章（撞车清单/12 处去污/`assert_no_eval_leak`/干净读数结论） |
+| AC8 | ✅ | `sed -n '/## 10/,/## 11/p' REPORT.md \| grep -c v2e` = 6 |
+| AC9 | ✅ | §0 成绩单 v2e 口径 + 八版终表（8 行 × 7 列 + 读数性质列，与 v2e-eval 对账一致） |
+| AC10 | ✅ | 证据链入库（reports/ 只增不改；本次终检新增 repro-check/deploy-recheck/lora-r12 证据三件） |
+| AC11 | ✅ | 量化保真度条款落档（skill §5 红线 + deploy 报告 §2/§3 + 本轮复验） |
+
+**终检补充**：§10 四段命令与产物一致且关键路径可复现——v2e build **bit-for-bit**（4/4 sha256 + meta 全字段）、eval **18/18 行逐字**、deploy **F16 5/5**、demo 温度修正。证据 [reports/2026-11-20-day10-repro-check.md](../reports/2026-11-20-day10-repro-check.md)。

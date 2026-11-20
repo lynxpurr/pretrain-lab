@@ -2,7 +2,7 @@
 
 用途：Gradio 安装受网络影响时的保底方案；功能等价于 tools/app.py（多轮对话 + 本地 URL）。
 启动：
-  .venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2-q4 --port 7860
+  .venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860
 然后浏览器打开 http://127.0.0.1:7860
 """
 from __future__ import annotations
@@ -129,9 +129,9 @@ def make_handler(host: str, model: str, temperature: float, top_p: float, max_ne
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default=os.environ.get("OLLAMA_URL", "http://127.0.0.1:11435"))
-    ap.add_argument("--model", default="pretrain-lab-sft-v2-q4")
+    ap.add_argument("--model", default="pretrain-lab-sft-v2e-q8")
     ap.add_argument("--port", type=int, default=7860)
-    ap.add_argument("--temperature", type=float, default=0.7)
+    ap.add_argument("--temperature", type=float, default=0.3)
     ap.add_argument("--top-p", type=float, default=0.9)
     ap.add_argument("--max-new", type=int, default=200)
     ap.add_argument("--num-gpu", type=int, default=-1, help="-1 = Ollama 默认；0 = 强制 CPU（训练期间验证用）")
