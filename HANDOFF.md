@@ -15,26 +15,29 @@
 
 **新会话首条消息（可直接粘贴）**：
 
-> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` Day 8 + `notes/qa-day-8.md` + lessons Day 8 段 + `reports/2026-11-20-day8-{v2c,review}.md` 运行与盘点）→ 执行 §7 机动窗口清单（v2d / LoRA 深化 / DPO 三选一 + 报告推进），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡开工：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步开工序执行——§2 复现检查 → 读前情（`LAB_NOTEBOOK.md` 机动窗口 v2d 段 + lessons 机动窗口四条 + `reports/2026-11-20-v2d.md` + `notes/qa-day-8.md`）→ 执行 §7 机动窗口清单（**v2e 第 2 轮 vs 锁定 v2 二选一**，默认 v2e），全程按 §6 惯例与 skill §3.2/§6 执行与收波。
 
 ## 1. 状态一段话
 
-**Day 0~8 已全部收官，下一动作 = 机动窗口（11-20 缓冲 / 11-22~25：v2d / LoRA 深化 / DPO 任选）+ 报告推进（REPORT.md 已起）**。项目 = 本地 5070 Ti 16GB 上 10 天从零训一个 ~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo），**学习导向**；底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。
+**Day 0~8 + 机动窗口 v2d 已全部收官；下一动作 = v2e（可选，11-22~25 拍板）或按失败路径锁定 v2 进 Day 10；报告推进中（REPORT.md 七版素材齐）**。项目 = 本地 5070 Ti 16GB 上 10 天从零训一个 ~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo），**学习导向**；底稿 = NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`。
 
 **当前手里有什么（都能直接跑）**：
 - **底座**：`out/main140m/last.pt`（137,847,552 参数 · 3B token · **val 2.7709** · sha `0c0096cc172e8a58`）+ 46 个等间隔 ckpt 谱系（≈73GB）
 - **SFT v1**：`out/sft-v1/last.pt`（**SFT val 1.5515** · sha `853322df4583bfa2`）——基线对照
-- **SFT v2（部署）**：`out/sft-v2/last.pt`（**SFT val 1.6038** · sha `a81c3480f4b63366`）——**rep-4 0.066**、校准/翻译/格式修好；数学弱（math-add 15、math-mul 72）
+- **SFT v2（部署）**：`out/sft-v2/last.pt`（**SFT val 1.6038** · sha `a81c3480f4b63366`）——**rep-4 0.066（七版最低）**、校准/翻译/格式修好；数学弱（math-add 15、math-mul 72）
 - **SFT v2b（消融，不部署）**：`out/sft-v2b/last.pt`（val 1.5981 · sha `44856617008a1e10`）——数学保护修回 8/42，但 rep-4 0.117、translate/capability 回归
-- **SFT v2c（消融，不部署）**：`out/sft-v2c/last.pt`（val 1.6018 · sha `6c12947bb3a56dd5`）——**题库 17/18 历史最高**、math 修回、**en-fluency 首次修复**；rep-4 0.135 + translate-en2zh 回归（rep-4 判据未过 → 按预注册不切换部署）
+- **SFT v2c（消融，不部署）**：`out/sft-v2c/last.pt`（val 1.6018 · sha `6c12947bb3a56dd5`）——**关键词题库 17/18 最高**、math 修回、**en-fluency 首次修复**；rep-4 0.135 + translate-en2zh 回归
+- **SFT v2d（消融，不部署，机动窗口）**：`out/sft-v2d/last.pt`（val 1.6059 · sha `fe972eed11aa599b`）——**rep-4 0.084（SFT 最低档）+ rubric 6/8（最高）**、reason 0.728→**0.088** / en-fluency 0.708→0.371 / zh-fluency 0.516→0.303、math-add 纯数字"8"；未达 = rep-4 差 0.004 / math-mul 回退 72 / translate 字词解释 / 关键词题库 15/18（语义 17/18）
 - **LoRA r=8 5e-4**：`out/sft-lora-r8-5e4/last.pt`（merged；1.20% 可训练；peak 9.74GB；**val 1.8253 / 题库 15-18 / rep-4 0.260**；1 epoch 欠拟合，不部署）
-- **数据**：`data/shards/`（3B 预训练）· `data/sft-mix/`（v1）· `data/sft-mix-v2/`（部署）· `data/sft-mix-v2b/`（消融）· `data/sft-mix-v2c/`（消融）· `data/sft-extra-v2/`（校准/格式/正例）· `data/eval/tests.json`（18 题 / 9 tag）
+- **数据**：`data/shards/`（3B 预训练）· `data/sft-mix/`（v1）· `data/sft-mix-v2/`（部署）· `data/sft-mix-v2b/v2c/v2d/`（消融）· `data/sft-extra-v2/`（校准/格式/正例/**concise**）· `data/eval/tests.json`（18 题 / 9 tag）
 - **部署**：GGUF F16 326MB / Q4_K_M 103MB / Q8_0 173MB · Ollama 用户级 11435 · `tools/app_stdlib.py`（7860）
-- **报告（G6）**：**[REPORT.md](REPORT.md) 已起**（11 章骨架 + Day 0~7 素材 + §4.4 v2c 回填；Day 10 定稿）
-- **脚本**：`tools/{model,train,sft,eval,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app}.py`
+- **报告（G6）**：**[REPORT.md](REPORT.md)**（七版素材 + loss 图 + §4.5 v2d；Day 10 定稿）· 图 = `tools/plot_loss.py`（`reports/figs/loss-curves-day8-v2d.png`）
+- **脚本**：`tools/{model,train,sft,eval,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app,plot_loss}.py`
 - **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（不加训 15 亿，双证据 0.0134 / 0.0051）
 
-**Day 8 关键结论**：v2c（选择性数学保护 + 英文再平衡）= **题库 17/18 + rubric 5/8 双历史最高**，math-add/math-mul 修回（8/42）、**en-fluency 四版全挂题首次修复**、refuse-unknown 双过；rep-4 0.135 未达 <0.08 判据 + translate-en2zh 回归 → **按预注册保持 v2 部署**。三条新教训：①能力域保护可按"功能特征"（等式行 ≥3）再收窄一档；②采样规则作用域 = 训练集（读到的行），改预算 = 改训练分布；③修复翻开新伤口——缺陷在评测维度迁移、loss 维度几乎不动（@1000 差 0.0013）。证据 = [reports/2026-11-20-day8-v2c.md](reports/2026-11-20-day8-v2c.md)。
+**Day 8 关键结论**：v2c（选择性数学保护 + 英文再平衡）= **关键词题库 17/18 + rubric 5/8 双历史最高**，math-add/math-mul 修回（8/42）、**en-fluency 四版全挂题首次修复**、refuse-unknown 双过；rep-4 0.135 未达 <0.08 判据 + translate-en2zh 回归 → **按预注册保持 v2 部署**。证据 = [reports/2026-11-20-day8-v2c.md](reports/2026-11-20-day8-v2c.md)。
+
+**机动窗口 v2d 关键结论**（2026-11-20，用户拍板 v2d + 部署保持 v2）：长答案压制 + translate 方向 + concise 正例 + format 3× → **rep-4 0.135→0.084（砍 38%）+ rubric 5/8→6/8**、三题复读全面下降（reason 砍 88%）；未达判据 = rep-4（差 0.004）/ math-mul（回退 72=组合记忆脆弱）/ translate（英答中但字词解释）/ 关键词题库 15/18（两题假阴，语义 17/18）→ **不部署**。三条新教训：组合记忆小扰动翻转 / 方向池上采样 ≠ 指令行为 / 英文长答案缺席只能加正例。证据 = [reports/2026-11-20-v2d.md](reports/2026-11-20-v2d.md)。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -54,7 +57,8 @@ ls -la out/main140m/last.pt out/sft-v1/last.pt                  # 底座 + SFT v
 ls data/sft-mix/{meta.json,SHA256SUMS} data/eval/tests.json     # SFT 数据 + 评测题库
 ls data/sft-mix-v2/{meta.json,SHA256SUMS} data/sft-extra-v2/{meta.json,SHA256SUMS}  # v2 数据
 ls data/sft-mix-v2c/{meta.json,SHA256SUMS} data/sft-mix-v2b/{meta.json,SHA256SUMS}  # v2b/v2c 数据
-ls out/sft-v2/last.pt out/sft-lora-r8-5e4/last.pt out/sft-v2c/last.pt  # 部署 / LoRA / v2c
+ls data/sft-mix-v2d/{meta.json,SHA256SUMS} data/sft-extra-v2/concise.jsonl          # v2d 数据 + concise
+ls out/sft-v2/last.pt out/sft-lora-r8-5e4/last.pt out/sft-v2c/last.pt out/sft-v2d/last.pt  # 部署 / LoRA / 消融
 ls tools/{build_sft_v2,gen_sft_v2_extra,lora,export_gguf,eval_format,app_stdlib}.py  # Day 7 脚本
 tmux ls | grep -E "sft|main140m|train|lora|demo" || echo no-running-training
 curl -s --max-time 3 http://127.0.0.1:11435/api/tags >/dev/null && echo ollama-user-ok || echo ollama-user-missing
@@ -111,6 +115,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 | **SFT v2b（消融）** | val 1.5981 / 1h19m23s / 53,073 tok/s / 数学修回（3+5=8、7×6=42）但 rep-4 0.117 / translate+capability 回归 / 不部署 |
 | **SFT v2c（消融）** | 数据 250,001,408 token（列表 10.55% / 会话 587,344 / 监督 76.16%）/ val **1.6018** / 1h19m40s / 52,925 tok/s / peak 12.05GB / **题库 17-18 + rubric 5-8 双最高** / math 修回 8/42 / **en-fluency 首修** / rep-4 0.135（判据未达）+ translate-en2zh 回归 / 不部署（预注册裁决） |
 | **LoRA r8** | 1.20% 可训练 / peak **9.74GB（-2.3GB）** / **54,124 tok/s** / ckpt **526MB + adapter 6.5MB** / val **1.8253** / 题库 15-18 / **rep-4 0.260** / 1 epoch 欠拟合（不部署；Day 8 试 r=12/2 epochs） |
+| **SFT v2d（消融，机动窗口）** | 数据 250,001,408 token（列表 10.15% / 会话 613,180 / 监督 75.65% / 长答案砍 6,507 留 6,296 + translate 写入 2,106 + concise 150 + fmt 3×）· 训练 **1h19m44s / 3,815 步 / 52,851 tok/s / val 1.6059 / peak 12.05GB** · 七版评测 **rep-4 0.084（SFT 最低档）+ rubric 6/8（最高）**、reason 0.728→0.088 / en-flu 0.708→0.371 / zh-flu 0.516→0.303 / math-add 纯数字「8」；未达 = rep-4 差 0.004 / math-mul 72 / translate 字词解释 / 关键词 15-18（语义 17-18）→ 不部署 |
 | **GGUF/Ollama** | F16 326MB / Q4_K_M **103MB** / Q8_0 173MB；raw 与 PyTorch 输出一致；demo 7860（系统提示 + T0.7） |
 
 **指纹与待办**
@@ -118,7 +123,7 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 | 项 | 值 |
 |---|---|
 | 数据指纹 | raw 17 · 字符级 3 · tokenizer 3 · 分片 7 · SFT v1/v2/v2b/v2c 各 4 · 补充样本 3 · 评测 1（全部入库，见 `data/PROVENANCE.md` 与各层 `SHA256SUMS`） |
-| ckpt 指纹 | char20m `5d97b5f73852a2e9` · 50M `71fc274be289c3c2` · 140M 探针 `df8fc7ac351415db` · **main140m `0c0096cc172e8a58`** · **sft-v1 `853322df4583bfa2`** · **sft-v2 `a81c3480f4b63366`** · **sft-v2b `44856617008a1e10`** · **sft-v2c `6c12947bb3a56dd5`** |
+| ckpt 指纹 | char20m `5d97b5f73852a2e9` · 50M `71fc274be289c3c2` · 140M 探针 `df8fc7ac351415db` · **main140m `0c0096cc172e8a58`** · **sft-v1 `853322df4583bfa2`** · **sft-v2 `a81c3480f4b63366`** · **sft-v2b `44856617008a1e10`** · **sft-v2c `6c12947bb3a56dd5`** · **sft-v2d `fe972eed11aa599b`** |
 | 待回填 | Day 10 最终对比表（六版）· REPORT.md §8 GPU 累计精确化 · v2d/LoRA 深化/DPO（机动窗口选） |
 | 参考实现 | minimind @ `233d00f` · nanoGPT @ `3adf61e`（`~/projects/`） |
 
@@ -135,11 +140,12 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 | Day 6（11-19） | **门② 正式判定** + 解码对照 | ✅ 完成（不加训；复读归因数据侧） |
 | Day 7（11-19） | **SFT 数据 v2/v2b → SFT v2 → LoRA → GGUF/Ollama** | ✅ 完成（v2 val 1.6038 / rep-4 0.066；v2b 消融；LoRA r8 1.20%；Q4 demo 7860） |
 | **Day 8（11-19 晚 → 11-20 晨，提前开工）** | 深化（v2c 数据）+ 六版评测 + 报告开写 | ✅ 完成（v2c 题库 17-18 双最高但 rep-4 未达 → 保持 v2 部署；REPORT.md 起稿） |
-| 机动（11-20 缓冲 / 11-22 ~ 11-25） | **v2d（压长答案复读 + 修 translate 方向）/ LoRA 深化（r=12 或 2 epochs）/ DPO** 任选 + 报告推进 | 未开工（下一动作） |
+| 机动（11-20） | **v2d 数据迭代（长答案压制 + translate 方向 + concise 正例 + format 3×）+ 七版评测 + 报告图** | ✅ 完成（rep-4 **0.084** + rubric **6/8** 双项最佳；rep-4 差 0.004 / math-mul 回退 / translate 字词解释 → 不部署；证据 `reports/2026-11-20-v2d*`） |
+| 机动（11-22 ~ 11-25） | **v2e（translate 精确样本扩容 + math 专项 + en_flu 降采样）或锁定 v2 进 Day 10** + LoRA 深化/DPO 视余力 | 未开工（下一动作） |
 | Day 9（11-26） | 硬缓冲（只在出事时用） | 未开工 |
 | Day 10（11-27） | 六版最终对比 + repo 整理 + 报告定稿 | 未开工 |
 
-**关键路径与缓冲（Day 8 实测重算）**：Day 3 框架 + 门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② 判定（不加训）+ 解码对照 ✅ → Day 7 **SFT v2/v2b + LoRA + GGUF/Ollama** ✅ → Day 8 **v2c + 六版评测 + 报告开写** ✅ → 机动窗口（v2d/LoRA/DPO 任选）→ Day 10 收尾。**缓冲 = 11-20 一天 + 11-22 ~ 11-25 机动 + Day 9（11-26）硬缓冲**——G3/G4/G5/G6 主体全部达成，机动窗口全是改进项而非救火；v2 部署可用（数学弱/英文拒答是已知限制，v2c 已证可修但 rep-4 代价未收敛）。
+**关键路径与缓冲（v2d 实测重算）**：Day 3 框架 + 门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② 判定 + 解码对照 ✅ → Day 7 **SFT v2/v2b + LoRA + GGUF/Ollama** ✅ → Day 8 **v2c + 六版评测 + 报告开写** ✅ → 机动窗口 **v2d（rep-4 0.084 + rubric 6/8 双项最佳，不部署）** ✅ → 11-22~25 v2e 或锁定 v2 → Day 10 收尾。**缓冲 = 11-22 ~ 25 机动 + Day 9（11-26）硬缓冲**——G1~G5 全闭环，剩余全是改进项；v2 部署可用（数学弱/英文拒答是已知限制，v2c/v2d 已证可修但代价未收敛）。
 
 ## 6. 惯例与红线
 
@@ -152,18 +158,17 @@ curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok || echo demo-m
 - **评测协议**：统一 greedy + 关键词 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。
 - **上游知识指针**：finetune-lab `notes/lessons.md` · `ms-swift-finetune` skill（D-10 选 B 时）· nl2fem `notes/ref-*-concepts.md`。
 
-## 7. 机动窗口清单（Day 8 已收官；v2d / LoRA 深化 / DPO 任选）
+## 7. 机动窗口清单（v2d 已完成；11-22~25 = v2e 或锁定 v2 二选一）
 
-> Day 8 已收官：v2c（val 1.6018 / 题库 17-18 双最高 / math 修回 / en-fluency 首修）+ rep-4 0.135 未达判据 → **按预注册保持 v2 部署**；REPORT.md 11 章起稿。证据见 §3/§4 与 `reports/2026-11-20-day8-*`；**盘点/后续计划详版 = [reports/2026-11-20-day8-review.md](reports/2026-11-20-day8-review.md)（含 v2d 预注册判据与失败路径）**。**v2c 的三个新伤口 = 机动窗口选题池**：①rep-4 0.135（reason/en-fluency/zh-fluency 三题长答案复读）；②translate-en2zh 英答英回归；③math-mul 非纯数字格式。
+> **v2d 已收官（2026-11-20）**：rep-4 **0.084**（SFT 最低档，v2c 0.135 砍 38%）+ rubric **6/8**（最高）、reason 0.728→0.088 / en-fluency 0.708→0.371 / zh-fluency 0.516→0.303、math-add 纯数字「8」；未达 = rep-4 差 0.004 / math-mul 回退 72 / translate 字词解释（英答中）/ 关键词题库 15-18（两题假阴，语义 17-18）→ **按预注册不部署（v2 保持）**。证据 = [reports/2026-11-20-v2d.md](reports/2026-11-20-v2d.md)；**失败路径 = 两轮不收敛则锁定 v2 进 Day 10（本轮为第 1 轮）**。
 
 | # | 事项 | 判据 |
 |---|---|---|
-| 1 | **v2d（数据侧，默认）**：在 v2c 基础上压长答案复读（reason/fluency 类答案长度约束样本或长答案截断）+ translate 方向样本（英文 prompt→中文回答正例上采样）；数学保护与英文再平衡沿用 v2c | rep-4 <0.08；translate-en2zh 恢复；题库 ≥16/18 保持；math 保持 |
-| 2 | **LoRA 深化（备选）**：r=12（≈1.80% <2%）或 2 epochs；单变量对照 ≥50 步 | 效果接近全参（题库差 ≤2 题）；显存/速度/磁盘三读数 |
-| 3 | **DPO（备选，对齐侧）**：minimind `dpo.jsonl` 偏好对齐（校准/拒答）；β 3 步剂量；与 v2 同题对比 | refuse-unknown 保持、en-fluency 改善、题库不降、rep-4 不升 |
-| 4 | **报告推进**：REPORT.md §8 成本精确化 + loss 曲线图（matplotlib）+ 六版对比表入 §0/§6 | Day 10 素材齐 |
-| 5 | 收波 | 证据三分 + 笔记本 + PLAN/HANDOFF/README + 指纹 + commit |
+| 1 | **v2e（第 2 轮，默认）**：①translate 精确样本扩容（`gen_sft_v2_extra.py` 加 ~30 条「把 X 翻译成中文」→直接译文的指令对 ×repeat 5——v2d 证明方向池泛化教不会指令行为）；②math 专项（`--format-repeat 4~5` 或 ARITH 乘法表 7×6 类专项重复）；③en_flu 型（u_en∧a_en∧FLU_RE∧≥600 字）在 en_helpful 分支降为 1× 不上采样；其余沿用 v2d | rep-4 **<0.08** · translate 关键词过 · 题库语义 ≥17/18 · math 保持 8/42 · PPL ≤10% |
+| 2 | **锁定 v2 进 Day 10（保守路径）**：停止迭代，v2c/v2d 过程素材转报告 §4.5 定稿 | — |
+| 3 | LoRA 深化（备选）：r=12 / 2 epochs，单变量对照 | 题库差 ≤2 题 + 显存/速度/磁盘三读数 |
+| 4 | DPO（备选）：minimind `dpo.jsonl` β 3 步剂量 | refuse 保持 + en-fluency 改善 + 题库不降 |
+| 5 | 报告推进：loss 图 ✅ + 七版对比表 ✅；剩 §4.5 v2d 定稿 + Day 10 最终对比表 | Day 10 素材齐 |
+| 6 | 收波 | 证据三分 + 笔记本 + PLAN/HANDOFF/README + 指纹 + commit |
 
-**机动窗口决策点**：①三选一（默认 **v2d**——v2c 只剩两个数据侧伤口，修复路径已明确）；②长答案复读的修法（默认答案长度约束样本 + 保留 v2c 其余规则）；③若做 LoRA 深化，默认 **r=12 / 1 epoch**（1.80% <2%）。
-
-**待拍板项**：是否把部署从 v2 切到 v2c（题库 17/18 + en-fluency/math 修复 vs rep-4 0.135 + translate 回归）——默认按预注册保持 v2；若切，需重导出 GGUF + 更新 Ollama/demo/模型卡。
+**决策点**：①**v2e vs 锁定 v2**（默认 v2e 第 2 轮——剩余伤口已定位到「精确样本缺失」，改动面小且可预判；失败路径已声明两轮为限）；②v2e 若仍不收敛 → 11-26/27 锁定 v2 进 Day 10。**已定案**：部署保持 v2（v2d 未达切换判据）；若 v2e 全过判据，切换部署需重导 GGUF + 联动 Ollama/demo/模型卡。

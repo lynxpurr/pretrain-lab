@@ -106,6 +106,34 @@ EN_REFUSAL_RE = re.compile(
     r"not able to|cannot answer|can't answer|cannot determine|can't determine|"
     r"as an AI|I'm not able|I am not able)\b", re.I)
 
+# v2d（Day 8 机动窗口）两规则，其余沿用 v2c（侦察 /tmp/v2d_recon*.py，2026-11-20）：
+# ①长答案复读压制：复读三题（reason 0.728 / en-fluency 0.708 / zh-fluency 0.516）的题型 =
+#   "介绍一下 X / 如果…怎么办 / tell me about X"——这类 prompt 的训练答案 p50≈600~700 字符
+#   （zh_flu 2,102 条 p50 614 / zh_hyp 59,303 条 p50 329 / en_flu 122 条 p50 683），
+#   长答案先验超出 140M 的长文连贯能力 → 对命中引导词、答案 ≥600 字符的**非列表非数学**样本
+#   保留 1/den。大盘开放问答（zh_open 27 万条）不碰——v2（rep-4 0.066）时它们就全量在。
+# ②translate-en2zh 方向修复：v2c 英文正例上采样 32,754 条"英→英"对，把英→中翻译对冲掉
+#   （池仅 608 条 @810k，0.22%）→ 英 prompt 中文答案的非列表样本上采样 N×。
+LONGANSWER_RE = re.compile(
+    r"介绍一下|谈谈|说说|讲讲|给我讲|给我介绍|该怎么|怎么办|该准备|应该带|该做|怎么做|怎样|如何|"
+    r"如果|假如|要是|"
+    r"\btell me about\b|\btalk about\b|\bdescribe\b|\bwhat would\b|\bwhat should\b|"
+    r"\bhow (?:do|would|can|to)\b|\bwhat do you know\b", re.I)
+TR_Q_RE = re.compile(r"翻译|translate", re.I)
+
+
+def zh_ratio(text: str) -> float:
+    return len(ZH_CHAR_RE.findall(text)) / max(len(text), 1)
+
+
+def is_longanswer_target(u: str, a: str) -> bool:
+    """长答案复读目标：引导型短 prompt + 长答案（非列表/数学/翻译题由分支条件排除）。"""
+    if not u or len(u) >= 120 or len(a) < 600:
+        return False
+    if TR_Q_RE.search(u):
+        return False
+    return bool(LONGANSWER_RE.search(u))
+
 
 def is_en(text: str) -> bool:
     """英文为主：中文字符占比 <5%（排除中英夹杂的翻译/对照样本）。"""
@@ -290,6 +318,12 @@ def main() -> None:
                     help="v2c：英文拒答样本保留 1/den（2 = 降采样 50%%；1 = 关）")
     ap.add_argument("--en-helpful-upsample", type=int, default=1,
                     help="v2c：英文正例按 hash 1/den 选中后上采样 2×（5 = 20%% 选中；1 = 关）")
+    ap.add_argument("--concise-repeat", type=int, default=0,
+                    help="v2d：concise 连贯正例（data/sft-extra-v2/concise.jsonl）重复次数")
+    ap.add_argument("--translate-upsample", type=int, default=1,
+                    help="v2d：英 prompt→中 answer 非列表样本上采样倍数（1 = 关）")
+    ap.add_argument("--long-answer-keep-den", type=int, default=1,
+                    help="v2d：引导型长答案（prompt<120 字 ∧ 答案≥600 字 ∧ 非列表/数学/翻译）保留 1/den（2 = 砍半；1 = 关）")
     ap.add_argument("--mask-sample", type=int, default=300)
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
@@ -313,6 +347,9 @@ def main() -> None:
                                  "en_refusal_seen": 0, "en_refusal_kept": 0,
                                  "en_refusal_dropped": 0, "en_helpful_seen": 0,
                                  "en_helpful_upsampled": 0,
+                                 "translate_seen": 0, "translate_written": 0,
+                                 "long_answer_seen": 0, "long_answer_kept": 0,
+                                 "long_answer_dropped": 0,
                                  "listy_dropped": 0, "plain_kept": 0},
         "train_conv_by_cat": {}, "val_skipped": 0, "n_read": 0,
         "skipped_long": 0, "sample_checks": 0,
@@ -323,6 +360,7 @@ def main() -> None:
         ("calibration", args.calib_repeat),
         ("format", args.format_repeat),
         ("helpful", args.helpful_repeat),
+        ("concise", args.concise_repeat),
     ]
     extra_items: list[tuple[str, dict]] = []
     for name, rep in extra_specs:
@@ -364,7 +402,8 @@ def main() -> None:
             # v2c：英文判定先做——拒答分支置于 calib 之前（EN_REFUSAL_RE 与 CALIB_RE
             # 英文部分重叠，v2 里 "I can't provide…" 型模板被 mined_calib 保留 1×，是泄漏源）。
             en_kind = None
-            if args.en_refusal_keep_den > 1 or args.en_helpful_upsample > 1:
+            if (args.en_refusal_keep_den > 1 or args.en_helpful_upsample > 1
+                    or args.translate_upsample > 1 or args.long_answer_keep_den > 1):
                 u_txt, a_txt = texts(rec)
                 if is_en(u_txt) and is_en(a_txt):
                     en_kind = "refusal" if EN_REFUSAL_RE.search(a_txt) else "helpful"
@@ -417,6 +456,25 @@ def main() -> None:
                     reps = 1
                     cat = "mined_plain"
                     stats["mined"]["plain_kept"] += 1
+            elif args.translate_upsample > 1 and u_txt and a_txt and not listy \
+                    and is_en(u_txt) and zh_ratio(a_txt) >= 0.5:
+                # v2d：英 prompt→中 answer 翻译方向样本上采样（修复 translate-en2zh 英答英：
+                # v2c 英→英上采样 32,754 条对冲掉了仅 544 条的英→中对，方向先验被淹没）
+                reps = args.translate_upsample
+                cat = "mined_translate"
+                stats["mined"]["translate_seen"] += 1
+                stats["mined"]["translate_written"] += reps
+            elif args.long_answer_keep_den > 1 and not listy and not is_math(rec) \
+                    and is_longanswer_target(u_txt, a_txt):
+                # v2d：引导型长答案（介绍/假设/tell me about，答案≥600 字符）保留 1/den
+                # ——复读三题的题型源；大盘开放问答与数学/翻译/列表不动
+                stats["mined"]["long_answer_seen"] += 1
+                if not keep_for_listy(line, args.long_answer_keep_den):
+                    stats["mined"]["long_answer_dropped"] += 1
+                    continue
+                reps = 1
+                cat = "mined_long_kept"
+                stats["mined"]["long_answer_kept"] += 1
             else:
                 reps = 1
                 cat = "mined_plain"
@@ -485,6 +543,7 @@ def main() -> None:
             "calibration_extras": stats["extras"]["calibration"],
             "format_extras": stats["extras"]["format"],
             "helpful_extras": stats["extras"]["helpful"],
+            "concise_extras": stats["extras"]["concise"],
             "mined": stats["mined"],
             "train_conv_by_cat": stats["train_conv_by_cat"],
             "listy_ratio_after": round(listy_kept / max(chat_total, 1), 4),
@@ -499,6 +558,15 @@ def main() -> None:
                         f"（分支先于 calib，含 CALIB_RE 英文重叠部分）；良性正例按 hash 1/{args.en_helpful_upsample}"
                         " 选中上采样 2×" if (args.en_refusal_keep_den > 1 or args.en_helpful_upsample > 1)
                         else "未启用"),
+            "translate_upsample": args.translate_upsample,
+            "long_answer_keep_den": args.long_answer_keep_den,
+            "v2d_rule": (f"①英 prompt→中 answer 非列表样本上采样 {args.translate_upsample}×（修 translate-en2zh 方向）；"
+                         f"②引导型长答案（prompt<120 字 ∧ 答案≥600 字 ∧ 非列表/数学/翻译题）保留 "
+                         f"1/{args.long_answer_keep_den}（压复读三题的长答案先验，大盘开放问答不动）；"
+                         f"③concise 连贯正例 repeat {args.concise_repeat}（介绍/假设题→2~3 句答案，含英文 fluency 对冲）；"
+                         f"④format-repeat {args.format_repeat}（压 math-mul 非纯数字瑕疵）"
+                         if (args.translate_upsample > 1 or args.long_answer_keep_den > 1
+                             or args.concise_repeat > 0) else "未启用"),
             "fmt_upsample": args.fmt_upsample,
         },
         "val_split": f"blake2b64(line) % {args.val_mod} == 0（文档级）；v2 直接复用 v1 val 文件，训练流跳过全部留出记录（跳过 {stats['val_skipped']:,} 条）",

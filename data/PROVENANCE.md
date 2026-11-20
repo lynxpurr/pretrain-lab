@@ -34,6 +34,7 @@
 | **sft-v2 last.pt** | **Day 7 SFT v2 终版（部署）**（`data/sft-mix-v2`；3,815 步 / 250M token / **SFT val 1.6038** / 1h19m46s / 52,825 tok/s；含 optimizer 态） | 1.65GB | `a81c3480f4b63366` | `out/sft-v2/last.pt`（`reports/2026-11-19-day7-sft-v2.{log,csv}` · `...-eval-v2b.md`） |
 | **sft-v2b last.pt** | **Day 7 SFT v2b（数学保护消融，不部署）**（`data/sft-mix-v2b`；3,815 步 / 250M token / **SFT val 1.5981** / 1h19m23s；含 optimizer 态） | 1.65GB | `44856617008a1e10` | `out/sft-v2b/last.pt`（`reports/2026-11-19-day7-sft-v2b.{log,csv}`） |
 | **sft-v2c last.pt** | **Day 8 SFT v2c（选择性数学保护 + 英文再平衡消融，不部署）**（`data/sft-mix-v2c`；3,815 步 / 250M token / **SFT val 1.6018** / 1h19m40s / 52,925 tok/s / 题库 17-18；含 optimizer 态） | 1.65GB | `6c12947bb3a56dd5` | `out/sft-v2c/last.pt`（`reports/2026-11-20-day8-sft-v2c.{log,csv}` · `...-day8-eval.md`） |
+| **sft-v2d last.pt** | **Day 8 机动窗口 SFT v2d（复读压制 + translate 方向 + 格式补强消融，不部署）**（`data/sft-mix-v2d`；3,815 步 / 250M token / **SFT val 1.6059** / 1h19m44s / 52,851 tok/s / **rep-4 0.084 + rubric 6/8 双项最佳**；含 optimizer 态） | 1.65GB | `fe972eed11aa599b` | `out/sft-v2d/last.pt`（`reports/2026-11-20-v2d-sft.{log,csv}` · `...-v2d-eval{,-rubric}.md` · `...-v2d.md`） |
 | **sft-lora-r8-5e4 last.pt** | **Day 7 LoRA r=8 终版（v2 数据，merged；1.20% 可训练；val 1.8253 / 题库 15-18 / rep-4 0.260；1 epoch 欠拟合，不部署）** | 526MB（model-only）+ adapter 6.5MB | `81fbbf0840ed56c1`（adapter `94ce1732659ec48c`） | `out/sft-lora-r8-5e4/last.pt` / `adapter.pt`（`reports/2026-11-19-day7-lora-5e4.log` · `...-eval-lora.md`） |
 
 ## Tokenizer（Day 2 产出）
@@ -67,8 +68,9 @@
 | `calibration.jsonl` | 校准/拒答：未来事件 / **错误前提**（如"2027 年世界杯"）/ 实时信息 / 隐私 / 不可验证 / 已知事实对比（同对话先答已知再拒答未知） | **1,630** 条唯一对话（构建时重复 3× → 4,890 条曝光） | `ebcbd1f56c780a55` |
 | `format.jsonl` | 格式硬约束：只回答数字算术（2..12 全组合）/ 一句话 / 不超过 N 字 / 列出 3 条 | **989** 条唯一对话（构建时重复 2× → 1,978） | `a8e625c8b3066326` |
 | `helpful.jsonl` | 中英良性问题正例（描述海洋/解释概念/翻译/写代码），对冲 v1 英文拒答模板泄漏 | **60** 条唯一对话（重复 3× → 180） | `633d388050df4b9c` |
+| `concise.jsonl`（**Day 8 机动窗口新增**） | 复读三题题型（介绍/假设/tell me about）的**中等长度连贯正例**（2~3 句、150~350 字符、不含编号列表行）；中文介绍 20 + 中文假设 10 + 英文 fluency 20 | **50** 条唯一对话（v2d 构建 repeat 3 → 150） | `517de60c33bdc673` |
 
-> 生成器确定性（seed 20261119；`zlib.crc32` 替代 Python 内置 hash）· 全量 `data/sft-extra-v2/SHA256SUMS`（3 条）· 生成读数 `logs/day7-sft-extra.log`。**只进 train，不进 val。**
+> 生成器确定性（seed 20261119；`zlib.crc32` 替代 Python 内置 hash）· 全量 `data/sft-extra-v2/SHA256SUMS`（Day 7 = 3 条；Day 8 v2d 起 = 4 条，**前三件指纹逐字节不变**——RNG 消耗顺序保持，确定性验证过）。**只进 train，不进 val。**
 
 ### SFT v2 训练集 `data/sft-mix-v2/`（Day 7 构建，`tools/build_sft_v2.py`）
 
@@ -96,6 +98,15 @@
 | `val.bin` + `val.labels.bin` | **复用 v1 val**（与 v1/v2/v2b 逐字节相同） | 2,001,920 token（4,281 条对话） | `8287b49028dd2f58` / `1a5184449637176b` |
 
 > 构建 4.8 min · 段级 mask 自检 **300 块 / 2,966 段 / 0 违规** · 全量 `data/sft-mix-v2c/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2c --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5 --calib-repeat 3 --format-repeat 2 --helpful-repeat 3`。**动机**：v2 遗留数学弱 + en-fluency 拒答，v2b 全量豁免的 rep-4 代价 0.117 → 收窄豁免口径（等式行 ≥3 才豁免，eqrows 侦察 9,693/26,184）；英文拒答全库 21,345 条中 16,601 条集中 rows 800k-900k 桶（预算 n_read≈810k 截断不读到）→ 训练集内拒答密度 1.16%→0.40%。预注册判据：math 正确且纯数字 / rep-4 <0.08 / en-fluency 不拒答 / 题库 ≥16/18 / 预训练 PPL ≤10%。
+
+### SFT v2d 训练集 `data/sft-mix-v2d/`（Day 8 机动窗口：复读压制 + 翻译方向 + 格式补强，v2c 规则全沿用）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `train.bin` + `train.labels.bin` | v2c 全部规则 + **①长答案复读压制**（引导型短 prompt ∧ 答案 ≥600 字符 ∧ 非列表/数学/翻译题 → 保留 1/2：seen 12,803 → 砍 6,507/留 6,296）+ **②translate 方向上采样**（英 prompt→中 answer 非列表样本 3×：seen 702 → 写入 2,106）+ **③concise 正例注入**（50×3 = 150 条）+ **④format-repeat 2→3**（1,978→2,967 条） | **250,001,408 token**（244,142 块 × 1024，与 v1/v2/v2b/v2c 完全同预算；监督 token 189,128,818 = **75.65%**；列表占比 **10.15%**；共 613,180 条对话） | `c0ca8f54847f1897` / `5d1fcb790a0716de` |
+| `val.bin` + `val.labels.bin` | **复用 v1 val**（与 v1/v2/v2b/v2c 逐字节相同） | 2,001,920 token（4,281 条对话） | `8287b49028dd2f58` / `1a5184449637176b` |
+
+> 构建 5.0 min · 段级 mask 自检 **300 块 / 3,211 段 / 0 违规** · 全量 `data/sft-mix-v2d/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2d --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5 --concise-repeat 3 --translate-upsample 3 --long-answer-keep-den 2 --format-repeat 3`。**侦察依据（`/tmp/v2d_recon*.py`，2026-11-20）**：①复读三题题型 = 引导型短 prompt（zh_flu 2,102 条 p50 614 字符 / zh_hyp 59,303 条 p50 329 / en_flu 122 条 p50 683）——长答案先验超出 140M 长文连贯能力；②英文长答案（≥1000 字符）几乎不在训练集（前 810k 行写入 0 条）→ 英文侧只能加正例对冲（concise EN 组）；③英→中池仅 608 条（0.22%）vs v2c 英→英上采样 32,754 条 → 方向先验被淹没。**对账**：长答案砍 6,507 条 ≈ 省 2.9M token、translate/concise/format 增 ~2.3M → n_read 延后 ~4%，v2c 各 seen/kept 类目微增（calib 3,039→3,158 / en_helpful_up 16,377→18,650 等），数学豁免 6,264 保持、列表 10.55%→10.15%。预注册判据：rep-4 <0.08 / translate-en2zh 恢复 / 题库 ≥16/18 / math 保持 8/42 / 预训练 PPL ≤10%。
 
 ### 评测集 `data/eval/tests.json`（Day 5 立，Day 6 定档）
 

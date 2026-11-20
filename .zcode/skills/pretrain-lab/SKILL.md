@@ -18,12 +18,12 @@
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b/v2c 数据（列表降采样 + `--protect-math` / `--protect-math-short` + `--en-refusal-keep-den` + `--en-helpful-upsample`）** · gen_sft_v2_extra.py 校准/格式/正例 · **lora.py LoRA A/B + apply/merge** · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b/v2c 数据（列表降采样 + `--protect-math` / `--protect-math-short` + `--en-refusal-keep-den` + `--en-helpful-upsample`）** · gen_sft_v2_extra.py 校准/格式/正例/concise · **lora.py LoRA A/B + apply/merge** · plot_loss.py 报告 loss 图 · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
-| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-extra-v2/`（calibration/format/helpful 补充样本）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
-| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-v2c/last.pt`（消融 · 1.6018 · 题库 17/18 · rep-4 0.135，不部署）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
+| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-mix-v2d/`（复读压制 + translate 方向 + concise 正例消融 · 列表 10.15%）** · **`data/sft-extra-v2/`（calibration/format/helpful/**concise** 补充样本）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
+| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-v2c/last.pt`（消融 · 1.6018 · 题库 17/18 · rep-4 0.135，不部署）** · **`out/sft-v2d/last.pt`（消融 · 1.6059 · rep-4 0.084 + rubric 6/8 双项最佳，不部署）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
 | 部署 | **GGUF `out/gguf/*.gguf`（F16/Q4/Q8）** · **Ollama 用户级 `127.0.0.1:11435`（模型 `pretrain-lab-sft-v2-q4/q8`）** · **demo `tools/app_stdlib.py` → `http://127.0.0.1:7860`** · 模型卡 [MODEL_CARD.md](../../../MODEL_CARD.md) |
 | 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS`（含 v2/v2b/v2c/extra） |
 | 产物 | `out/<run>/last.pt`（gitignore）· `out/gguf/` · `logs/`（gitignore，证据快照拷 reports/） |
@@ -72,8 +72,13 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 # v2c（Day 8）：加 --out-dir data/sft-mix-v2c --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5
 #   选择性数学保护 = 仅 assistant 等式行 ≥3 的数学列表豁免（练习列表教算术组合，叙述罗列不豁免）
 #   英文拒答保留 1/2（分支先于 calib——EN_REFUSAL_RE 与 CALIB_RE 英文部分重叠）+ 英文正例 1/5 选中上采样 2×
+# v2d（机动窗口，Day 8 收官后）：v2c 参数 + --concise-repeat 3 --translate-upsample 3 --long-answer-keep-den 2 --format-repeat 3
+#   ①长答案压制 = 引导型短 prompt ∧ 答案≥600 字 ∧ 非列表/数学/翻译题 → 保留 1/2（复读三题的题型源；大盘开放问答不动）
+#   ②translate 方向 = 英 prompt→中 answer 非列表样本 3×（但"方向池"教不会"翻译指令行为"——v2e 要精确指令样本）
+#   ③concise 正例 = 介绍/假设题→2~3 句连贯答案（50 unique，含英文 fluency 组——英文长答案不在训练集，只能加正例）
+#   结果：rep-4 0.084（差 0.004 未达 <0.08）+ rubric 6/8；math-mul 回退 72（组合记忆容量边缘）；不部署
 ```
-- 判据：250,001,408 token / 244,142 blocks / 列表类 ≤15%（v2 9.33% / v2b 13.53% / v2c 10.55%）/ mask 300 块 3,000+ 段 0 违规 / val 与 v1 同 sha（复用 v1 val）。
+- 判据：250,001,408 token / 244,142 blocks / 列表类 ≤15%（v2 9.33% / v2b 13.53% / v2c 10.55% / v2d 10.15%）/ mask 300 块 3,000+ 段 0 违规 / val 与 v1 同 sha（复用 v1 val）。
 - **采样按能力域保护**：v2b 全量豁免数学（rep-4 0.117 代价）；v2c 收窄为 eqrows≥3（豁免 6,243 条，math 照样修回）。
 - **采样规则作用域 = 训练集（读到的行）**：英文拒答 78% 集中 rows 800k-900k 桶、250M 预算 n_read≈810k 截断读不到；改 `--max-tokens` = 改训练分布，前后必须 meta 对账。
 

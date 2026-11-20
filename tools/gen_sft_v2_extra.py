@@ -552,6 +552,80 @@ def gen_helpful(rng: random.Random) -> list[dict]:
     return recs
 
 
+# ------------------------------------------------------------------ D. concise（v2d，Day 8 机动窗口）
+
+# v2c 复读三题（reason 0.728 / en-fluency 0.708 / zh-fluency 0.516）的数据侧病因：
+# "介绍一下 X / 如果…该怎么办"类问题的训练答案 p50≈700 字符，长答案先验超出 140M 的长文连贯能力；
+# 英文侧长答案几乎不在训练集里（en 复读 = 长答案先验的泛化），砍不到、只能加正例对冲。
+# → 本类教"介绍/假设题 → 2~3 句连贯答案"（150~350 字符），**不用编号列表行**（防罗列格式泛化）。
+ZH_CONCISE_INTRO = [
+    ("介绍一下北京。", "北京是中国的首都，也是全国的政治和文化中心。这里有故宫、长城等著名历史遗迹，同时也聚集了许多高校和科技公司。"),
+    ("介绍一下上海。", "上海是中国最大的城市之一，位于长江入海口。它以金融和贸易闻名，外滩的天际线是这座城市的标志。"),
+    ("介绍一下长城。", "长城是中国古代的防御工程，横跨北方多个省份。它历史悠久，如今是著名的旅游景点，也被视为中华民族的象征。"),
+    ("介绍一下春节。", "春节是农历新年，是中国最重要的传统节日。家人通常会在这一天团聚，一起吃年夜饭、贴春联。"),
+    ("介绍一下中秋节。", "中秋节在农历八月十五，是家人团聚的节日。人们会赏月、吃月饼，寄托思念之情。"),
+    ("介绍一下大熊猫。", "大熊猫是中国特有的珍稀动物，主要生活在四川的山林里。它们以竹子为主食，性格温顺，深受世界各地的人喜爱。"),
+    ("介绍一下春天。", "春天是四季之一，天气渐渐变暖，植物开始发芽开花。很多人喜欢在这个季节出门踏青。"),
+    ("介绍一下海洋。", "海洋覆盖了地球表面的大部分区域，孕育着极其丰富的生命。它还参与调节全球气候，与人类生活息息相关。"),
+    ("介绍一下太阳。", "太阳是太阳系的中心恒星，为地球提供光和热。它的能量来自内部的核聚变反应。"),
+    ("介绍一下地球。", "地球是太阳系中距离太阳第三近的行星，是目前已知唯一存在生命的星球。它的表面大部分被海洋覆盖。"),
+    ("介绍一下猫。", "猫是常见的家庭宠物，性格独立又亲人。它们爱干净，每天会花很多时间梳理毛发。"),
+    ("介绍一下狗。", "狗是最早被人类驯化的动物之一，忠诚而友好。经过训练，它们可以看家、导盲，甚至参与救援。"),
+    ("介绍一下茶叶。", "茶叶是中国传统饮品，用茶树的嫩叶加工制成。绿茶、红茶、乌龙茶是几种常见的类型。"),
+    ("介绍一下图书馆。", "图书馆是收藏和借阅图书的公共场所。人们可以在这里安静地阅读、查阅资料，许多图书馆还提供免费的座位和电子资源。"),
+    ("介绍一下博物馆。", "博物馆是收藏和展示文物的场所。参观博物馆可以帮助人们了解历史、艺术和科学知识。"),
+    ("介绍一下乒乓球。", "乒乓球是中国的国球，是一项在桌面上进行的球类运动。它节奏快，对反应能力要求高，非常适合各个年龄段的人。"),
+    ("介绍一下机器学习。", "机器学习是让计算机从数据中学习规律的技术。与人工编写规则不同，模型会随着样本增多自动改进。推荐系统和图像识别都是它的常见应用。"),
+    ("介绍一下互联网。", "互联网把全世界的计算机连接在一起，让人们可以随时传递和获取信息。它是现代通信、学习和工作的基础。"),
+    ("介绍一下高铁。", "高铁是时速超过两百公里的铁路系统，速度快、准点率高。它让跨城市出行变得方便，也带动了沿线城市的发展。"),
+    ("介绍一下冰箱。", "冰箱是用来低温储存食物的家用电器。低温能减缓细菌繁殖，让食物保存得更久。"),
+]
+
+ZH_CONCISE_HYP = [
+    ("如果明天下雨，我该准备什么？", "建议带一把伞，穿防滑的鞋子。如果骑自行车，最好穿上雨衣。出门前也可以先看一眼天气预报。"),
+    ("如果周末去爬山，我该准备什么？", "带上足够的水和一些食物，穿舒适防滑的运动鞋。出发前查看天气，最好再带一件外套。"),
+    ("想学好英语，我该怎么做？", "每天坚持背几个单词，多听英语材料，并找机会开口说。坚持几个月就能看到明显进步。"),
+    ("想养成读书习惯，我该怎么做？", "从每天睡前读十页开始，先选自己感兴趣的书。把书放在床头，比定大目标更容易坚持。"),
+    ("下周要出远门，我该怎么准备？", "提前订好交通和住宿，查一下当地近几天的天气，再准备证件和常用药品。行李尽量精简。"),
+    ("想开始运动，我该从哪里做起？", "从快走或慢跑开始，每周三到四次，每次半小时左右。运动前记得热身，循序渐进最重要。"),
+    ("考试前很紧张，我该怎么办？", "把复习内容拆成小块，按计划推进，紧张感会小很多。考前保证睡眠，比熬夜刷题更有效。"),
+    ("家里人多口杂，怎么安静学习？", "可以戴耳塞或降噪耳机，去图书馆或书房等安静的地方。把手机放到看不见的地方也能减少打扰。"),
+    ("新手想养植物，该怎么选？", "可以从绿萝、多肉这类好养的植物开始。它们对水和光照的要求不高，适合练手。"),
+    ("做饭总是手忙脚乱，怎么办？", "做菜前先把所有食材切好、调料备齐，下锅时就不会乱。先从简单的菜开始，熟练了再尝试复杂的。"),
+]
+
+EN_CONCISE_FLU = [
+    ("Tell me about the ocean.", "The ocean covers most of Earth's surface and is home to a huge variety of life. It helps regulate the climate and provides food for billions of people."),
+    ("Tell me about spring.", "Spring is when the weather warms up and plants begin to grow. Birds return, flowers bloom, and many people enjoy outdoor activities."),
+    ("Tell me about winter.", "Winter is the coldest season of the year. Days become short, and in many places it snows. People keep warm indoors and celebrate holidays together."),
+    ("Tell me about cats.", "Cats are popular pets known for being independent yet affectionate. A healthy cat sleeps a lot and grooms itself every day."),
+    ("Tell me about dogs.", "Dogs are loyal and friendly animals, and one of the first domesticated species. With training they can guard homes, guide people, and join rescues."),
+    ("Tell me about coffee.", "Coffee is a brewed drink made from roasted beans. It contains caffeine, which helps people stay awake, and it is popular around the world."),
+    ("Tell me about the Great Wall.", "The Great Wall is an ancient fortification in northern China. It stretches across mountains and deserts, and today it is a famous symbol of China."),
+    ("Tell me about Beijing.", "Beijing is the capital of China and its political and cultural center. It is home to historic sites such as the Forbidden City, with the Great Wall nearby."),
+    ("Tell me about pandas.", "Pandas are rare bears that live in the mountains of China. They eat bamboo almost all day and are loved around the world."),
+    ("Tell me about books.", "Books carry knowledge and stories from one generation to the next. Reading regularly builds vocabulary and gives you new ways to see the world."),
+    ("Tell me about trains.", "Trains run on fixed tracks and can carry many people or heavy goods at once. High-speed rail has made travel between cities fast and convenient."),
+    ("Describe a rainy day.", "On a rainy day the streets look shiny and the air smells fresh. People carry umbrellas, and it is a good time to stay indoors with a book."),
+    ("Describe a good friend.", "A good friend listens to you and stands by you in hard times. You can be honest around them and share both joy and trouble."),
+    ("Describe your morning routine.", "A good morning starts with waking up on time, drinking some water, and having breakfast. A short walk or stretch helps you start the day with energy."),
+    ("What is machine learning?", "Machine learning is a way for computers to learn patterns from data. Instead of following hand-written rules, the model improves as it sees more examples."),
+    ("What is photosynthesis?", "Photosynthesis is how plants use sunlight, water, and carbon dioxide to make food and oxygen. It is the foundation of almost all life on Earth."),
+    ("What should I take if it rains tomorrow?", "Take an umbrella and wear shoes that do not slip. If you ride a bike, a raincoat is more useful."),
+    ("How can I keep healthy?", "Keep a regular schedule, eat balanced meals, and exercise a few times a week. A good mood matters just as much."),
+    ("How do I learn to code?", "Pick one language like Python and practice a little every day. Start with small projects and read the error messages carefully when something breaks."),
+    ("What would you do on a free weekend?", "I would sleep in a little, take a walk in a park, and read a book in the afternoon. Simple plans often make the best weekends."),
+]
+
+
+def gen_concise(rng: random.Random) -> list[dict]:
+    recs = ([q(u, a) for u, a in ZH_CONCISE_INTRO]
+            + [q(u, a) for u, a in ZH_CONCISE_HYP]
+            + [q(u, a) for u, a in EN_CONCISE_FLU])
+    rng.shuffle(recs)
+    return recs
+
+
 def main() -> None:
     t0 = time.time()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -559,10 +633,12 @@ def main() -> None:
     calib = gen_calibration(rng)
     fmt = gen_format(rng)
     helpful = gen_helpful(rng)
+    concise = gen_concise(rng)
 
     write_jsonl(OUT / "calibration.jsonl", calib)
     write_jsonl(OUT / "format.jsonl", fmt)
     write_jsonl(OUT / "helpful.jsonl", helpful)
+    write_jsonl(OUT / "concise.jsonl", concise)
 
     meta = {
         "purpose": "SFT v2 数据侧修正补充样本（只进 train，不进 val）",
@@ -571,16 +647,19 @@ def main() -> None:
                         "categories": ["未来事件", "错误前提", "实时信息", "隐私", "不可验证", "已知事实对比"]},
         "format": {"unique": len(fmt), "categories": ["只回答数字算术", "一句话", "不超过 N 字", "列出 3 条"]},
         "helpful": {"unique": len(helpful), "categories": ["英文良性问答", "中文良性问答"]},
+        "concise": {"unique": len(concise),
+                    "categories": ["中文介绍类连贯答案", "中文假设/建议类连贯答案", "英文 fluency 连贯答案"],
+                    "note": "v2d 新增：复读三题题型（介绍/假设）的中等长度连贯正例，不含编号列表行"},
         "template": "<|im_start|>{role}\\n{content}<|im_end|>\\n",
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
         "elapsed_s": round(time.time() - t0, 1),
     }
     (OUT / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-    lines = [f"{sha256_file(OUT / name)}  {name}"
-             for name in ("calibration.jsonl", "format.jsonl", "helpful.jsonl")]
+    names = ("calibration.jsonl", "format.jsonl", "helpful.jsonl", "concise.jsonl")
+    lines = [f"{sha256_file(OUT / name)}  {name}" for name in names]
     (OUT / "SHA256SUMS").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[done] calibration={len(calib):,} format={len(fmt):,} helpful={len(helpful):,} "
-          f"→ {OUT}/（SHA256SUMS 3 条）· {time.time()-t0:.1f}s", flush=True)
+          f"concise={len(concise):,} → {OUT}/（SHA256SUMS {len(names)} 条）· {time.time()-t0:.1f}s", flush=True)
 
 
 if __name__ == "__main__":

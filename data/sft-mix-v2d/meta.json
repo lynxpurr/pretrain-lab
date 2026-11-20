@@ -1,0 +1,116 @@
+{
+  "source": "data/raw/minimind_dataset/sft_t2t_mini.jsonl",
+  "extra_dir": "data/sft-extra-v2",
+  "template": "<|im_start|>{role}\\n{content}<|im_end|>\\n",
+  "specials": {
+    "endoftext": 0,
+    "im_start": 1,
+    "im_end": 2
+  },
+  "block_size": 1024,
+  "train": {
+    "tokens": 250001408,
+    "blocks": 244142,
+    "supervised_tokens": 189128818,
+    "supervised_ratio": 0.7565,
+    "conversations": 613180
+  },
+  "val": {
+    "tokens": 2001920,
+    "blocks": 1955,
+    "conversations": 4281,
+    "supervised_ratio": 0.7105,
+    "source": "data/sft-mix"
+  },
+  "pretrain_mix": {
+    "ratio_blocks": 0.25,
+    "every_n_blocks": 4,
+    "source": "data/shards"
+  },
+  "v2_changes": {
+    "calibration_extras": {
+      "file": "data/sft-extra-v2/calibration.jsonl",
+      "repeat": 3,
+      "unique": 1630,
+      "written": 4890,
+      "tokens": 279552
+    },
+    "format_extras": {
+      "file": "data/sft-extra-v2/format.jsonl",
+      "repeat": 3,
+      "unique": 989,
+      "written": 2967,
+      "tokens": 99328
+    },
+    "helpful_extras": {
+      "file": "data/sft-extra-v2/helpful.jsonl",
+      "repeat": 3,
+      "unique": 60,
+      "written": 180,
+      "tokens": 15360
+    },
+    "concise_extras": {
+      "file": "data/sft-extra-v2/concise.jsonl",
+      "repeat": 3,
+      "unique": 50,
+      "written": 150,
+      "tokens": 10240
+    },
+    "mined": {
+      "calib_kept": 3158,
+      "fmt_kept": 2050,
+      "listy_seen": 298314,
+      "listy_kept": 55961,
+      "math_listy_kept": 6264,
+      "math_short_kept": 6264,
+      "en_refusal_seen": 5091,
+      "en_refusal_kept": 2521,
+      "en_refusal_dropped": 2570,
+      "en_helpful_seen": 94405,
+      "en_helpful_upsampled": 18650,
+      "translate_seen": 702,
+      "translate_written": 2106,
+      "long_answer_seen": 12803,
+      "long_answer_kept": 6296,
+      "long_answer_dropped": 6507,
+      "listy_dropped": 236089,
+      "plain_kept": 487292
+    },
+    "train_conv_by_cat": {
+      "format": 2967,
+      "calibration": 4890,
+      "concise": 150,
+      "helpful": 180,
+      "mined_plain": 487287,
+      "mined_calib": 3158,
+      "mined_fmt": 4100,
+      "mined_listy_kept": 55961,
+      "mined_long_kept": 6296,
+      "mined_math_listy": 6264,
+      "mined_en_helpful_up": 37300,
+      "mined_en_refusal": 2521,
+      "mined_translate": 2106
+    },
+    "listy_ratio_after": 0.1015,
+    "listy_rule": "assistant 任一段 ≥5 个编号/项目行 → blake2b64(line)%5==0 保留；仅等式行 ≥3 的数学列表豁免（v2c 选择性保护）",
+    "protect_math": false,
+    "protect_math_short": true,
+    "en_refusal_keep_den": 2,
+    "en_helpful_upsample": 5,
+    "en_rule": "英文为主样本（中文字符占比<5%）：拒答模板命中→保留 1/2（分支先于 calib，含 CALIB_RE 英文重叠部分）；良性正例按 hash 1/5 选中上采样 2×",
+    "translate_upsample": 3,
+    "long_answer_keep_den": 2,
+    "v2d_rule": "①英 prompt→中 answer 非列表样本上采样 3×（修 translate-en2zh 方向）；②引导型长答案（prompt<120 字 ∧ 答案≥600 字 ∧ 非列表/数学/翻译题）保留 1/2（压复读三题的长答案先验，大盘开放问答不动）；③concise 连贯正例 repeat 3（介绍/假设题→2~3 句答案，含英文 fluency 对冲）；④format-repeat 3（压 math-mul 非纯数字瑕疵）",
+    "fmt_upsample": 2
+  },
+  "val_split": "blake2b64(line) % 100 == 0（文档级）；v2 直接复用 v1 val 文件，训练流跳过全部留出记录（跳过 8,777 条）",
+  "skipped_long": 837,
+  "sample_checks": 30,
+  "mask_verify": {
+    "checked_blocks": 300,
+    "checked_segments": 3211,
+    "violations": 0
+  },
+  "elapsed_s": 297.2,
+  "created": "2026-11-20 08:39:09"
+}
