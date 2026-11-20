@@ -165,7 +165,7 @@ ls specs/2026-11-20-final-phase.md reports/2026-11-20-deploy-v2e.md out/gguf/pre
 ## 6. 惯例与红线
 
 - **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md` 执行（含 §3 预训练、§3.2 SFT+评测、§6 收波校准清单）。
-- **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。当前待自答：qa-day-2 ~ qa-day-5、qa-day-7、**qa-day-10**（Day 10 题池：bit-for-bit 复现 / 量化抽检 / 读数标注）；qa-day-8 已有 agent 预答卡（可复核/改写）。
+- **每晚三道概念检验题**：`notes/qa-day-N.md` 先自答；空洞回 `notes/lessons.md` 补课（追加制带出处）。当前待自答：qa-day-2 ~ qa-day-5、qa-day-7、**qa-day-10**（Day 10 题池：bit-for-bit 复现 / 量化抽检 / 读数标注）；qa-day-8 已有 agent 预答卡（可复核/改写）。**评分要点 = [notes/qa-rubric.md](notes/qa-rubric.md)**（18 题判分要点 + 常见错误 + 出处；先自答再对照）；若只想快速收口，可授权 agent 按 qa-day-8 模式代写预答卡。
 - **证据纪律**：`reports/` 只增不改（改错走勘误追加）；每次 run 证据三分 = 摘要 md + 曲线 csv + 原始 log。
 - **指纹纪律**：每份数据/ckpt 落位即录（`SHA256SUMS` 例外入库；数据本体 gitignore）。
 - **git**：develop 直提为主（信息带 `day-N` 标签）；大改走 `feature/day-N-<slug>` → `--no-ff`；模型/checkpoint/语料/日志不入库。

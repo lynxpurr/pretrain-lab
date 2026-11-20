@@ -42,7 +42,7 @@
 | 模型卡（架构/数据/评测/限制/复现） | [MODEL_CARD.md](MODEL_CARD.md) |
 | 训练/评测/数据/部署脚本（Day 1~10 逐步生长） | `tools/` |
 | run 证据（只增不改） | `reports/` |
-| 学习者 lessons（追加制）+ 概念检验题答案卡 | `notes/` |
+| 学习者 lessons（追加制）+ 概念检验题答案卡/评分要点 | `notes/`（`qa-rubric.md` = 18 题判分要点） |
 | 仓内操作规程（训练跑批/故障速查/红线，agent 优先加载） | [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md) |
 | 数据集落位 + 出处指纹 | `data/`（PROVENANCE.md + SHA256SUMS） |
 | 模型/checkpoint/语料（gitignore，脚本可再生） | `models/` · `checkpoints/` |
