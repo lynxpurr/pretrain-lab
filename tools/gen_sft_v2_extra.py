@@ -304,6 +304,8 @@ def gen_calibration(rng: random.Random) -> list[dict]:
             add(q(f"请告诉我 {year} 年{event}的{result}。", ans))
             add(q(f"{year} 年{event}的{result}是谁/是什么？", ans))
         for year in invalid_years:
+            if year == 2027 and event == "世界杯":
+                continue  # v2e 去污：与评测题 refuse-unknown（2027 世界杯）原句撞车，跳过该组合
             ans = FALSE_PREMISE_ANSWERS[(dh(event) + year) % len(FALSE_PREMISE_ANSWERS)].format(
                 year=year, event=event, result=result, cycle=cycle,
                 valid_years="、".join(str(y) for y in valid_years[:3]))
@@ -368,6 +370,8 @@ def gen_format(rng: random.Random) -> list[dict]:
 
     for a in range(2, 13):
         for b in range(2, 13):
+            if (a, b) in {(3, 5), (7, 6)}:
+                continue  # v2e 去污：3+5 / 7×6 = 评测题 math-add/math-mul 的算术组合
             for tpl in ARITH_Q[:3]:
                 if "减" in tpl and b > a:
                     continue
@@ -386,7 +390,7 @@ def gen_format(rng: random.Random) -> list[dict]:
 
     # 一句话 / 不超过 N 字 / 列出 3 条
     one_sentence = [
-        ("机器学习", "机器学习是让计算机从数据中学习规律、而不是靠人工规则完成任务的方法。"),
+        ("神经网络", "神经网络是受大脑启发的计算模型，由多层相互连接的单元组成。"),
         ("光合作用", "光合作用是植物利用阳光把水和二氧化碳转化为氧气和养分的过程。"),
         ("重力", "重力是物体之间相互吸引的力，它让物体落向地面并维持行星运行。"),
         ("人工智能", "人工智能是让机器模拟人类感知、学习和决策能力的技术。"),
@@ -403,7 +407,7 @@ def gen_format(rng: random.Random) -> list[dict]:
         add(q(f"一句话概括什么是{concept}。", definition))
 
     brevity = [
-        ("中国的首都是哪里？", "北京。"), ("水的化学式是什么？", "H2O。"),
+        ("日本的首都是哪里？", "东京。"), ("二氧化碳的化学式是什么？", "CO2。"),
         ("一年有几个月？", "12 个月。"), ("3 加 5 等于多少？", "8。"),
         ("太阳从哪边升起？", "东边。"), ("地球有几个卫星？", "1 个。"),
         ("冰的熔点是多少摄氏度？", "0 摄氏度。"), ("一天有多少小时？", "24 小时。"),
@@ -414,7 +418,7 @@ def gen_format(rng: random.Random) -> list[dict]:
         add(q(f"简短回答：{question}", answer))
 
     list3 = [
-        ("学习编程", ["1. 先选一门语言并坚持练习；", "2. 每天写一点代码，从小项目开始；", "3. 学会读报错和查文档。"]),
+        ("时间管理", ["1. 把任务按重要程度排序；", "2. 给每件事设定明确的时间；", "3. 每天回顾一次完成情况。"]),
         ("保持健康", ["1. 规律作息，保证睡眠；", "2. 均衡饮食，多喝水；", "3. 每周至少运动三次。"]),
         ("提高写作", ["1. 每天读一点好文章；", "2. 先写大纲再展开；", "3. 写完后大声读一遍并修改。"]),
         ("准备面试", ["1. 研究岗位要求；", "2. 复习核心知识并做模拟题；", "3. 准备几个能体现能力的项目故事。"]),
@@ -504,16 +508,16 @@ ZH_HELPFUL = [
      "量子计算利用量子比特的叠加和纠缠来进行计算，在特定问题上可能比经典计算机更快，但目前仍处于早期阶段。"),
     ("写一个 Python 函数判断一个数是不是偶数。",
      "def is_even(n):\n    return n % 2 == 0"),
-    ("把'今天天气不错'翻译成英文。", "The weather is nice today."),
-    ("把'I enjoy reading books'翻译成中文。", "我喜欢读书。"),
-    ("用一句话说明什么是机器学习。",
-     "机器学习是让计算机从数据中学习规律、而不是靠人工规则完成任务的方法。"),
+    ("把'我喜欢在周末爬山'翻译成英文。", "I like hiking on weekends."),
+    ("把'The sky is blue'翻译成中文。", "天空是蓝色的。"),
+    ("用一句话说明什么是人工智能。",
+     "人工智能是让机器模拟人类感知、学习和决策能力的技术。"),
     ("给三个学习编程的建议。",
      "1. 选一门语言坚持练习；\n2. 从小项目开始，遇到报错先读错误信息；\n3. 多读别人的代码和官方文档。"),
-    ("下雨天出门要带什么？", "带伞或雨衣，注意路面湿滑。"),
-    ("水的分子式是什么？", "H2O。"),
-    ("一年有多少个月？", "12 个月。"),
-    ("中国的首都是哪座城市？", "北京。"),
+    ("下雨天出门要注意什么？", "带好雨具，注意路面湿滑。"),
+    ("水由哪些元素组成？", "水由氢和氧两种元素组成。"),
+    ("一年分为几个季度？", "四个季度。"),
+    ("法国的首都是哪座城市？", "巴黎。"),
     ("解释一下什么是互联网。",
      "互联网是把全球计算机网络连接起来、用于交换信息的系统，它让不同设备之间可以互相通信和共享资源。"),
     ("什么是操作系统？",
@@ -524,13 +528,13 @@ ZH_HELPFUL = [
      "光合作用是植物利用阳光，把水和二氧化碳转化为氧气和养分的过程。"),
     ("怎样保持健康？",
      "规律作息、均衡饮食、适量运动，并注意心理健康和定期体检。"),
-    ("写一个 Python 函数返回两个数的和。",
+    ("用 Python 定义一个函数，计算两个整数之和。",
      "def add(a, b):\n    return a + b"),
     ("12 乘以 8 等于多少？", "96。"),
     ("15 加 27 等于多少？", "42。"),
-    ("总结一下：苹果公司发布了新款手机，搭载更快的芯片和更好的摄像头。",
-     "苹果发布了搭载更快芯片和更好摄像头的新款手机。"),
-    ("如果明天下雨，我应该带什么？", "应该带伞或雨衣。"),
+    ("概括这段话：某公司推出新手机，芯片更快、摄像头更好。",
+     "该公司发布了芯片更快、摄像头更好的新手机。"),
+    ("下雨天出门要带什么？", "带伞或雨衣，注意路面湿滑。"),
     ("什么是一张关系型数据库的表？",
      "关系型数据库的表是按行和列组织的数据集合，每一行通常代表一条记录，每一列代表一个字段。"),
     ("解释一下什么是算法。", "算法是解决某个问题的一系列明确步骤。"),
@@ -559,7 +563,7 @@ def gen_helpful(rng: random.Random) -> list[dict]:
 # 英文侧长答案几乎不在训练集里（en 复读 = 长答案先验的泛化），砍不到、只能加正例对冲。
 # → 本类教"介绍/假设题 → 2~3 句连贯答案"（150~350 字符），**不用编号列表行**（防罗列格式泛化）。
 ZH_CONCISE_INTRO = [
-    ("介绍一下北京。", "北京是中国的首都，也是全国的政治和文化中心。这里有故宫、长城等著名历史遗迹，同时也聚集了许多高校和科技公司。"),
+    ("介绍一下广州。", "广州是中国南方的大城市，位于珠江口。这里气候温暖湿润，以美食和商贸闻名，也是一座历史悠久的城市。"),
     ("介绍一下上海。", "上海是中国最大的城市之一，位于长江入海口。它以金融和贸易闻名，外滩的天际线是这座城市的标志。"),
     ("介绍一下长城。", "长城是中国古代的防御工程，横跨北方多个省份。它历史悠久，如今是著名的旅游景点，也被视为中华民族的象征。"),
     ("介绍一下春节。", "春节是农历新年，是中国最重要的传统节日。家人通常会在这一天团聚，一起吃年夜饭、贴春联。"),
@@ -575,14 +579,14 @@ ZH_CONCISE_INTRO = [
     ("介绍一下图书馆。", "图书馆是收藏和借阅图书的公共场所。人们可以在这里安静地阅读、查阅资料，许多图书馆还提供免费的座位和电子资源。"),
     ("介绍一下博物馆。", "博物馆是收藏和展示文物的场所。参观博物馆可以帮助人们了解历史、艺术和科学知识。"),
     ("介绍一下乒乓球。", "乒乓球是中国的国球，是一项在桌面上进行的球类运动。它节奏快，对反应能力要求高，非常适合各个年龄段的人。"),
-    ("介绍一下机器学习。", "机器学习是让计算机从数据中学习规律的技术。与人工编写规则不同，模型会随着样本增多自动改进。推荐系统和图像识别都是它的常见应用。"),
+    ("介绍一下深度学习。", "深度学习是机器学习的一个分支，使用多层神经网络从大量数据中学习。图像识别和语音识别都是它的典型应用。"),
     ("介绍一下互联网。", "互联网把全世界的计算机连接在一起，让人们可以随时传递和获取信息。它是现代通信、学习和工作的基础。"),
     ("介绍一下高铁。", "高铁是时速超过两百公里的铁路系统，速度快、准点率高。它让跨城市出行变得方便，也带动了沿线城市的发展。"),
     ("介绍一下冰箱。", "冰箱是用来低温储存食物的家用电器。低温能减缓细菌繁殖，让食物保存得更久。"),
 ]
 
 ZH_CONCISE_HYP = [
-    ("如果明天下雨，我该准备什么？", "建议带一把伞，穿防滑的鞋子。如果骑自行车，最好穿上雨衣。出门前也可以先看一眼天气预报。"),
+    ("如果明天要加班，我该准备什么？", "提前把任务列清楚，准备一些零食和饮用水。晚上尽量早点休息，第二天效率更高。"),
     ("如果周末去爬山，我该准备什么？", "带上足够的水和一些食物，穿舒适防滑的运动鞋。出发前查看天气，最好再带一件外套。"),
     ("想学好英语，我该怎么做？", "每天坚持背几个单词，多听英语材料，并找机会开口说。坚持几个月就能看到明显进步。"),
     ("想养成读书习惯，我该怎么做？", "从每天睡前读十页开始，先选自己感兴趣的书。把书放在床头，比定大目标更容易坚持。"),
@@ -595,7 +599,7 @@ ZH_CONCISE_HYP = [
 ]
 
 EN_CONCISE_FLU = [
-    ("Tell me about the ocean.", "The ocean covers most of Earth's surface and is home to a huge variety of life. It helps regulate the climate and provides food for billions of people."),
+    ("Tell me about rivers.", "Rivers carry fresh water from mountains to lakes and seas. They shape the land around them and supply water to cities and farms."),
     ("Tell me about spring.", "Spring is when the weather warms up and plants begin to grow. Birds return, flowers bloom, and many people enjoy outdoor activities."),
     ("Tell me about winter.", "Winter is the coldest season of the year. Days become short, and in many places it snows. People keep warm indoors and celebrate holidays together."),
     ("Tell me about cats.", "Cats are popular pets known for being independent yet affectionate. A healthy cat sleeps a lot and grooms itself every day."),
@@ -618,6 +622,61 @@ EN_CONCISE_FLU = [
 ]
 
 
+# ------------------------------------------------------------------ E. translate（v2e，机动窗口第 2 轮）
+
+# v2d 教训："同方向样本上采样"教不会"指令行为"——英→中池 3× 上采样后输出变成
+# "英文原句 + 中文字词解释"（方向修了、行为没学会）。修法 = 造"指令 + 直接译文"的精确对。
+# 设计约束：①答案只给译文（不带原文、不带解释）；②**避开 18 题评测原句**
+# （"I love machine learning" / "今天天气很好" 等）；③中英双向各 15 句，模板轮换
+# （评测模板 "Translate into Chinese: …" / "把下面这句话翻译成英文：…" 保留同模板、换句子）。
+EN2ZH = [
+    ("The sky is blue.", "天空是蓝色的。"),
+    ("She goes to school by bus.", "她坐公交车上学。"),
+    ("We had dinner at a small restaurant.", "我们在一家小餐馆吃了晚饭。"),
+    ("The meeting starts at nine o'clock.", "会议九点开始。"),
+    ("He is learning to play the piano.", "他正在学弹钢琴。"),
+    ("This book is very interesting.", "这本书很有趣。"),
+    ("The train arrives in ten minutes.", "火车十分钟后到达。"),
+    ("Please close the window before you leave.", "离开前请关上窗户。"),
+    ("I will call you tomorrow morning.", "我明天早上给你打电话。"),
+    ("The children are playing in the park.", "孩子们正在公园里玩。"),
+    ("Beijing is the capital of China.", "北京是中国的首都。"),
+    ("Spring is my favorite season.", "春天是我最喜欢的季节。"),
+    ("The soup tastes a little salty.", "这汤尝起来有点咸。"),
+    ("We should protect the environment.", "我们应该保护环境。"),
+    ("He finished the work ahead of time.", "他提前完成了工作。"),
+]
+ZH2EN = [
+    ("我喜欢在周末爬山。", "I like hiking on weekends."),
+    ("他每天早上跑步。", "He runs every morning."),
+    ("这家餐厅的菜很好吃。", "The food at this restaurant is delicious."),
+    ("请把门关上。", "Please close the door."),
+    ("我们明天见面。", "We will meet tomorrow."),
+    ("她喜欢听音乐。", "She likes listening to music."),
+    ("这个问题很难。", "This question is difficult."),
+    ("我住在北京。", "I live in Beijing."),
+    ("天气渐渐变冷了。", "The weather is getting colder."),
+    ("他正在学习中文。", "He is learning Chinese."),
+    ("我们的会议推迟到下周一。", "Our meeting is postponed to next Monday."),
+    ("这只猫很可爱。", "This cat is very cute."),
+    ("请慢一点说。", "Please speak more slowly."),
+    ("我想喝一杯咖啡。", "I would like a cup of coffee."),
+    ("图书馆在学校的东边。", "The library is east of the school."),
+]
+TR_EN2ZH_TPL = ["Translate into Chinese: {t}", "把这句话翻译成中文：{t}", "Translate '{t}' into Chinese."]
+TR_ZH2EN_TPL = ["Translate into English: {t}", "把这句话翻译成英文：{t}", "请翻译：{t}"]
+
+
+def gen_translate(rng: random.Random) -> list[dict]:
+    recs = []
+    for i, (en, zh) in enumerate(EN2ZH):
+        recs.append(q(TR_EN2ZH_TPL[i % len(TR_EN2ZH_TPL)].format(t=en), zh))
+    for i, (zh, en) in enumerate(ZH2EN):
+        recs.append(q(TR_ZH2EN_TPL[i % len(TR_ZH2EN_TPL)].format(t=zh), en))
+    rng.shuffle(recs)
+    return recs
+
+
 def gen_concise(rng: random.Random) -> list[dict]:
     recs = ([q(u, a) for u, a in ZH_CONCISE_INTRO]
             + [q(u, a) for u, a in ZH_CONCISE_HYP]
@@ -634,11 +693,13 @@ def main() -> None:
     fmt = gen_format(rng)
     helpful = gen_helpful(rng)
     concise = gen_concise(rng)
+    translate = gen_translate(rng)
 
     write_jsonl(OUT / "calibration.jsonl", calib)
     write_jsonl(OUT / "format.jsonl", fmt)
     write_jsonl(OUT / "helpful.jsonl", helpful)
     write_jsonl(OUT / "concise.jsonl", concise)
+    write_jsonl(OUT / "translate.jsonl", translate)
 
     meta = {
         "purpose": "SFT v2 数据侧修正补充样本（只进 train，不进 val）",
@@ -650,16 +711,19 @@ def main() -> None:
         "concise": {"unique": len(concise),
                     "categories": ["中文介绍类连贯答案", "中文假设/建议类连贯答案", "英文 fluency 连贯答案"],
                     "note": "v2d 新增：复读三题题型（介绍/假设）的中等长度连贯正例，不含编号列表行"},
+        "translate": {"unique": len(translate),
+                      "categories": ["英→中 15 句", "中→英 15 句"],
+                      "note": "v2e 新增：翻译指令精确对（指令+直接译文，避开 18 题评测原句）；v2d 教训=方向池上采样教不会指令行为"},
         "template": "<|im_start|>{role}\\n{content}<|im_end|>\\n",
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
         "elapsed_s": round(time.time() - t0, 1),
     }
     (OUT / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-    names = ("calibration.jsonl", "format.jsonl", "helpful.jsonl", "concise.jsonl")
+    names = ("calibration.jsonl", "format.jsonl", "helpful.jsonl", "concise.jsonl", "translate.jsonl")
     lines = [f"{sha256_file(OUT / name)}  {name}" for name in names]
     (OUT / "SHA256SUMS").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[done] calibration={len(calib):,} format={len(fmt):,} helpful={len(helpful):,} "
-          f"concise={len(concise):,} → {OUT}/（SHA256SUMS {len(names)} 条）· {time.time()-t0:.1f}s", flush=True)
+          f"concise={len(concise):,} translate={len(translate):,} → {OUT}/（SHA256SUMS {len(names)} 条）· {time.time()-t0:.1f}s", flush=True)
 
 
 if __name__ == "__main__":

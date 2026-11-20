@@ -22,8 +22,8 @@
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
-| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-mix-v2d/`（复读压制 + translate 方向 + concise 正例消融 · 列表 10.15%）** · **`data/sft-extra-v2/`（calibration/format/helpful/**concise** 补充样本）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
-| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-v2c/last.pt`（消融 · 1.6018 · 题库 17/18 · rep-4 0.135，不部署）** · **`out/sft-v2d/last.pt`（消融 · 1.6059 · rep-4 0.084 + rubric 6/8 双项最佳，不部署）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
+| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-mix-v2d/`（复读压制 + translate 方向 + concise 正例消融 · 列表 10.15%）** · **`data/sft-mix-v2e/`（去污 + translate 精确对 + math ×2 消融 · 列表 11.47%）** · **`data/sft-extra-v2/`（calibration/format/helpful/concise/**translate** 五类补充样本，**v2e 起已评测去污**）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
+| 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（部署 · 1.6038 · rep-4 0.066）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-v2c/last.pt`（消融 · 1.6018 · 题库 17/18 · rep-4 0.135，不部署）** · **`out/sft-v2d/last.pt`（消融 · 1.6059 · rep-4 0.084 + rubric 6/8 双项最佳，不部署）** · **`out/sft-v2e/last.pt`（消融 · 1.6065 · rep-4 0.055 全系最低 + 题库 17-18 去污后，五项判据全过，部署切换待拍板）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · 底座谱系 46 ckpt ≈73GB |
 | 部署 | **GGUF `out/gguf/*.gguf`（F16/Q4/Q8）** · **Ollama 用户级 `127.0.0.1:11435`（模型 `pretrain-lab-sft-v2-q4/q8`）** · **demo `tools/app_stdlib.py` → `http://127.0.0.1:7860`** · 模型卡 [MODEL_CARD.md](../../../MODEL_CARD.md) |
 | 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS`（含 v2/v2b/v2c/extra） |
 | 产物 | `out/<run>/last.pt`（gitignore）· `out/gguf/` · `logs/`（gitignore，证据快照拷 reports/） |
@@ -77,6 +77,11 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 #   ②translate 方向 = 英 prompt→中 answer 非列表样本 3×（但"方向池"教不会"翻译指令行为"——v2e 要精确指令样本）
 #   ③concise 正例 = 介绍/假设题→2~3 句连贯答案（50 unique，含英文 fluency 组——英文长答案不在训练集，只能加正例）
 #   结果：rep-4 0.084（差 0.004 未达 <0.08）+ rubric 6/8；math-mul 回退 72（组合记忆容量边缘）；不部署
+# v2e（机动第 2 轮，最后一轮）：v2d 参数 + --translate-ex-repeat 6 --math-upsample 2 --en-flu-no-upsample
+#   ①extras 评测去污（12 处同型变体 + build 的 assert_no_eval_leak 断言——**造数据不许抄评测原句**）
+#   ②translate 精确指令对 = 指令+直接译文 30 unique ×6（v2d 教训：方向池上采样教不会指令行为）
+#   ③math-upsample 2 = 数学豁免 ×2（修 math-mul 组合记忆）；④en_flu 长答案不上采样
+#   结果：**五项判据全过** rep-4 0.055（全系最低）/ 题库 17-18（去污后）/ translate 真译文 / math 8-42（真泛化）/ PPL +5.5%
 ```
 - 判据：250,001,408 token / 244,142 blocks / 列表类 ≤15%（v2 9.33% / v2b 13.53% / v2c 10.55% / v2d 10.15%）/ mask 300 块 3,000+ 段 0 违规 / val 与 v1 同 sha（复用 v1 val）。
 - **采样按能力域保护**：v2b 全量豁免数学（rep-4 0.117 代价）；v2c 收窄为 eqrows≥3（豁免 6,243 条，math 照样修回）。
@@ -94,7 +99,7 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 - **lr**：2e-4 首跑 1000 步 val 1.8839 且采样退化；5e-4 同 step 更好（500 步 1.8974）。r=8 1 epoch 可能仍欠拟合；机动窗口试 r=12（≈1.80%）/ 2 epochs。
 - 冒烟：`--max-steps 50 --eval-every 0 --sample-every 0 --ckpt-every 0`，loss 应下降（实测 2.7086 → 2.5235）。
 
-**评测协议（Day 10 七版对比沿用）**：
+**评测协议（Day 10 八版对比沿用）**：
 ```bash
 .venv-pre/bin/python -I tools/eval.py --ckpt base=out/main140m/last.pt --ckpt sft=out/sft-v1/last.pt \
   --out reports/<日期>-eval.md
@@ -166,6 +171,7 @@ cd data/shards && sha256sum -c SHA256SUMS
 - 每份数据落位即录指纹（raw 层 17 条 Day 0 已立、字符级 3 条 Day 1 已立、tokenizer 3 条 + 分片 7 条 Day 2 已立；SFT 数据 Day 4 续录）。
 - 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**）**已判定 PASS（52,250 tok/s，2026-11-18）**；②（Day 6 loss 仍陡降→加训）**已判定不触发（最后 10% 0.0134 + 恒定 lr 探针 0.0051，2026-11-19）**，重开条件见 PLAN §4.1——两者跑前未改口径。
 - SFT/评测协议（Day 6 定档，Day 7 扩展）：SFT 数据 25% 预训练混入 + assistant-only mask；评测统一 greedy + 关键词判分 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。评测 CSV 固定 8 列（model,decode,test_id,tag,pass,distinct2,rep4,answer）、答案截断 1000；关键词分与 rubric 分并列报告。
+- **评测集去重红线**（v2e 立）：**extras/补充样本不得与 `data/eval/tests.json` 原句相同或近合**（v2 起曾把 2027 世界杯/7×6/水的化学式等评测原句带进训练集，v2~v2d 题库分含记忆成分，v1/v2e 才是干净读数）；`build_sft_v2.py` 的 `assert_no_eval_leak` 为硬门，造新样本先想"同型变体"而非"原题"。
 - **数据采样按能力域保护**（Day 7 立，Day 8 收窄）：v2 一刀切列表降采样误伤数学（`math-add 15 / math-mul 72`）；v2b 全量豁免数学修回 `8/42` 但 rep-4 0.117；**v2c 定稿口径 = 仅 assistant 等式行 ≥3 的数学列表豁免**（练习列表教算术组合，写入 6,243 条，math 照样修回且列表占比 10.55%）——豁免口径按"功能特征"而非"领域标签"，改口径先做 assistant 侧分桶侦察。
 - 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。

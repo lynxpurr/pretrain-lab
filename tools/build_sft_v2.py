@@ -293,6 +293,33 @@ def load_extras(path: Path, repeat: int) -> list[dict]:
     return recs * repeat
 
 
+def assert_no_eval_leak(items: list[tuple[str, dict]], tests_path: Path) -> None:
+    """v2e 去污断言：extras 的 user 原句不得与评测题库 prompt 相同/互相包含（norm 后）。
+
+    背景：v2 起"按评测缺陷造数据"曾把评测原句带进训练集（2027 世界杯 / 7×6 / 水的化学式 /
+    学习编程列表等）——题库分含记忆成分。此断言让"再造数据"时自动拦截。
+    """
+    def norm(x: str) -> str:
+        return re.sub(r"\s+", "", x).lower().strip("。？?！!")
+
+    if not tests_path.exists():
+        return
+    prompts = [norm(t["prompt"]) for t in json.loads(tests_path.read_text(encoding="utf-8"))]
+    bad = []
+    for name, rec in items:
+        u = " ".join((m.get("content") or "") for m in (rec.get("conversations") or [])
+                      if m.get("role") == "user")
+        nu = norm(u)
+        if len(nu) < 8:
+            continue
+        for tp in prompts:
+            if len(tp) >= 8 and (nu == tp or nu in tp or tp in nu):
+                bad.append(f"{name}: {u[:50]!r}")
+                break
+    if bad:
+        raise AssertionError("extras 与评测原句撞车（v2e 去污断言）：\n" + "\n".join(bad[:10]))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sft-jsonl", default="data/raw/minimind_dataset/sft_t2t_mini.jsonl")
@@ -324,6 +351,13 @@ def main() -> None:
                     help="v2d：英 prompt→中 answer 非列表样本上采样倍数（1 = 关）")
     ap.add_argument("--long-answer-keep-den", type=int, default=1,
                     help="v2d：引导型长答案（prompt<120 字 ∧ 答案≥600 字 ∧ 非列表/数学/翻译）保留 1/den（2 = 砍半；1 = 关）")
+    ap.add_argument("--translate-ex-repeat", type=int, default=0,
+                    help="v2e：translate 精确指令对（data/sft-extra-v2/translate.jsonl）重复次数")
+    ap.add_argument("--math-upsample", type=int, default=1,
+                    help="v2e：数学豁免样本（eqrows≥3）上采样倍数（2 = ×2，修 math-mul 组合记忆）")
+    ap.add_argument("--en-flu-no-upsample", action="store_true",
+                    help="v2e：en_flu 型长答案（引导词∧≥600 字）在 en_helpful 分支不做 2× 上采样")
+    ap.add_argument("--tests", default="data/eval/tests.json", help="评测题库（extras 去污断言用）")
     ap.add_argument("--mask-sample", type=int, default=300)
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
@@ -348,6 +382,7 @@ def main() -> None:
                                  "en_refusal_dropped": 0, "en_helpful_seen": 0,
                                  "en_helpful_upsampled": 0,
                                  "translate_seen": 0, "translate_written": 0,
+                                 "en_flu_kept_1x": 0,
                                  "long_answer_seen": 0, "long_answer_kept": 0,
                                  "long_answer_dropped": 0,
                                  "listy_dropped": 0, "plain_kept": 0},
@@ -361,6 +396,7 @@ def main() -> None:
         ("format", args.format_repeat),
         ("helpful", args.helpful_repeat),
         ("concise", args.concise_repeat),
+        ("translate", args.translate_ex_repeat),
     ]
     extra_items: list[tuple[str, dict]] = []
     for name, rep in extra_specs:
@@ -369,6 +405,7 @@ def main() -> None:
         stats["extras"][name] = {"file": str(p), "repeat": rep, "unique": len(recs) // max(rep, 1),
                                  "written": 0, "tokens": 0}
         extra_items.extend((name, r) for r in recs)
+    assert_no_eval_leak(extra_items, Path(args.tests))
     random.Random(args.seed).shuffle(extra_items)
     for name, rec in extra_items:
         ids, mask, n_asst = conversation_segments(tok, rec.get("conversations") or [],
@@ -430,7 +467,8 @@ def main() -> None:
                 stats["mined"]["listy_seen"] += 1
                 if args.protect_math_short and is_math(rec) and eq_rows_in(rec) >= 3:
                     # v2c：只豁免等式密集的数学练习列表（"只保护短算术，不保长叙述"）
-                    reps = 1
+                    # v2e：--math-upsample 2 → 算术组合曝光翻倍（修 math-mul 容量边缘脆弱性）
+                    reps = args.math_upsample
                     cat = "mined_math_listy"
                     stats["mined"]["math_listy_kept"] += 1
                     stats["mined"]["math_short_kept"] += 1
@@ -447,7 +485,11 @@ def main() -> None:
                     stats["mined"]["listy_kept"] += 1
             elif en_kind == "helpful":
                 stats["mined"]["en_helpful_seen"] += 1
-                if args.en_helpful_upsample > 1 and keep_for_listy(line, args.en_helpful_upsample):
+                en_flu_long = args.en_flu_no_upsample and is_longanswer_target(u_txt, a_txt)
+                if en_flu_long:
+                    stats["mined"]["en_flu_kept_1x"] += 1
+                if args.en_helpful_upsample > 1 and not en_flu_long \
+                        and keep_for_listy(line, args.en_helpful_upsample):
                     # v2c：英文正例按 hash 1/den 选中 → 上采样 2×（对冲拒答模板泄漏）
                     reps = 2
                     cat = "mined_en_helpful_up"
@@ -559,6 +601,9 @@ def main() -> None:
                         " 选中上采样 2×" if (args.en_refusal_keep_den > 1 or args.en_helpful_upsample > 1)
                         else "未启用"),
             "translate_upsample": args.translate_upsample,
+            "translate_ex_repeat": args.translate_ex_repeat,
+            "math_upsample": args.math_upsample,
+            "en_flu_no_upsample": args.en_flu_no_upsample,
             "long_answer_keep_den": args.long_answer_keep_den,
             "v2d_rule": (f"①英 prompt→中 answer 非列表样本上采样 {args.translate_upsample}×（修 translate-en2zh 方向）；"
                          f"②引导型长答案（prompt<120 字 ∧ 答案≥600 字 ∧ 非列表/数学/翻译题）保留 "

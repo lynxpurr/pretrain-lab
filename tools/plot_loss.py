@@ -39,7 +39,8 @@ def read_curve(path: Path) -> tuple[list[float], list[float], list[float]]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--with-v2d", action="store_true", help="附 SFT v2d 曲线（机动窗口跑完后）")
+    ap.add_argument("--with-v2d", action="store_true", help="附 SFT v2d 曲线（机动窗口第 1 轮）")
+    ap.add_argument("--with-v2e", action="store_true", help="附 SFT v2e 曲线（机动窗口第 2 轮）")
     ap.add_argument("--tag", default="day8")
     args = ap.parse_args()
 
@@ -70,7 +71,9 @@ def main() -> None:
         ("v2c (selective+en-rebal)", "reports/2026-11-20-day8-sft-v2c.csv", "#9467bd"),
     ]
     if args.with_v2d:
-        sft_specs.append(("v2d (d2: concis+translate)", "reports/2026-11-20-v2d-sft.csv", "#ff7f0e"))
+        sft_specs.append(("v2d (d2: concise+translate)", "reports/2026-11-20-v2d-sft.csv", "#ff7f0e"))
+    if args.with_v2e:
+        sft_specs.append(("v2e (d3: clean+exact pairs)", "reports/2026-11-20-v2e-sft.csv", "#17becf"))
     finals = []
     for name, rel, color in sft_specs:
         p = ROOT / rel

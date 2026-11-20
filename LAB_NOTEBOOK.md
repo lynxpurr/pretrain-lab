@@ -95,6 +95,13 @@
 - 读数：数据 250,001,408 token / 244,142 块 / 监督 75.65% / 列表 10.15% / 会话 613,180 / mask 0 违规 / 构建 5.0 min；训练 **EXIT:0 / val 1.6059 / 1h19m44s / 52,851 tok/s / peak 12.05GB**；七版评测 = **rep-4 0.084（SFT 版最低档，v2c 0.135 砍 38%）+ rubric 6/8（历史最高）**、reason 0.728→**0.088** / en-fluency 0.708→0.371 / zh-fluency 0.516→0.303、math-add 纯数字"8"；未达 = rep-4（差 0.004）/ math-mul（72）/ translate 行为（字词解释）/ 关键词题库 15/18（两题假阴，语义 17/18）。判据 5 项过 2.5 → **不部署，v2 保持部署**。证据 = [reports/2026-11-20-v2d.md](reports/2026-11-20-v2d.md) · `...-v2d-eval{,-rubric}.md` · `...-v2d-sft.{log,csv}`；ckpt sha `fe972eed11aa599b`；图 [loss-curves-day8-v2d.png](reports/figs/loss-curves-day8-v2d.png)。
 - 疑问：①"翻译指令→直接译文"精确样本扩容（~30 条×5）能否同时修 translate 行为并把 rep-4 压到 <0.08（该题 rep-4 0.293 是 v2d 最大单项）？②math-mul 组合记忆需要多强的重复才稳定（format-repeat 4~5 / ARITH 乘法表专项）？③en_flu 型在 en_helpful 分支 2× 上采样是否该降为 1×（en-fluency 0.371 顽固）？④v2e 一轮能否把四项同时收口——还是该按失败路径锁定 v2 进 Day 10？——机动窗口决策点（11-22~25 拍板）。
 
+## 机动窗口 · 2026-11-20 · v2e 去污轮（translate 精确对 + math ×2 + en_flu 降采样 + extras 评测去污）
+
+- 决策：用户"继续推进下一步"= 走 HANDOFF §7 默认路径第 2 轮（两轮为限的最后一轮）；预注册开工前落档（rep-4 <0.08 / translate 关键词过 / 题库关键词 ≥16 语义 ≥17 / math 8-42 / PPL ≤10%）。**开工发现评测污染**：extras 与 18 题原句存在系统性同题样本（calibration 2027 世界杯 / ARITH 7×6 / 水的化学式 / 中国的首都 / 学习编程列表 / concise ocean&北京&下雨=refuse/math-mul/fact-water/fact-capital-cn/list-3/en-flu/zh-flu/reason 原句；v2 起就有、v2d 又加 3 条）→ 本轮新增"去污"为第 1 改动面（12 处换同型变体 + `assert_no_eval_leak` 硬断言，复扫 0 撞车）。
+- 现象：①去污后 calibration 1,630→1,628 / format 989→979（ARITH 排除 (3,5)/(7,6)）、extras 指纹全变——历史读数含记忆成分，**v1 的 16/18 反而是干净版**；②数学豁免 ×2（6,250→12,500 写入）把 math-mul 从 v2d 的 72 修回 42（去污后=真泛化）；③translate 精确对 180 条（30 unique×6）修出"我热爱机器学习。"（v2d 的"字词解释"消失）；④en_flu 型 770 条降 1× 后 en-fluency rep4 0.371→0.208；⑤长答案压制延续，reason 0.095 / zh-flu 0.224 无复读。
+- 读数：数据 250,001,408 token / 244,142 块 / 监督 75.99% / 列表 11.47% / 会话 595,348 / mask 0 违规 / 构建 4.8 min；训练 **EXIT:0 / val 1.6065 / 1h19m19s / 53,098 tok/s / peak 12.05GB**；八版评测 = **rep-4 0.055（全系最低）+ 题库 17/18（去污后）+ rubric 6/8 + distinct-2 0.860（最高）+ translate 真译文 + math 8/42 + PPL +5.5%** → **五项判据全过**（首个全过版本）；格式瑕疵同历史（math-mul 加粗算式 / list-3 段落式编号）。证据 = [reports/2026-11-20-v2e.md](reports/2026-11-20-v2e.md) · `...-v2e-eval{,-rubric}.md` · `...-v2e-sft.{log,csv}`；ckpt sha `984a25c4d59e36a4`；图 [loss-curves-day8-v2e.png](reports/figs/loss-curves-day8-v2e.png)。
+- 疑问：①部署是否切 v2e（五项全过且全面优于 v2——rep-4/题库/math/en-fluency 全胜、PPL 持平；切换需重导 GGUF + Ollama/demo/模型卡联动，待用户拍板）；②list-3 段落式编号与 math-mul 加粗格式是否值得再做一轮（两轮为限已用完，默认不做了，留 Day 10 材料）；③评测污染的比例贡献能否量化（v2 含记忆 vs v2e 去污的差值 = 下界估计，可作报告亮点）；④qa-day-8 题 3 的"中文稀释"视角可补：去污后 zh 题全过 = 无稀释证据。——Day 9/10 题池。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）
