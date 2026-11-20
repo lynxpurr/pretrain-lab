@@ -45,7 +45,7 @@
 
 **最终阶段（2026-11-20 晚，spec 推进）**：`specs/2026-11-20-final-phase.md`（AC1~AC11 + T1~T4）——**T1 部署切 v2e-q8**（demo 7860 已切，旧 v2 tag 全保留回滚 <1min）；对拍发现 **Q4_K_M 量化吃掉新学能力**（math 42→72、translate 退回英文原句）→ 部署默认 **Q8_0** + 新增"量化保真度抽检"验收红线（skill §5）；**T2 报告扩写**（§5.1 评测污染独立章 + §10 复现→v2e + §0 成绩单 v2e 口径 + 五轮迭代）；AC2~AC8 命令级验收通过。证据 = [reports/2026-11-20-deploy-v2e.md](reports/2026-11-20-deploy-v2e.md) · commit `d0c973d`/`5fc4d2c`。
 
-**Day 10 终检（2026-11-20 提前 7 天，T4）**：①**八版终表**（§0 8 行 × 7 列 + **"读数性质（含记忆/干净）"列** + §4.7 裁决表；与 v2e-eval 逐题对账）；②repo 整理（README 收官态 / MODEL_CARD 全面转 v2e / 54 份 md / 152 链接 **0 断链** / 证据 md-csv-log 三分核对）；③**§10 复现走查**：v2e build **bit-for-bit**（4/4 sha256 + meta 全字段）、eval **18/18 行逐字**、deploy **F16 5/5**、Q8 保住新学能力；④**LoRA r=12 容量对照**（1.79% / val 1.8054 / 题库 15-18 / rubric 5-8 / rep-4 0.249——rank↑ 只补 0.02 val，仍不部署）；⑤终检修正 **demo 温度 T0.7→T0.3**（translate 方向 16/20→20/20）；⑥REPORT 置 **FINAL**、spec 置 **COMPLETED**。证据 = [reports/2026-11-20-day10-repro-check.md](reports/2026-11-20-day10-repro-check.md) · `...-deploy-v2e-recheck.log` · `...-lora-r12-eval{,-rubric}.md` · `...-lora-r12-sft.{log,csv}`。
+**Day 10 终检（2026-11-20 提前 7 天，T4）**：①**八版终表**（§0 8 行 × 7 列 + **"读数性质（含记忆/干净）"列** + §4.7 裁决表；与 v2e-eval 逐题对账）；②repo 整理（README 收官态 / MODEL_CARD 全面转 v2e / 54 份 md / 152 链接 **0 断链** / 证据 md-csv-log 三分核对）；③**§10 复现走查**：v2e build **bit-for-bit**（4/4 sha256 + meta 全字段）、eval **18/18 行逐字**、deploy **F16 5/5**、Q8 保住新学能力；④**LoRA r=12 容量对照**（1.79% / val 1.8054 / 题库 15-18 / rubric 5-8 / rep-4 0.249——rank↑ 只补 0.02 val，仍不部署）；⑤终检修正 **demo 温度 T0.7→T0.3**（translate 方向 16/20→20/20）；⑥REPORT 置 **FINAL**、spec 置 **COMPLETED**；⑦**holdout 复核**（30 题未见题，对 dev 集/extras/SFT 源三层去重 0 撞车）：**v2e 与 v2 人工复核同为 24/30——dev 的 17 vs 15 优势不复现**；`13×3` 仍答 42、translate 只认精确句式，**calibration 是唯一稳定泛化项** → REPORT §5.2。证据 = [reports/2026-11-20-day10-repro-check.md](reports/2026-11-20-day10-repro-check.md) · `...-deploy-v2e-recheck.log` · `...-lora-r12-eval{,-rubric}.md` · `...-holdout-{eval,audit}.md`。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -107,7 +107,7 @@ ls specs/2026-11-20-final-phase.md reports/2026-11-20-deploy-v2e.md out/gguf/pre
 | 32k BPE | 词表 32,000 · specials 0/1/2 · zh 1.841 / en 4.226 chars/token · sha `05e9ef17…` |
 | 3B 训练集 | 3,000,000,000 token · en 60%/zh 40% · 6×1GB + val 4M · max_id 31999 |
 | SFT 集 | **250,001,408 token** = 404,210 会话 + 25% 预训练块 · 监督占比 78.15% · val 2,001,920 token · `data/sft-mix/SHA256SUMS`（4 条） |
-| 评测集 | 18 题 / 9 tag · sha `6c5bd1e92e4b4aba` |
+| 评测集 | 18 题 / 9 tag（dev）· sha `6c5bd1e92e4b4aba` · **holdout 30 题 / 13 tag**（sha `c81f7c1a1cf6a61f`；三层去重 0 撞车） |
 
 **训练与评测**
 
@@ -185,7 +185,7 @@ ls specs/2026-11-20-final-phase.md reports/2026-11-20-deploy-v2e.md out/gguf/pre
 | 4 | §10 复现走查（v2e build/sft/eval/deploy 四段） | ✅ build **bit-for-bit**（4/4 sha256 + meta 全同）/ eval **18/18 行逐字** / deploy **F16 5/5**——`reports/2026-11-20-day10-repro-check.md` |
 | 5 | 收波：commit + push；LAB_NOTEBOOK Day 10 段 | ✅ `git log` 有 `day-10:` 提交 |
 
-**终检额外产出**：LoRA r=12（1.79% / val 1.8054 / rubric 5-8 / rep-4 0.249，仍不部署）；demo 温度 T0.7→T0.3（方向 16/20→20/20）；qa-day-10 题池。
+**终检额外产出**：LoRA r=12（1.79% / val 1.8054 / rubric 5-8 / rep-4 0.249，仍不部署）；demo 温度 T0.7→T0.3（方向 16/20→20/20）；**holdout 复核 30 题**（v2e 与 v2 人工复核同为 24/30，dev 的 17 vs 15 优势不复现；`13×3` 仍答 42 → REPORT §5.2）；qa-day-10 题池。
 
 **已拍板/执行**：①LoRA r=12 跑完（HANDOFF 默认路径）；②八版终表保留"含记忆/干净"标注（对外版保留——诚实读数解释优于"高分"）。
 **未做（超出 10 天计划）**：LoRA 2 epochs、DPO、分语言 val、评测集扩容——见 REPORT §11 后续方向。
