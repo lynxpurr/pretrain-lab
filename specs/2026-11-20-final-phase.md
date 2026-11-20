@@ -102,3 +102,13 @@
 | AC11 | ✅ | 量化保真度条款落档（skill §5 红线 + deploy 报告 §2/§3 + 本轮复验） |
 
 **终检补充**：§10 四段命令与产物一致且关键路径可复现——v2e build **bit-for-bit**（4/4 sha256 + meta 全字段）、eval **18/18 行逐字**、deploy **F16 5/5**、demo 温度修正。证据 [reports/2026-11-20-day10-repro-check.md](../reports/2026-11-20-day10-repro-check.md)。
+
+## 10. 收官后复核（Day 11，2026-11-20）
+
+> 本 spec 已于 §9 置 COMPLETED；本节记录收官后发现的**证据质量问题**与处置，不改变 T1~T4 的完成状态。
+
+- **dev 去重残留**：`assert_no_eval_leak` 的 `len(prompt)>=8` 守卫 + 只去空白的 norm 造成假阴性——`fact-months`（一年有几个月）/ `math-add`（3 加 5）仍以 format brevity 变体留在 v2e 训练集（4 条）；v2e 的 17/18 改为"17/18，2 题残留；干净子集 15/16"。
+- **holdout 初版近重复**：3 题（2030 世界杯/光合作用/人工智能）+ 1 条 concise（上海）在双向检查下暴露 → 换题重跑 v2（sha `e6e31aaa`）：v2e 与 v2 人工复核同为 **23/30**，结论不变。
+- **修复**：`assert_no_eval_leak` 去所有非单词字符、取消长度守卫、内置已知撞车自测、同时查 dev+holdout；新增 `tools/check_eval_leak.py`（双向三层）。
+- **AC 影响**：AC7（评测污染章）已按残留更新；AC9（§0 成绩单）已把 v2e 标为"部分干净（2 题残留）"；AC11（量化抽检）不受影响。**部署不变**（v2e-q8 在 holdout 不劣、rep-4 最低）。
+- 证据：[reports/2026-11-20-eval-leak-recheck.md](../reports/2026-11-20-eval-leak-recheck.md) · `...-holdout-eval-v2.md` · `...-holdout-audit.md` §7。

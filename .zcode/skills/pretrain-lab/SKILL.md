@@ -18,11 +18,11 @@
 | 逐日记账 | [LAB_NOTEBOOK.md](../../../LAB_NOTEBOOK.md)（决策/现象/读数/疑问，按日追加） |
 | 可复用教训（补课用） | [notes/lessons.md](../../../notes/lessons.md)（追加制带出处） |
 | 概念检验题（先自答） | `notes/qa-day-N.md` |
-| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b/v2c 数据（列表降采样 + `--protect-math` / `--protect-math-short` + `--en-refusal-keep-den` + `--en-helpful-upsample`）** · gen_sft_v2_extra.py 校准/格式/正例/concise · **lora.py LoRA A/B + apply/merge** · plot_loss.py 报告 loss 图 · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
+| 脚本 | `tools/`（model.py 模型 · prepare_* 数据 · **train.py 预训练框架（多分片/累积/续训/采样/`--init-from` 探针）** · **sft.py 全参 SFT + LoRA（配对 labels + ignore_index + `--lora-*`）** · **eval.py 评测（双口径 PPL + 题库 + distinct-2/rep-4；`--tests` 可换 holdout）** · **check_eval_leak.py 评测去重检查器（双向三层）** · eval_format.py 格式/方向/拒答 rubric · build_sft.py v1 数据 · **build_sft_v2.py v2/v2b/v2c/v2d/v2e 数据（列表降采样 + `--protect-math` / `--protect-math-short` + `--en-refusal-keep-den` + `--en-helpful-upsample`）** · gen_sft_v2_extra.py 校准/格式/正例/concise · **lora.py LoRA A/B + apply/merge** · plot_loss.py 报告 loss 图 · **export_gguf.py GGUF（q/k permute）** · export_hf.py HF Llama 格式 · app_stdlib.py 零依赖 demo · app.py Gradio 备用 · train_char20m.py 字符级闭环 · train_tokenizer.py 训 BPE · build_shards.py 建 memmap 分片；都在仓根跑，勿从子目录启动） |
 | run 证据（只增不改） | `reports/<日期>-<主题>.{md,csv,log}` 三分 |
 | Tokenizer | `data/tokenizer-32k/`（32k ByteLevel BPE，specials endoftext/im_start/im_end；sha 见其 `SHA256SUMS`；重训 `tools/train_tokenizer.py` ~4.5min） |
 | 训练数据 | `data/shards/`（3,000,000,000 token · en 60%/zh 40% · 6×1GB 片 + val 4M · uint16；指纹 `data/shards/SHA256SUMS`；重建 `tools/build_shards.py` ~21min） |
-| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-mix-v2d/`（复读压制 + translate 方向 + concise 正例消融 · 列表 10.15%）** · **`data/sft-mix-v2e/`（去污 + translate 精确对 + math ×2 消融 · 列表 11.47%）** · **`data/sft-extra-v2/`（calibration/format/helpful/concise/**translate** 五类补充样本，**v2e 起已评测去污**）** · `data/eval/tests.json`（18 题 / 9 tag 题库） |
+| SFT 数据 / 评测集 | `data/sft-mix/`（v1 · 250,001,408 token · 404,210 会话 + 25% 预训练块 · assistant-only mask）· **`data/sft-mix-v2/`（当前 SFT · 同 token/块 · 校准/格式补充 + 列表 1/5 · val 复用 v1）** · **`data/sft-mix-v2b/`（数学保护消融 · 列表 13.53%）** · **`data/sft-mix-v2c/`（选择性数学保护 + 英文再平衡消融 · 列表 10.55%）** · **`data/sft-mix-v2d/`（复读压制 + translate 方向 + concise 正例消融 · 列表 10.15%）** · **`data/sft-mix-v2e/`（去污 + translate 精确对 + math ×2 消融 · 列表 11.47%）** · **`data/sft-extra-v2/`（calibration/format/helpful/concise/**translate** 五类补充样本，**v2e 起已评测去污**）** · **`data/eval/tests.json`（dev 18 题 / 13 tag）+ `data/eval/tests-holdout.json`（holdout 30 题；双向去重 0 撞车）**；去重检查器 `tools/check_eval_leak.py` |
 | 模型产物 | `out/main140m/last.pt`（底座 · val 2.7709）· `out/sft-v1/last.pt`（v1 · 1.5515）· **`out/sft-v2/last.pt`（原部署至 11-20 · 1.6038 · rep-4 0.066 · 含记忆读数）** · **`out/sft-v2b/last.pt`（消融 · 1.5981 · rep-4 0.117）** · **`out/sft-v2c/last.pt`（消融 · 1.6018 · 题库 17/18 · rep-4 0.135，不部署）** · **`out/sft-v2d/last.pt`（消融 · 1.6059 · rep-4 0.084 + rubric 6/8 双项最佳，不部署）** · **`out/sft-v2e/last.pt`（部署 · 1.6065 · rep-4 0.055 全系最低 + 题库 17-18 去污后，五项判据全过）** · **`out/sft-lora-r8-5e4/last.pt`（LoRA merged · 1.8253 · rep-4 0.260，不部署）** · **`out/sft-lora-r12-5e4/last.pt`（LoRA merged · 1.79% · val 1.8054 · rubric 5-8 · rep-4 0.249，不部署）** · 底座谱系 46 ckpt ≈73GB |
 | 部署（**2026-11-20 已切 v2e**） | **默认 `pretrain-lab-sft-v2e-q8`**（Q8_0 173MB；F16 326MB 可选；**Q4_K_M 在 v2e 上不保真**——吃掉 math 42/translate 新能力）· GGUF `out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf` · Ollama 用户级 `127.0.0.1:11435`（v2 全 tag 保留回滚）· **demo `tools/app_stdlib.py` → `http://127.0.0.1:7860`（默认 T0.3：T0.7 下 translate 方向 16/20，T0.3 20/20）** · 模型卡 [MODEL_CARD.md](../../../MODEL_CARD.md) · 证据 `reports/2026-11-20-deploy-v2e.md` · 复验 `...-deploy-v2e-recheck.log` |
 | 数据与指纹 | `data/raw/`（gitignore）+ `data/PROVENANCE.md` + 各层 `SHA256SUMS`（含 v2/v2b/v2c/extra） |
@@ -80,6 +80,8 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 #   结果：rep-4 0.084（差 0.004 未达 <0.08）+ rubric 6/8；math-mul 回退 72（组合记忆容量边缘）；不部署
 # v2e（机动第 2 轮，最后一轮）：v2d 参数 + --translate-ex-repeat 6 --math-upsample 2 --en-flu-no-upsample
 #   ①extras 评测去污（12 处同型变体 + build 的 assert_no_eval_leak 断言——**造数据不许抄评测原句**）
+#   注：v2e 历史构建仍含 2 条 brevity 残留（Day 11 发现）；复现它需加 --skip-eval-leak-check；
+#       新构建默认严格断言（失败即改 extras），并先跑 tools/check_eval_leak.py 确认 0 撞车
 #   ②translate 精确指令对 = 指令+直接译文 30 unique ×6（v2d 教训：方向池上采样教不会指令行为）
 #   ③math-upsample 2 = 数学豁免 ×2（修 math-mul 组合记忆）；④en_flu 长答案不上采样
 #   结果：**五项判据全过** rep-4 0.055（全系最低）/ 题库 17-18（去污后）/ translate 真译文 / math 8-42（真泛化）/ PPL +5.5%
@@ -112,6 +114,28 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 - **规则分会高估质量**（v1：规则 89% vs 质性 ~60%），报告必须并列质性复核；
 - 解码参数（T/top-p/repetition penalty）是**质量变量**，demo 端可换但需单独声明，不混进对比表；
 - 复读优先查数据（采样几乎不改善：0.131→0.123），repetition penalty 是"用事实换多样性"（1.3 压复读到 0.032 但题库 16→13）。
+- **dev 之外必须有 holdout**（Day 10 立）：30 题未见题、同 13 tag、三层双向去重 0 撞车；命令与规则见 §3.4。**dev 排名不可直接复用**——v2e 与 v2 在 dev 是 17 vs 15，holdout 人工复核同为 23/30。
+- **关键词分必须配人工复核**：holdout 30 题里 moon-count 有 7 个假阳（提到"月球"但数量全错）、weather 2 个假阴（"阳光明媚"不在词表）、knowledge 2 个部分匹配；报告并列"关键词原始分 + 人工复核分"。
+- **版本读数分级标注**：完全干净（无 extras，如 v1）/ 部分干净（v2e，2 题残留）/ 含记忆（v2~v2d）；残留题要给"干净子集"读数（v2e 15/16）。
+
+## §3.4 评测集建设与去重硬门（Day 10~11 沉淀）
+
+**holdout 建设规则**：
+- 30~100 题，覆盖全部 tag；每题 `{id,prompt,expect_any,tag}`，与 dev 同型变体（换知识点/数字/场景），**不参与任何数据迭代**。
+- **三层双向去重**：vs dev / vs `data/sft-extra-v2/*` / vs SFT 源 user 内容。**训练样本可能是评测题前缀**（`请告诉我 2030 年世界杯的冠军。` vs `……冠军是谁`）——单向 `eval in train` 会漏。
+- 数字嵌套（`3×3` ⊂ `13×3`、`3+8` ⊂ `13+8`）是**假阳**：换 operand 消除（如 13×5 / 17+6）。
+- 评测：`eval.py --tests data/eval/tests-holdout.json --skip-ppl`；题目改动后必须重跑并保留旧文件（`-v2`），不覆盖历史证据。
+
+**去重硬门（构建前/评测前各跑一次）**：
+```bash
+.venv-pre/bin/python -I tools/check_eval_leak.py \
+  --eval data/eval/tests.json --eval data/eval/tests-holdout.json \
+  --extra-dir data/sft-extra-v2 \
+  --sft-source data/raw/minimind_dataset/sft_t2t_mini.jsonl
+# EXIT 0 = 0 撞车；EXIT 1 = 有撞车（打印 id/来源/片段）→ 先改数据/题库再跑
+```
+- **检查器必须自测**：`assert_no_eval_leak` 内置"已知撞车必须被捕获"的自测。历史 bug = `len(prompt)>=8` 守卫跳过短 prompt（6 字「一年有几个月」/7 字「3 加 5 等于多少」）+ norm 只去空白 + 单向检查 → "0 撞车"是假阴性（`reports/2026-11-20-eval-leak-recheck.md`）。
+- 断言/检查器禁止有长度/归一化静默跳过；报 0 撞车前先喂一个已知违规样本做阳性对照。
 
 ## §3.3 部署标准动作（Day 7 建立，2026-11-20 v2e 轮升级）
 
@@ -185,6 +209,9 @@ cd data/shards && sha256sum -c SHA256SUMS
 | labels.bin 值域自检报 max=65,436 | 读的 dtype 错：labels 是 **int16** 存储（-100 ignore_index 的补码在 uint16 视角 = 65,436） | labels 用 `np.int16` 读，断言 `max < 32000 且 min >= -100`；token 文件（train/val.bin）才用 uint16 |
 | LoRA 采样出特殊 token/乱码、val 落后全参 | r=8/lr 2e-4 在 1 epoch 内欠拟合 | 先试 lr 5e-4（500 步探针）；仍欠拟合则 r=12（≈1.80%）或 2 epochs |
 | 量化后模型"变笨"（新学的答案/翻译丢失，退回首版行为） | **量化噪声冲掉弱记忆**（新学能力与基座强先验冲突）——先做三同对拍：F16 是否忠实？ | 换 Q8_0（或 F16）部署；验收用"新学能力抽检"而非只看能对话（2026-11-20 v2e：Q4 下 math 42→72） |
+| 关键词判分与人工复核差很多 | 关键词表缺同义说法 / 假阳（提到关键词但事实错） | 报告并列"关键词原始分 + 人工复核分"；holdout 判别项逐题看（moon-count 7 假阳 / weather 2 假阴） |
+| "0 撞车"但指标异常好 | 检查器假阴性：长度守卫、只去空白、单向包含 | 先喂已知撞车做阳性对照；用 `tools/check_eval_leak.py`（双向三层）；断言内置自测 |
+| dev 修复换题就失效 | 修的是单题模式，不是能力 | 建 holdout（≥30 题，三层双向去重）；dev 只用于迭代，验收看 holdout + 干净子集 |
 | GGUF 与 PyTorch 对拍大面积不一致（空输出/答错主题） | prompt 构造是否同模板？解码是否同 greedy？tokenizer 是否同文件？ | **三同原则**：chat 模板+温度0+同 tokenizer；裸 prompt 对拍无效（本轮实测差点误判导出坏） |
 | `F.linear` LoRA 报 mat2 在 CPU | `apply_lora` 在 model.to(cuda) 后创建 A/B，默认 CPU | A/B 用 `device=base.weight.device, dtype=base.weight.dtype`（Day 7 已修） |
 
@@ -195,7 +222,9 @@ cd data/shards && sha256sum -c SHA256SUMS
 - 决策门①（Day 3 吞吐 **140M 等效 ≥3.5 万 token/s**）**已判定 PASS（52,250 tok/s，2026-11-18）**；②（Day 6 loss 仍陡降→加训）**已判定不触发（最后 10% 0.0134 + 恒定 lr 探针 0.0051，2026-11-19）**，重开条件见 PLAN §4.1——两者跑前未改口径。
 - SFT/评测协议（Day 6 定档，Day 7 扩展）：SFT 数据 25% 预训练混入 + assistant-only mask；评测统一 greedy + 关键词判分 + distinct-2/rep-4 + 人工 rubric；**不许用解码调参替代数据修复**。评测 CSV 固定 8 列（model,decode,test_id,tag,pass,distinct2,rep4,answer）、答案截断 1000；关键词分与 rubric 分并列报告。
 - **量化保真度红线**（2026-11-20 立）：部署量化档必须通过"三同对拍 + 新学能力抽检"——F16 逐字一致才算链路忠实；目标量化档要在至少 N 条"本版新修复"的题上抽检（本项目 = math 42 / translate 中文 / refuse 表述），任一丢失即降档（Q4→Q8/F16）。**"能加载/能对话"不是验收，量化掉的恰是刚学会的。**
-- **评测集去重红线**（v2e 立）：**extras/补充样本不得与 `data/eval/tests.json` 原句相同或近合**（v2 起曾把 2027 世界杯/7×6/水的化学式等评测原句带进训练集，v2~v2d 题库分含记忆成分，v1/v2e 才是干净读数）；`build_sft_v2.py` 的 `assert_no_eval_leak` 为硬门，造新样本先想"同型变体"而非"原题"。
+- **评测集去重红线**（v2e 立，Day 11 加严）：**extras/补充样本不得与评测集原句相同或近合——双向、且覆盖前缀/少字变体**（v2 起曾把 2027 世界杯/7×6/水的化学式等评测原句带进训练集；holdout 初版也漏过"训练样本是评测题前缀"的 3 题）；`build_sft_v2.py` 的 `assert_no_eval_leak` 为硬门（已修：去所有非单词字符、取消长度守卫、内置自测、同时查 dev+holdout），独立检查用 `tools/check_eval_leak.py`；造新样本先想"同型变体"而非"原题"。
+- **评测双层验收红线**（2026-11-20 立）：**dev 集只用于迭代，验收必须有未见题 holdout**（≥30 题、三层双向去重 0 撞车）；关键词分必须配人工复核（30 题里误判可 >10 处）；版本读数标注 **完全干净 / 部分干净 / 含记忆**，残留题给"干净子集"读数。**dev 修复不等于能力**（v2e 的 math-add 8 是残留记忆、math-mul 42 是窄查表；13×5 全错、translate 只认精确句式）。
+- **检查器自测红线**（2026-11-20 立）：报"0 撞车"之前，先喂一个已知违规样本证明检查器抓得到；禁止长度/归一化静默跳过（旧 `len(prompt)>=8` 守卫让 v2e"复扫 0 撞车"成为假阴性，dev 残留 2 题）。
 - **数据采样按能力域保护**（Day 7 立，Day 8 收窄）：v2 一刀切列表降采样误伤数学（`math-add 15 / math-mul 72`）；v2b 全量豁免数学修回 `8/42` 但 rep-4 0.117；**v2c 定稿口径 = 仅 assistant 等式行 ≥3 的数学列表豁免**（练习列表教算术组合，写入 6,243 条，math 照样修回且列表占比 10.55%）——豁免口径按"功能特征"而非"领域标签"，改口径先做 assistant 侧分桶侦察。
 - 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。
@@ -210,3 +239,4 @@ cd data/shards && sha256sum -c SHA256SUMS
 5. **状态面**：HANDOFF §1/§3/§5/§7、README 状态、LAB_NOTEBOOK 当日段、lessons/qa、PLAN 变更记录同步。
 6. **导出/评测链路面**（Day 7 起）：GGUF raw 与 PyTorch 同 prompt/greedy 对拍；`eval.py` CSV 表头 8 列 + 行字段数断言；rubric 与关键词分并列；demo `/health` + `ollama ps` 显示 100% GPU。
 7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；七版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分；**修复项要连着查相邻能力域**（Day 8：en-fluency 修复伴随英文复读 + translate 方向回归）。
+8. **评测面（Day 10 起）**：新数据/新题库先跑 `tools/check_eval_leak.py`（双向三层，EXIT 0）；holdout 与 dev 分表；关键词分 + 人工复核并列；版本读数标"完全干净/部分干净/含记忆"并给干净子集；去重断言自测过（已知撞车被抓）。**dev 排名不可直接写进结论——先看 holdout。**

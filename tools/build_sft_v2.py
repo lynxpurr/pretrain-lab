@@ -293,31 +293,42 @@ def load_extras(path: Path, repeat: int) -> list[dict]:
     return recs * repeat
 
 
-def assert_no_eval_leak(items: list[tuple[str, dict]], tests_path: Path) -> None:
-    """v2e 去污断言：extras 的 user 原句不得与评测题库 prompt 相同/互相包含（norm 后）。
+def assert_no_eval_leak(items: list[tuple[str, dict]], tests_paths: list[Path]) -> None:
+    """评测去重硬门：extras 的 user 内容不得与评测题库 prompt 相同/互相包含（norm 后）。
 
     背景：v2 起"按评测缺陷造数据"曾把评测原句带进训练集（2027 世界杯 / 7×6 / 水的化学式 /
     学习编程列表等）——题库分含记忆成分。此断言让"再造数据"时自动拦截。
+
+    **v2e 假阴性修复（2026-11-20）**：旧版 norm 只去空白 + `len(prompt)>=8` 守卫，跳过了
+    "一年有几个月"（6 字）/ "3 加 5 等于多少"（7 字）等短 prompt，导致 v2e 的"0 撞车"是假的；
+    现改为去掉所有非单词字符、长度守卫只防空串，并内置自测（自测失败 = 断言代码坏了）。
     """
     def norm(x: str) -> str:
-        return re.sub(r"\s+", "", x).lower().strip("。？?！!")
+        return re.sub(r"[\s\W_]+", "", x.lower(), flags=re.UNICODE)
 
-    if not tests_path.exists():
+    # 自测：已知撞车必须被 norm 后的包含关系抓到（防再次被守卫/归一化差异静默跳过）
+    _a, _b = norm("简短回答：一年有几个月？"), norm("一年有几个月？")
+    assert _a and _b and _b in _a, "assert_no_eval_leak 自测失败：norm/包含逻辑异常"
+
+    if not any(p.exists() for p in tests_paths):
         return
-    prompts = [norm(t["prompt"]) for t in json.loads(tests_path.read_text(encoding="utf-8"))]
+    prompts: list[str] = []
+    for p in tests_paths:
+        if p.exists():
+            prompts += [norm(t["prompt"]) for t in json.loads(p.read_text(encoding="utf-8"))]
     bad = []
     for name, rec in items:
         u = " ".join((m.get("content") or "") for m in (rec.get("conversations") or [])
                       if m.get("role") == "user")
         nu = norm(u)
-        if len(nu) < 8:
+        if not nu:
             continue
         for tp in prompts:
-            if len(tp) >= 8 and (nu == tp or nu in tp or tp in nu):
+            if tp and (nu == tp or nu in tp or tp in nu):
                 bad.append(f"{name}: {u[:50]!r}")
                 break
     if bad:
-        raise AssertionError("extras 与评测原句撞车（v2e 去污断言）：\n" + "\n".join(bad[:10]))
+        raise AssertionError("extras 与评测原句撞车（评测去重断言）：\n" + "\n".join(bad[:10]))
 
 
 def main() -> None:
@@ -358,6 +369,8 @@ def main() -> None:
     ap.add_argument("--en-flu-no-upsample", action="store_true",
                     help="v2e：en_flu 型长答案（引导词∧≥600 字）在 en_helpful 分支不做 2× 上采样")
     ap.add_argument("--tests", default="data/eval/tests.json", help="评测题库（extras 去污断言用）")
+    ap.add_argument("--skip-eval-leak-check", action="store_true",
+                    help="仅供复现历史构建（已知残留，如 v2e 的 2 条 brevity）；新构建勿用")
     ap.add_argument("--mask-sample", type=int, default=300)
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
@@ -405,7 +418,8 @@ def main() -> None:
         stats["extras"][name] = {"file": str(p), "repeat": rep, "unique": len(recs) // max(rep, 1),
                                  "written": 0, "tokens": 0}
         extra_items.extend((name, r) for r in recs)
-    assert_no_eval_leak(extra_items, Path(args.tests))
+    if not args.skip_eval_leak_check:
+        assert_no_eval_leak(extra_items, [Path(args.tests), Path("data/eval/tests-holdout.json")])
     random.Random(args.seed).shuffle(extra_items)
     for name, rec in extra_items:
         ids, mask, n_asst = conversation_segments(tok, rec.get("conversations") or [],
