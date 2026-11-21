@@ -29,7 +29,7 @@
 - **SFT v2c（消融）**：题库 17/18、en-fluency 首修；rep-4 0.135
 - **SFT v2d（消融）**：rep-4 0.084 + rubric 6/8；math-mul 回退 72
 - **SFT v2e（部署，2026-11-20 起）**：`out/sft-v2e/last.pt`（val 1.6065 · sha `984a25c4d59e36a4`）——rep-4 **0.055**、题库 17/18（**2 题残留**）、rubric 6/8；干净子集 **15/16**
-- **LoRA**：r=8 `out/sft-lora-r8-5e4/last.pt`（1.20% · val 1.8253 · rep-4 0.260）；r=12 `out/sft-lora-r12-5e4/last.pt`（1.79% · val 1.8054 · rubric 5-8 · rep-4 0.249）——均 1 epoch 欠拟合，不部署
+- **LoRA**：r=8 `out/sft-lora-r8-5e4/last.pt`（1.20% · val 1.8253 · rep-4 0.260）；r=12 `out/sft-lora-r12-5e4/last.pt`（1.79% · val 1.8054 · rubric 5-8 · rep-4 0.249）；**r=12 2ep `out/sft-lora-r12-5e4-2ep/last.pt`（val 1.7921 · rep-4 0.176 · holdout v3 人工 48）**——均不部署（rank 与 epochs 单独加码都不够）
 - **数据**：`data/shards/`（3B）· `data/sft-mix/`（v1）· `data/sft-mix-v2/v2b/v2c/v2d/v2e/` · `data/sft-extra-v2/`（5 类补充样本）· `data/eval/tests.json`（dev 18）+ `tests-holdout.json`（holdout 30）
 - **部署**：Ollama 用户级 11435 默认 `pretrain-lab-sft-v2e-q8`（F16/Q8/Q4 三 tag；旧 v2 全 tag 保留，回滚 <1min）· `tools/app_stdlib.py` 7860（**默认 T0.3**）· 证据 `reports/2026-11-20-deploy-v2e.md`
 - **报告**：**[REPORT.md](REPORT.md)** 定稿（八版终表 + §5.1 去污/残留 + §5.2 holdout + §6 LoRA + §10 复现）
@@ -52,7 +52,7 @@ ls data/raw/SHA256SUMS data/tokenizer-32k/tokenizer.json data/shards/meta.json
 ls data/sft-mix/{meta.json,SHA256SUMS} data/sft-mix-v2e/{meta.json,SHA256SUMS}
 ls data/eval/tests.json data/eval/tests-holdout.json data/eval/tests-holdout-v3.json data/eval/SHA256SUMS
 ls out/main140m/last.pt out/sft-v1/last.pt out/sft-v2/last.pt out/sft-v2e/last.pt \
-   out/sft-lora-r8-5e4/last.pt out/sft-lora-r12-5e4/last.pt
+   out/sft-lora-r8-5e4/last.pt out/sft-lora-r12-5e4/last.pt out/sft-lora-r12-5e4-2ep/last.pt
 tmux ls | grep -E "sft|train|lora|demo" || echo no-running-training
 curl -s --max-time 3 http://127.0.0.1:11435/api/tags >/dev/null && echo ollama-user-ok || echo ollama-user-missing
 OLLAMA_HOST=127.0.0.1:11435 ollama list | grep -c v2e      # 应 ≥3（v2e / v2e-q8 / v2e-q4）
@@ -152,7 +152,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 - **指纹纪律**：每份数据/ckpt 落位即录（`SHA256SUMS` 入库；数据本体 gitignore）。
 - **git**：develop 直提（`day-N` 标签）；模型/checkpoint/语料/原始 logs 不入库。
 - **决策门**：①/② 已判定且口径跑前未改（PLAN §4.1），不得事后改口径。
-- **评测红线（Day 10~11 加严）**：① dev 只用于迭代，验收必须有 holdout（≥30 题，**双向**三层去重 0 撞车）；② 关键词分必须配人工复核；③ 版本读数标 **完全干净/部分干净/含记忆** + 干净子集；④ **去重检查器先自测**（已知撞车必须被抓）；⑤ 报告 `check_eval_leak.py` 的 EXIT 码。
+- **评测红线（Day 10~12 加严）**：① dev 只用于迭代，验收必须有 holdout（≥30 题，**双向**三层去重 0 撞车；能力验收用 90 题 v3）；② 关键词分必须配人工复核；③ 版本读数标 **完全干净/部分干净/含记忆** + 干净子集；④ **去重检查器先自测**（已知撞车必须被抓）；⑤ 报告 `check_eval_leak.py` 的 EXIT 码；⑥ **判"持平/无差异"前先算功效**（30 题 CI ±4；检测 +6 差需 ≥70 题——Day 12 的 90 题推翻了 30 题"持平"）；⑦ **expect 表数值写法变体要收口**（299,792 vs 30万——lightspeed 9/10 版答对而关键词全灭）。
 - **上游知识指针**：finetune-lab `notes/lessons.md` · `ms-swift-finetune` skill · nl2fem `notes/ref-*-concepts.md`。
 
 ## 7. 收官后可选工作（**均需新 spec；不阻塞交付**）

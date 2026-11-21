@@ -112,3 +112,7 @@
 - **修复**：`assert_no_eval_leak` 去所有非单词字符、取消长度守卫、内置已知撞车自测、同时查 dev+holdout；新增 `tools/check_eval_leak.py`（双向三层）。
 - **AC 影响**：AC7（评测污染章）已按残留更新；AC9（§0 成绩单）已把 v2e 标为"部分干净（2 题残留）"；AC11（量化抽检）不受影响。**部署不变**（v2e-q8 在 holdout 不劣、rep-4 最低）。
 - 证据：[reports/2026-11-20-eval-leak-recheck.md](../reports/2026-11-20-eval-leak-recheck.md) · `...-holdout-eval-v2.md` · `...-holdout-audit.md` §7。
+
+## 11. 后续（2026-11-21）
+
+Day 12 收官后深化已另立 spec [`2026-11-21-post-final-deepening.md`](2026-11-21-post-final-deepening.md) 并 **COMPLETED**（holdout 90 题 + LoRA r12 2ep + 分语言 val）：结论 = **v2e 90 题人工校准 53 vs v2 47（+6 达预注册阈值；30 题"持平"系欠功效）**；数学/翻译能力块判据不通过（窄查表/句式级维持）；LoRA rank 与 epochs 单独加码都不够；英文上采样无稀释。**本 spec 的 AC1~AC11 与 §10 Day 11 复核结论不受影响；部署仍为 v2e-q8。**
