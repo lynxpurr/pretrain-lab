@@ -46,10 +46,10 @@
 | 训练/评测/数据/部署脚本（Day 1~10 逐步生长） | `tools/` |
 | run 证据（只增不改） | `reports/` |
 | 学习者 lessons（追加制）+ 概念检验题答案卡/评分要点 | `notes/`（`qa-rubric.md` = 18 题判分要点） |
-| 仓内操作规程（训练跑批/故障速查/红线，agent 优先加载） | [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md) |
+| 仓内操作规程（训练跑批/故障速查/红线，agent 优先加载） | `.zcode/skills/pretrain-lab/SKILL.md`（本地私有，已 gitignore） |
 | 数据集落位 + 出处指纹 | `data/`（PROVENANCE.md + SHA256SUMS） |
 | 模型/checkpoint/语料（gitignore，脚本可再生） | `models/` · `checkpoints/` |
 
 ## 工作方式
 
-develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 17 条 · 字符级 3 条 · tokenizer 3 条 · 分片 7 条 · SFT v1/v2/v2b/v2c/v2d/v2e 各 4 条 + 补充样本 5 条 · 评测集 2 条（dev 18 + holdout 30）· ckpt 12 条）。决策门①（**140M 等效 ≥35k tok/s**）**已判 PASS（52,250）**、②（加训判定）**已判不触发**（最后 10% 0.0134 + 恒定 lr 探针 0.0051），口径跑前未改。仓内操作规程见 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)；demo/Ollama 启动命令见 HANDOFF §2 与 [reports/2026-11-19-day7-deploy.log](reports/2026-11-19-day7-deploy.log)。
+develop 主干直提为主（提交信息带 `day-N` 标签）+ 大改走 feature 分支；每晚三道概念检验题（学习者模式）；证据只增不改；**数据指纹每份落位即录**（raw 层 17 条 · 字符级 3 条 · tokenizer 3 条 · 分片 7 条 · SFT v1/v2/v2b/v2c/v2d/v2e 各 4 条 + 补充样本 5 条 · 评测集 2 条（dev 18 + holdout 30）· ckpt 12 条）。决策门①（**140M 等效 ≥35k tok/s**）**已判 PASS（52,250）**、②（加训判定）**已判不触发**（最后 10% 0.0134 + 恒定 lr 探针 0.0051），口径跑前未改。仓内操作规程见 `.zcode/skills/pretrain-lab/SKILL.md`（本地私有，已 gitignore）；demo/Ollama 启动命令见 HANDOFF §2 与 [reports/2026-11-19-day7-deploy.log](reports/2026-11-19-day7-deploy.log)。

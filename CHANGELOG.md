@@ -27,7 +27,10 @@ The project follows a "evidence first" convention: every run has a summary
 
 ### Changed
 - Reader-facing docs are separated from the internal process record
-  (`HANDOFF.md`, `PLAN.md`, `LAB_NOTEBOOK.md`, `.zcode/skills/...`).
+  (`HANDOFF.md`, `PLAN.md`, `LAB_NOTEBOOK.md`).
+- The local agent skill (`.zcode/skills/pretrain-lab/`) is untracked and
+  gitignored; it remains a local-only private file. Git history is not
+  rewritten, so the file is still visible in earlier commits.
 - The demo server binds to `127.0.0.1` by default.
 - Public wording downgraded: v2e vs v2 meets the pre-registered threshold
   (audit +6; re-judgment +7) but is **not statistically significant**

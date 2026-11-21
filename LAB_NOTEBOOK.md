@@ -156,6 +156,13 @@
 - 读数：push `e81669e..814b494`；远端 README 首行 `# pretrain-lab`；链接/compile 通过；Phase 1 ✅ / Phase 2 部分 / Phase 3 pending。
 - 疑问：①Phase 3 何时做（HF/GitHub Release/长文）？②独立复核 30~50 题是否值得在发布前做？③v2f 是否等发布后？
 
+## 2026-11-21（发布维护）· 私有化仓内 agent 规程（.zcode gitignore）
+
+- 决策：用户指示"将 `.zcode/skills/pretrain-lab` 从公开代码库中移除，变成私有（gitignore）"→ 立 spec [`specs/2026-11-21-private-agent-skill.md`](specs/2026-11-21-private-agent-skill.md)；**只 untrack，不重写历史**（旧 commit 仍可见，彻底清除需另行决策）。
+- 现象：①仓库唯一被跟踪的 `.zcode` 文件是 `SKILL.md`；②引用点 6 处，公开读者面（README EN/ZH、docs/internal/README、CHANGELOG、HANDOFF、归档 status-log）改为"本地私有/不入库"，历史 spec 保留纯文本路径；③`git rm --cached` 后本地文件保留，`.zcode/` 加入 `.gitignore`。
+- 读数：`git ls-files .zcode` 为空；`git check-ignore` 命中 `.gitignore:55`；`check_links` 12 docs 0 broken；`compileall` EXIT 0。
+- 疑问：旧 commit 仍含 SKILL.md（历史不重写）——若目标是"任何历史版本都不可见"，需 force push/filter-repo，破坏报告里的 commit 引用，另行拍板。
+
 <!-- 模板（复制使用）：
 ## YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）

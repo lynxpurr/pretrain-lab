@@ -136,7 +136,7 @@ F16 GGUF 与 PyTorch 5/5 逐字一致。见 `reports/2026-11-20-day10-repro-chec
 | `docs/` | quickstart、reproduction、evaluation、architecture、FAQ |
 | `REPORT.md` | 完整中文报告 |
 | `MODEL_CARD.md` / `MODEL_CARD.en.md` | 模型卡（中/英） |
-| `HANDOFF.md`、`PLAN.md`、`LAB_NOTEBOOK.md`、`.zcode/skills/` | 内部过程记录——有上下文价值，**不是读者入口** |
+| `HANDOFF.md`、`PLAN.md`、`LAB_NOTEBOOK.md` | 内部过程记录——有上下文价值，**不是读者入口** |
 
 ## 实现说明
 

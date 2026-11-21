@@ -50,3 +50,6 @@ __pycache__/
 # reports/ 是证据快照（只增不改），原始 log 必须入库（Day 2 发现 Day 1 日志曾被 *.log 误伤）
 !reports/*.log
 reports/**/*.tmp
+
+# 本地 agent 配置/规程（私有，不随仓库发布）
+.zcode/

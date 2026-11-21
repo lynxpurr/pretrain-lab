@@ -6,7 +6,7 @@
 - `PLAN.md`（仓库根）：项目计划与决策记录（原始计划）、D-01~D-10、风险与纪律。
 - `LAB_NOTEBOOK.md`（仓库根）：过程记录（按日期；决策/现象/读数/疑问）。
 - `HISTORY.md`（仓库根）：旧 commit message 的口径对照（day 标签、+6、五项全过、0 撞车、手写、部署）。
-- `.zcode/skills/pretrain-lab/SKILL.md`：agent 操作规程（训练/评测/部署/故障排查/红线）。
+- `.zcode/skills/pretrain-lab/SKILL.md`（**本地私有**，已 gitignore，不随仓库发布）：agent 操作规程（训练/评测/部署/故障排查/红线）。
 - `status-log-2026-11-21.md`：旧版 README（内部状态长文），2026-11-21 归档。
 - 求职材料（仓外）：`~/job-search/pretrain-lab/`（不随仓库发布）。
 

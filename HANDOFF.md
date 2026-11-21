@@ -4,7 +4,7 @@
 >
 > **口径**：对外叙事用日期，不写 day/工期；AI 披露只在 README 底部 "Implementation note" 一处；旧 commit 说法见 [HISTORY.md](HISTORY.md)，不重写历史。
 >
-> 更新：2026-11-21 · 本件是新会话的启动入口。操作规程：[.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)；报告：[REPORT.md](REPORT.md)；求职材料在仓外 `~/job-search/pretrain-lab/`。
+> 更新：2026-11-21 · 本件是新会话的启动入口。操作规程：`.zcode/skills/pretrain-lab/SKILL.md`（**本地私有**，已 gitignore，不随仓库发布）；报告：[REPORT.md](REPORT.md)；求职材料在仓外 `~/job-search/pretrain-lab/`。
 
 ## 0. 新会话开工序（按序，不跳步）
 
