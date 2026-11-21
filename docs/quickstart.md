@@ -59,14 +59,14 @@ Only expose it on a network you trust (`BIND=0.0.0.0` is possible but unsafe).
 ```bash
 curl -s http://127.0.0.1:11435/api/chat -d '{
   "model": "pretrain-lab-sft-v2e-q8",
-  "messages": [{"role": "user", "content": "你好，请介绍一下你自己。"}],
+  "messages": [{"role": "user", "content": "请用一句话介绍杭州。"}],
   "stream": false,
   "options": {"temperature": 0.3, "top_p": 0.9}
 }' | python3 -c 'import json,sys; print(json.load(sys.stdin)["message"]["content"])'
 ```
 
-Expected style: a short Chinese self-introduction. The model is a 140M
-learning artifact; do not expect ChatGPT-level answers.
+Expected style: a short Chinese answer. The model is a 140M learning
+artifact; do not expect ChatGPT-level answers.
 
 ## Path B — Hugging Face `transformers`
 
@@ -81,14 +81,14 @@ import torch
 
 repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
-model = AutoModelForCausalLM.from_pretrained(repo, torch_dtype=torch.float16)
+model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
 model.eval()
 
-messages = [{"role": "user", "content": "你好，请介绍一下你自己。"}]
-ids = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
+messages = [{"role": "user", "content": "请用一句话介绍杭州。"}]
+inputs = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
 with torch.no_grad():
-    out = model.generate(ids, max_new_tokens=80, do_sample=False)
-print(tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True))
+    out = model.generate(**inputs, max_new_tokens=80, do_sample=False)
+print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True))
 PY
 ```
 
@@ -123,11 +123,12 @@ Budget: ~38 GB download, ~145 GB disk, one 16 GB GPU.
 
 ## What to try
 
-- Identity: `你好，请介绍一下你自己。`
-- Calibration: `请告诉我 2046 年世界杯的冠军。` (it should refuse to invent)
+- Short answer: `请用一句话介绍杭州。`
+- Calibration: `请告诉我 2045 年世界杯的冠军。` (2045 is not a World Cup year; it should say so)
 - Translation: `把这句话翻译成英文：我爱机器学习。` (works for trained patterns)
 - Math: `17 加 6 等于多少？` (likely wrong — the model does not do arithmetic)
 - Format: `用一句话解释什么是光合作用。` (short answer, may miss the exact format)
+- Identity: `你是谁？` (it often answers "minimind" — a known SFT-data artifact)
 
 The demo is for observing behavior, not for benchmarking. For numbers, use
 [`evaluation.md`](evaluation.md).

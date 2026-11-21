@@ -105,8 +105,9 @@ was underpowered.
    versions (prior override).
 4. **Repetition**: v2e has the lowest rep-4 in the family (0.055 on dev), but
    long English answers can still repeat.
-5. **Identity**: under sampling it may claim to be another model; greedy is
-   more stable. The demo defaults to T=0.3.
+5. **Identity**: the SFT corpus comes from minimind; the model often
+   identifies as "minimind" even with greedy decoding. Treat its
+   self-description as unreliable. The demo defaults to T=0.3.
 6. **Context**: 1024 tokens; longer inputs are truncated.
 7. **Safety**: no safety tuning, no RLHF, no bias evaluation.
 
@@ -120,14 +121,14 @@ import torch
 
 repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
-model = AutoModelForCausalLM.from_pretrained(repo, torch_dtype=torch.float16)
+model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
 model.eval()
 
-messages = [{"role": "user", "content": "你好，请介绍一下你自己。"}]
-ids = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
+messages = [{"role": "user", "content": "请用一句话介绍杭州。"}]
+inputs = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
 with torch.no_grad():
-    out = model.generate(ids, max_new_tokens=80, do_sample=False)
-print(tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True))
+    out = model.generate(**inputs, max_new_tokens=80, do_sample=False)
+print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True))
 ```
 
 ### Ollama / GGUF

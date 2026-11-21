@@ -40,11 +40,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
-model = AutoModelForCausalLM.from_pretrained(repo, torch_dtype=torch.float16)
-messages = [{"role": "user", "content": "你好，请介绍一下你自己。"}]
-ids = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
-out = model.generate(ids, max_new_tokens=80, do_sample=False)
-print(tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True))
+model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
+messages = [{"role": "user", "content": "请用一句话介绍杭州。"}]
+inputs = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
+out = model.generate(**inputs, max_new_tokens=80, do_sample=False)
+print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True))
 PY
 ```
 
@@ -90,7 +90,8 @@ PY
 - **翻译**：只学会了少量指令句式，不是翻译模型；`Knowledge is power` 常被原样回英文。
 - **事实**：140M / 3B token ≈ GPT-2 级知识；会编造人名、年份、细节，不要当知识源。
 - **生产**：没有安全对齐、RLHF、长上下文（1024 token），不保证事实/风格质量。
-- **身份**：采样下偶发自称别的模型；greedy 更稳定。
+- **身份**：SFT 语料来自 minimind，模型常自称 "minimind"（greedy 下也是）；
+  自述身份不可靠。
 
 ## 最有意思的部分：评测方法学
 
