@@ -241,6 +241,8 @@ cd data/shards && sha256sum -c SHA256SUMS
 - **检查器自测红线**（2026-11-20 立）：报"0 撞车"之前，先喂一个已知违规样本证明检查器抓得到；禁止长度/归一化静默跳过（旧 `len(prompt)>=8` 守卫让 v2e"复扫 0 撞车"成为假阴性，dev 残留 2 题）。
 - **评测功效红线**（2026-11-21 立）：判定"无显著差异/持平"前必须给 CI 或所需样本量；n=30 的 ±4 题 CI 只能排除大差距——**"30 题持平"已被 90 题推翻（v2e +6）**。能力型结论用 10~14 题块（≥70%），不用单题。
 - **关键词 expect 数值变体红线**（2026-11-21 立）：数值类题目的 `expect_any` 必须覆盖常见写法（299,792 / 299,792,458 / 30万 / 3×10^5），否则"掌握了也判错"（lightspeed 9/10 版答对 → 关键词 0/10）；标签类不能用题干原词当 expect（回声假阳）。
+- **发布叙事红线**（2026-11-21 立）：公开/求职材料用日期，不写 day/工期，不把"10 天/60 小时"当卖点；AI 披露只一处（README 底部 Implementation note）；不称 hand-written/独立；旧 commit 不重写，用 HISTORY.md 对照。
+- **远端一致性红线**（2026-11-21 立）：README/docs 改动后必须 push 并验证 `git show origin/develop:README.md`；本地/HEAD 干净 ≠ GitHub 已更新。
 - **数据采样按能力域保护**（Day 7 立，Day 8 收窄）：v2 一刀切列表降采样误伤数学（`math-add 15 / math-mul 72`）；v2b 全量豁免数学修回 `8/42` 但 rep-4 0.117；**v2c 定稿口径 = 仅 assistant 等式行 ≥3 的数学列表豁免**（练习列表教算术组合，写入 6,243 条，math 照样修回且列表占比 10.55%）——豁免口径按"功能特征"而非"领域标签"，改口径先做 assistant 侧分桶侦察。
 - 主训练定档（Day 3）：140M bs8×accum8×T1024 · 65,536 tok/step · 45,777 步 · lr 6e-4/warmup 500 · ckpt 每 1000 步 46 件 ≈76GB；命令 = `reports/2026-11-18-day3-140m-probe.md` §6。除该报错/环境变化外不改配置。
 - 模型/checkpoint/语料/原始 logs 不入库（.gitignore）；**证据快照三件（md/csv/log）必须入 `reports/` 并跟踪**（`!reports/*.log` 例外，commit 前 `git add -n` 核对）。
@@ -257,3 +259,31 @@ cd data/shards && sha256sum -c SHA256SUMS
 7. **能力域采样面**（Day 7 起）：列表/降采样规则是否误伤数学/代码/翻译；七版评测的失败项按"能力域"归因（数学/校准/格式/翻译/复读），不只看总分；**修复项要连着查相邻能力域**（Day 8：en-fluency 修复伴随英文复读 + translate 方向回归）。
 8. **评测面（Day 10 起）**：新数据/新题库先跑 `tools/check_eval_leak.py`（双向三层，EXIT 0）；holdout 与 dev 分表；关键词分 + 人工复核并列；版本读数标"完全干净/部分干净/含记忆"并给干净子集；去重断言自测过（已知撞车被抓）。**dev 排名不可直接写进结论——先看 holdout。**
 9. **评测功效面（Day 12 起）**：新题库人工校准表（每版 关键词/人工/FP/FN 四列）+ 判据功效（CI 或"可排除的最小差距"）；数值类 expect 覆盖写法变体（见 §3.4）；分语言 val 用 `tools/eval_lang.py`（zh/en × all/sup 双口径，基线选因果对照）。
+10. **发布面（2026-11-21 起）**：README/docs 改动后 push；`git show origin/develop:README.md | head -1` 验证远端；旧 commit 说法由 HISTORY.md 对照；不 force push/改 hash。
+
+## §7 公开发布与叙事校准（2026-11-21 沉淀）
+
+**发布件（缺一不发布）**：License/NOTICE/CITATION/CHANGELOG · README 首屏（what/quickstart/results/limits/license）· HF fp16 + 独立 Q8_0 GGUF · `RELEASE_SHA256SUMS` · CI（题库 schema / 去重阳性对照 / 链接 / compileall）。
+
+**叙事规则**：
+- 用日期，不写 day-N；不把"10 天/60 小时/30 GPU 小时"当卖点。
+- AI 披露只一处（README 底部 Implementation note）；不称 hand-written/独立；用 "AI-assisted, human-verified"。
+- 旧 commit 不重写；加 HISTORY.md 对照表（旧说法 → 最终读法）；报告里的 commit hash 才不失效。
+- 对外只写"达到预注册阈值、统计上不显著"；不写"显著优于"。
+
+**关键命令**：
+
+```bash
+git show origin/develop:README.md | head -3
+git ls-files | while read f; do git log -1 --format='%s' -- "$f"; done | sort | uniq -c | sort -rn | head
+sha256sum -c RELEASE_SHA256SUMS
+.venv-pre/bin/python -I tests/test_eval_schema.py
+.venv-pre/bin/python -I tests/test_leak_checker.py
+.venv-pre/bin/python -I tests/check_links.py
+```
+
+**坑**：
+- GitHub 文件列表 = 每个文件最后一次 commit；旧 day 消息会留存；push 不会让它们消失。
+- 本地/HEAD ≠ 远端；README 旧标题 = 未 push 或缓存；push 后 `git show origin/develop:README.md` 验证。
+- 改 commit message 会改 hash，破坏报告引用；用 HISTORY.md，不 rebase/filter-repo。
+- 统计：阈值 ≠ 显著；n=90 单比例 CI ≈ ±9~10 题，配对差值 CI 另算。

@@ -1,8 +1,8 @@
 # SPEC · 公开发布准备（Public Release Readiness）
 
-- **Status**: **IN PROGRESS — Phase 1 COMPLETED; Phase 2 PARTIAL**（2026-11-21；900 格标签 + McNemar/CI 已完成，独立复核/v2f 待执行；Phase 3 待用户确认）
+- **Status**: **IN PROGRESS — Phase 1 ✅; Phase 2 PARTIAL; Phase 3 PENDING**（2026-11-21；900 格标签 + McNemar 已完成；GitHub 已 push；HF/Release/长文待确认）
 - **Owner**: 用户拍板（2026-11-21："同意建议，执行"）· agent 执行
-- **Scope 一句话**：把当前"内部收官态"仓库整理成可对外发布的 **代码 + 文档 + 模型 + 证据** 四件套：Phase 1 清发布阻断项（许可证/README/依赖/模型导出/CI），Phase 2 加固可信度（900 格人工标签落盘 + McNemar/CI + 独立复核），Phase 3 打包发布（HF Hub + GitHub Release + 长文）。**本 spec 不包含任何未经用户确认的公网推送/上传。**
+- **Scope 一句话**：把当前"内部收官态"仓库整理成可对外发布的 **代码 + 文档 + 模型 + 证据** 四件套：Phase 1 清发布阻断项（许可证/README/依赖/模型导出/CI），Phase 2 加固可信度（900 格人工标签落盘 + McNemar/CI + 独立复核），Phase 3 打包发布（HF Hub + GitHub Release + 长文）。**GitHub push 已于 2026-11-21 获用户确认；HF Hub / GitHub Release / 长文仍需确认。**
 
 ## 1. Context（现状，事实源）
 
@@ -159,6 +159,10 @@
 
 > **口径（2026-11-21）**：对外统一为 **"AI-assisted implementation, human-verified"**；README 底部 "Implementation note" 为唯一披露点；训练/评测/证据不变。
 
-### Phase 3
+### Phase 3（部分：GitHub push 已完成）
 
-（未执行；AC15~AC17 待用户确认）
+| AC | 结果 | 证据 |
+|---|---|---|
+| AC15 | ⏳ | HF Hub 未创建 |
+| AC16 | ⏳ | GitHub Release 未创建；`develop` 已 push（远端 README 已更新） |
+| AC17 | ⏳ | 长文/视频未做 |

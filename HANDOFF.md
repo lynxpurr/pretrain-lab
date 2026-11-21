@@ -1,105 +1,92 @@
-# HANDOFF — 新会话交接（项目收官态）
+# HANDOFF — 新会话交接（公开发布维护态）
 
-> **过程记录（非读者入口）**：本文件是项目开发过程的内部交接，保留当时的本地路径与内部引用。公开读者请从 [README.md](README.md) / [docs/](docs/) 进入；发布状态见 [docs/internal/README.md](docs/internal/README.md)。
+> **过程记录（非读者入口）**：本文件是项目开发过程的内部交接，保留本地路径与内部引用。公开读者请从 [README.md](README.md) / [docs/](docs/) 进入；发布状态见 [docs/internal/README.md](docs/internal/README.md)。
 >
-> 日期口径：正文中的 "Day N" 为原计划工作日编号；对外叙事使用日期；不强调工期。
+> **口径**：对外叙事用日期，不写 day/工期；AI 披露只在 README 底部 "Implementation note" 一处；旧 commit 说法见 [HISTORY.md](HISTORY.md)，不重写历史。
 >
-> 更新：2026-11-21（**项目收官 + Day 11 复核 + Day 12 深化**）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 锚点 + 可选下一步。知识本体在 [PLAN.md](PLAN.md)（D-01~D-10 · 逐日 · 决策门 · 风险 · 纪律），操作规程在 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)（新会话优先加载）。**当前没有"当日清单"：10 天计划已全部完成，任何新动作先立新 spec。**
+> 更新：2026-11-21 · 本件是新会话的启动入口。操作规程：[.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)；报告：[REPORT.md](REPORT.md)；求职材料在仓外 `~/job-search/pretrain-lab/`。
 
 ## 0. 新会话开工序（按序，不跳步）
 
-1. **加载 skill + 读本件 + PLAN 三节**：`SKILL.md` → 本件 §1/§2/§7 → PLAN §3（D-01~D-10）§4.1（门①/门② 判定）§6（纪律）。缺细节回 PLAN，不臆造。
-2. **跑 §2 复现检查**（约 1 分钟）——红项先修再动；50 系环境坑已在 Day 0 解决（PLAN §5）。
-3. **读前情**：`REPORT.md` 定稿（重点 §0 八版终表、§5.1 去污+残留、§5.2 holdout、§10 复现、**§12 Day 12 深化**）+ `LAB_NOTEBOOK.md` Day 10~12 段 + `notes/lessons.md` Day 10~12（含跨日回顾 14~17）+ `reports/2026-11-20-eval-leak-recheck.md` + `reports/2026-11-21-holdout-audit-v3.md`。
-4. **确认项目状态**：§5 日程全 ✅、§7 项 1~3 已完成（剩余为候选，均需新 spec）；用户若要继续，**先按 `specs/` 惯例立新 spec（目标/非目标/AC/任务/回滚）再执行**。
-5. **收波**（任何新动作结束前）：`reports/` 证据三分 → LAB_NOTEBOOK 段 → lessons（有新教训才写）→ qa 题池 → PLAN 变更记录 → README 状态 → 指纹补 PROVENANCE → `git commit -m "day-N: …"` + push。
+1. **加载 skill + 读本件**：`SKILL.md` → 本件 §1/§1.1/§2/§5/§6；缺细节回 PLAN/REPORT，不臆造。
+2. **跑 §2 复现检查**（约 1 分钟）——红项先修再动；50 系环境坑见 PLAN §5。
+3. **读前情**：`REPORT.md`（§0 终表、§5.1 去污/残留、§5.2 holdout、§10 复现、§12 深化、§13 McNemar）+ `docs/evaluation.md` + [HISTORY.md](HISTORY.md) + `LAB_NOTEBOOK.md` Release Phase 1/2 段 + `notes/lessons.md` 14~21。
+4. **确认状态**：Phase 1 ✅ / Phase 2 部分 / Phase 3 pending；远端 `origin/develop` 已同步（以 `git log -1 origin/develop` 为准）。
+5. **收波**（任何新动作结束前）：`reports/` 证据三分 → LAB_NOTEBOOK 段 → lessons（有新教训才写）→ PLAN 变更记录 → README/CHANGELOG → 指纹补 PROVENANCE → commit + push → **验证远端 README**。
 6. **边界**：nl2fem / finetune-lab 是知识上游非资产上游（PLAN §7）——只引用知识不改其档案；本仓数据与代码全自建。
 
-**首次回复向用户汇报四件事**：项目/窗口状态 · 最近一次结果 · 今日可做什么 · 待拍板项（如有）。
+**首次回复向用户汇报四件事**：项目/发布状态 · 最近一次结果 · 今日可做什么 · 待拍板项。
 
 **新会话首条消息（可直接粘贴）**：
 
-> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 五步执行——§2 复现检查（demo = pretrain-lab-sft-v2e-q8）→ 读前情（REPORT 定稿 §0/§5.1/§5.2/§10 + LAB_NOTEBOOK Day 10~12 + lessons Day 10~12 + eval-leak-recheck + holdout-audit-v3）→ **项目已收官（Day 10 于 2026-11-20 提前完成；Day 11 去重复核；Day 12 holdout 扩容 90 题 + LoRA 2ep + 分语言 val）**；若要继续可选深化（见 §7），先立新 spec 再执行。
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 六步执行——§2 复现检查（demo = `pretrain-lab-sft-v2e-q8`）→ 读前情（REPORT §0/§5.1/§5.2/§10/§12/§13 + docs/evaluation + HISTORY + LAB_NOTEBOOK Release Phase 1/2）→ 确认状态（Phase 1 ✅ / Phase 2 部分 / Phase 3 pending；远端已 push）→ 新动作先立 spec。口径：日期、不写 day/工期；AI 披露一处；历史不重写。
 
 ## 1. 状态一段话
 
-**项目于 2026-11-20 完成**：本地 5070 Ti 16GB 上从零训出 137,847,552 参数中英小模型（3B token 预训练 → 250M token SFT ×6 版 → LoRA ×3（r8/r12/r12-2ep）→ GGUF/Ollama demo），产出 = 经验 + 模型 + 报告 + demo。**部署 = `pretrain-lab-sft-v2e-q8`**（Q8_0 173MB；F16 326MB 可选；Q4_K_M 不保真）。**收官后复核（Day 11）修正了三处表述**：①dev 去重有 2 题残留（v2e 是"部分干净"，干净子集 15/16）；②去重检查器曾假阴性（已修 + 自带自测）；③holdout 初版 3 题近重复（换题重跑 v2）。**最终诚实结论（Day 12 升级；发布前 Phase 2 再修正）：dev 集 v2e 最优；holdout 90 题 audit v2e 53 vs v2 47（+6），2026-11-21 逐题重判 v2e 52 vs v2 45（+7）——达到预注册阈值，但 McNemar p=0.0923 不显著、CI 下界≈0，且增量集中在英文流畅度（不是数学/翻译/calibration）；数学/翻译的修复不泛化（能力块 0~3/14、0~5/14），calibration 是唯一稳定泛化项（v2 数据系 5~6/6）。**
+**项目已完成，当前处于公开发布维护态**：本地 5070 Ti 16GB 上从零训出 **137,847,552** 参数中英小模型（3B token 预训练 → 250M token SFT ×6 → LoRA ×3 → GGUF/Ollama），产出 = 经验 + 模型 + 报告 + demo。**部署 = `pretrain-lab-sft-v2e-q8`**（Q8_0 174MB；F16 326MB 可选；Q4_K_M 不保真）。
 
-**当前手里有什么（都能直接跑）**：
-- **底座**：`out/main140m/last.pt`（137,847,552 参数 · 3B token · **val 2.7709** · sha `0c0096cc172e8a58`）+ 46 个等间隔 ckpt 谱系（≈73GB）
-- **SFT v1（完全干净基线）**：`out/sft-v1/last.pt`（val 1.5515 · sha `853322df4583bfa2`）——无 extras，16/18 全干净
-- **SFT v2（原部署至 11-20）**：`out/sft-v2/last.pt`（val 1.6038 · sha `a81c3480f4b63366`）——rep-4 0.066；含记忆；数学弱
-- **SFT v2b（消融）**：数学保护修回但 rep-4 0.117、translate 回归
-- **SFT v2c（消融）**：题库 17/18、en-fluency 首修；rep-4 0.135
-- **SFT v2d（消融）**：rep-4 0.084 + rubric 6/8；math-mul 回退 72
-- **SFT v2e（部署，2026-11-20 起）**：`out/sft-v2e/last.pt`（val 1.6065 · sha `984a25c4d59e36a4`）——rep-4 **0.055**、题库 17/18（**2 题残留**）、rubric 6/8；干净子集 **15/16**
-- **LoRA**：r=8 `out/sft-lora-r8-5e4/last.pt`（1.20% · val 1.8253 · rep-4 0.260）；r=12 `out/sft-lora-r12-5e4/last.pt`（1.79% · val 1.8054 · rubric 5-8 · rep-4 0.249）；**r=12 2ep `out/sft-lora-r12-5e4-2ep/last.pt`（val 1.7921 · rep-4 0.176 · holdout v3 人工 48）**——均不部署（rank 与 epochs 单独加码都不够）
-- **数据**：`data/shards/`（3B）· `data/sft-mix/`（v1）· `data/sft-mix-v2/v2b/v2c/v2d/v2e/` · `data/sft-extra-v2/`（5 类补充样本）· `data/eval/tests.json`（dev 18）+ `tests-holdout.json`（holdout 30）
-- **部署**：Ollama 用户级 11435 默认 `pretrain-lab-sft-v2e-q8`（F16/Q8/Q4 三 tag；旧 v2 全 tag 保留，回滚 <1min）· `tools/app_stdlib.py` 7860（**默认 T0.3**）· 证据 `reports/2026-11-20-deploy-v2e.md`
-- **报告**：**[REPORT.md](REPORT.md)** 定稿（八版终表 + §5.1 去污/残留 + §5.2 holdout + §6 LoRA + §10 复现）
-- **脚本**：`tools/{model,train,sft,eval,check_eval_leak,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app,plot_loss}.py`
-- **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（0.0134 / 0.0051 双证据）
+- **技术结论**：dev 集 v2e 最优（17/18，2 题残留；干净子集 15/16）；holdout 90 题 audit v2e 53 vs v2 47（+6），逐题重判 52 vs 45（+7）——**达到预注册阈值，但 McNemar p=0.0923 不显著、bootstrap CI [0,0.156]**；增量集中在英文流畅度；数学/翻译不泛化；calibration 是唯一稳定泛化项。
+- **发布状态**：Phase 1 ✅（License/README/docs/scripts/HF fp16/Q8 GGUF/CI）；Phase 2 **部分**（900 格标签 + McNemar；独立复核/v2f 待）；Phase 3 **pending**（GitHub 已 push；HF Hub / GitHub Release / 长文未做）。
+- **当前口径**：日期，不写 day/工期；AI 披露只 README 底部一处；不称 hand-written/独立；旧 commit 由 [HISTORY.md](HISTORY.md) 解释。
 
-**阶段结论（简版）**：Day 7 v2 = 校准/翻译/格式修好但数学回归；Day 8 v2c = 选择性保护 + en-fluency 首修；机动 v2d = 复读修复最有效（rep-4 0.084）；v2e = 去污 + 精确指令对 + math×2 → dev 判据字面全过、rep-4 0.055；最终阶段 = Q4 量化吃掉弱记忆 → 部署 Q8；Day 10 = 八版终表 + bit-for-bit 复现 + LoRA r12 + demo T0.3；**Day 11 = 去重假阴性修复 + holdout v2（v2e 与 v2 同 23/30）；Day 12 = holdout 扩容 90 题 + LoRA 2ep + 分语言 val（v2e audit +6 / 重判 +7，但 McNemar p=0.092 不显著、增量集中在英文流畅度 / epochs 与 rank 单独加码都不够 / 英文上采样无稀释）**。
+## 1.1 公开发布状态（spec = [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)）
 
-## 1.1 公开发布阶段（2026-11-21 起）
+| 阶段 | 状态 | 证据 |
+|---|---|---|
+| Phase 1 发布阻断项 | ✅ | `LICENSE`/`NOTICE`/`CITATION`/`CHANGELOG`；README EN/ZH + docs 五件 + scripts + CI；HF fp16 + Q8 GGUF；[`reports/2026-11-21-release-model-export.md`](reports/2026-11-21-release-model-export.md) |
+| Phase 2 可信度 | ⚠️ 部分 | 900 格标签 + McNemar/CI；[`reports/2026-11-21-manual-labels-audit.md`](reports/2026-11-21-manual-labels-audit.md)；独立复核/v2f 待 |
+| Phase 3 打包发布 | ⏳ pending | **GitHub `develop` 已 push，远端 README 已更新**；HF Hub / GitHub Release / 长文/视频未做 |
 
-- spec = [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)（用户 2026-11-21 拍板"对外发布"）。
-- **Phase 1 完成**：Apache-2.0/CC-BY-4.0/NOTICE/CITATION/CHANGELOG · 英文 README + 中文 README + `docs/` 五件 · requirements + `scripts/` · v2e HF fp16（137,847,552 参数 / 262.9 MiB / greedy 30/30 与 PyTorch 一致）· 独立 Q8_0 GGUF（174 MB / sha `8b64b668…` / Ollama 输出与部署 tag 逐字一致）· 轻量 CI 四项全过。证据 [`reports/2026-11-21-release-model-export.md`](reports/2026-11-21-release-model-export.md) · LAB_NOTEBOOK Release Phase 1 段。
-- **Phase 2 部分完成（2026-11-21）**：900 格逐题标签已落盘（`reports/2026-11-21-holdout-v3-manual-labels.csv`）· 复算 + McNemar：v2e 52 vs v2 45（+7）· **p=0.0923（不显著；bootstrap 95% CI [0,0.156]）** · 分 tag：fluency-en +5、reason +2，数学 −1、翻译/calibration 持平；**对外措辞已降级为"达到预注册阈值、统计上不显著"**。剩余：独立复核 30~50 题（kappa）· v2f 决策。
-- **发布口径（2026-11-21）**：对外统一为 **"AI-assisted implementation, human-verified"**；README 底部 "Implementation note" 为唯一披露点；不再宣称"独立训练 LLM"。
-- **Phase 3 待用户确认**：HF Hub 仓库 / GitHub Release / 长文；**目前未做任何公网推送或上传**。README 中的 HF 仓库名是目标名，尚未创建。
-- 新会话若继续发布：先读 spec §4 Phase 2 AC10~AC14，再按 §5 措辞红线（McNemar 已做：p=0.0923 不显著；只能写"达到预注册阈值、统计上不显著"；不写工期/天数）。
+**发布件坐标**：
+- HF fp16：`out/hf-sft-v2e/`（262.9 MiB / 137,847,552 参数 / sha `7d1c2f0c…`）
+- Q8_0 GGUF：`out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf`（174 MB / sha `8b64b668…`）
+- F16 GGUF：`out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf`（326 MB / sha `eee10822…`）
+- 校验：`sha256sum -c RELEASE_SHA256SUMS`（4/4 OK）
 
 ## 2. 复现检查（约 1 分钟，按序）
 
 ```bash
 cd /home/zenz/projects/pretrain-lab
-git branch --show-current && git fetch -q && git status -sb   # develop；干净、与 origin 同步
-nvidia-smi --query-gpu=memory.free --format=csv,noheader       # ~14GB 空闲（laya-triage ~1.8G）
-df -h /home | tail -1                                          # 余量 ≥100GB
-which tmux || echo tmux-missing
+git branch --show-current && git fetch -q && git status -sb       # develop；干净、与 origin 同步
+git show origin/develop:README.md | head -1                      # 应为 "# pretrain-lab"
+nvidia-smi --query-gpu=memory.free --format=csv,noheader         # ~14GB 空闲
+df -h /home | tail -1                                            # 余量 ≥100GB
 .venv-pre/bin/python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_name(0))"
-ls data/raw/SHA256SUMS data/tokenizer-32k/tokenizer.json data/shards/meta.json
-(cd data/shards && sha256sum -c SHA256SUMS | tail -1)           # 全 OK
-ls data/sft-mix/{meta.json,SHA256SUMS} data/sft-mix-v2e/{meta.json,SHA256SUMS}
+(cd data/shards && sha256sum -c SHA256SUMS | tail -1)             # 全 OK
 ls data/eval/tests.json data/eval/tests-holdout.json data/eval/tests-holdout-v3.json data/eval/SHA256SUMS
-ls out/main140m/last.pt out/sft-v1/last.pt out/sft-v2/last.pt out/sft-v2e/last.pt \
-   out/sft-lora-r8-5e4/last.pt out/sft-lora-r12-5e4/last.pt out/sft-lora-r12-5e4-2ep/last.pt
-tmux ls | grep -E "sft|train|lora|demo" || echo no-running-training
+ls out/main140m/last.pt out/sft-v2e/last.pt out/sft-lora-r12-5e4-2ep/last.pt
 curl -s --max-time 3 http://127.0.0.1:11435/api/tags >/dev/null && echo ollama-user-ok || echo ollama-user-missing
-OLLAMA_HOST=127.0.0.1:11435 ollama list | grep -c v2e      # 应 ≥3（v2e / v2e-q8 / v2e-q4）
-curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok   # demo 指向 v2e-q8
-.venv-pre/bin/python -I tools/check_eval_leak.py --eval data/eval/tests-holdout.json \
-  --extra-dir data/sft-extra-v2 --skip-sft-source             # 应 EXIT 0（holdout 0 撞车）
-ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak-recheck}.md
+OLLAMA_HOST=127.0.0.1:11435 ollama list | grep -c v2e             # 应 ≥3（v2e / v2e-q8 / v2e-q4）
+curl -s --max-time 3 http://127.0.0.1:7860/health && echo demo-ok
+.venv-pre/bin/python -I tools/check_eval_leak.py --eval data/eval/tests-holdout-v3.json \
+  --extra-dir data/sft-extra-v2 --skip-sft-source                 # 应 EXIT 0
+.venv-pre/bin/python -I tests/test_eval_schema.py                 # EXIT 0
+.venv-pre/bin/python -I tests/test_leak_checker.py                # 阳性对照 + holdout 0 撞车
+.venv-pre/bin/python -I tests/check_links.py                      # 12 docs 0 broken
+.venv-pre/bin/python -m compileall -q tools tests                 # EXIT 0
+sha256sum -c RELEASE_SHA256SUMS                                  # 4/4 OK
 ```
 
 - **注意**：全量去重（含 dev）会 EXIT 1（dev 仍有 2 题残留，已知；见 §4）——这是**预期**，不是环境坏。
 - `bad interpreter` = venv 断链（D-07 uv 托管解释器免疫）。
-- `ollama-user-missing` / `demo-missing`：Ollama 用户级 `OLLAMA_MODELS=$HOME/.ollama/models OLLAMA_HOST=127.0.0.1:11435 ollama serve`；demo `.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860`（默认 T0.3）。
+- `ollama-user-missing` / `demo-missing`：`OLLAMA_MODELS=$HOME/.ollama/models OLLAMA_HOST=127.0.0.1:11435 ollama serve`；demo `.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860`（默认 T0.3）。
 - 分片 `sha256sum -c` 失败 = 数据被动过——**先查再训**（PROVENANCE 纪律）。
-- 检查不过 → PLAN §8 / §5；重建命令见 `reports/2026-11-18-day0-env-snapshot.md`。
+- **远端旧标题 = 未 push 或浏览器缓存**：先 `git status -sb`，再 `git show origin/develop:README.md | head -1`；仍旧则检查 push。
 
-## 3. 已完成摘要（Day 0~11，细节在证据与笔记）
+## 3. 里程碑（日期；详细证据在 reports/）
 
-| Day | 内容 | 结果 |
+| 日期 | 内容 | 结果 |
 |---|---|---|
-| 0（11-18 早） | 环境预铺 + 数据下载 + D-10 拍板 | `.venv-pre`（uv 3.12.13 + torch 2.11.0+cu128）· 数据 37.9GB / 17 条指纹 |
-| 1（11-18） | 手写 `model.py` + 字符级 20M 闭环 | 22,220,544 参数 · val 1.5599 · 187,480 字符/s |
-| 2（11-18 续跑） | 32k BPE + 3B memmap | zh 1.841 / en 4.226 chars/token · 3,000,000,000 token |
-| 3（11-18 续跑） | 训练框架 + 50M/探针 + 门① | 50M 120,517 tok/s · 140M **52,250 → PASS** |
-| 4（11-18 → 11-19） | 140M × 3B 主训练 | 16h07m41s · **val 2.7709** · 46 ckpt ≈73GB |
-| 5（11-19） | SFT v1 + 评测框架 | val 1.5515 · 题库 6/18→16/18 · PPL 9.82→4.60 |
-| 6（11-19） | 门② 判定 + 解码对照 | **不加训**（0.0134 / 0.0051）· 复读归因数据侧 |
-| 7（11-19） | v2/v2b + LoRA r8 + GGUF/Ollama | v2 val 1.6038 / rep-4 0.066；LoRA 1.20%；demo 7860 |
-| 8（11-19→20） | v2c + 六版评测 + 报告开写 | 题库 17/18 + en-fluency 首修；rep-4 0.135 → 不部署 |
-| 机动（11-20） | v2d 复读压制 | rep-4 0.084 + rubric 6/8；差 0.004 → 不部署 |
-| 机动（11-20） | v2e 去污轮 + 八版评测 | rep-4 0.055 / 题库 17/18（2 残留）/ dev 五项字面全过 |
-| 最终阶段（11-20） | 部署切 v2e-q8 + 报告扩写 | Q4 不保真 → Q8；§5.1 评测污染章 |
-| **Day 10（11-20 提前）** | 八版终表 + repo 整理 + 复现走查 + LoRA r12 | bit-for-bit 4/4 · eval 18/18 逐字 · F16 5/5 · r12 val 1.8054 · demo T0.3 |
-| **Day 11（11-20 收官后）** | **去重假阴性修复 + holdout 双向复检** | 断言/工具修复 · dev 残留 2 题披露（干净子集 v2e 15/16）· holdout v2：v2e=v2=23/30 |
-| **Day 12（11-21 收官后深化）** | **holdout 扩容 90 题 + LoRA 2ep + 分语言 val** | 90 题（sha `2539aa2b`）0 撞车 · 数学/翻译能力块判据 ✗ · calibration ✓ · v2e 校准 53 vs v2 47（+6 达阈值）· LoRA 2ep val 1.7921 · 英文上采样无稀释 |
+| 2026-11-18 | 环境 + 自包含 `model.py` + 字符级 20M + 32k BPE + 3B 分片 + 140M 探针 | 门① PASS 52,250 tok/s |
+| 2026-11-18 → 11-19 | 140M × 3B 主训练 | 16h07m41s · val 2.7709 · 46 ckpt |
+| 2026-11-19 | SFT v1 + 评测框架 + 门② | val 1.5515 · 门② 不触发（0.0134 / 0.0051） |
+| 2026-11-19 | v2/v2b + LoRA r8 + GGUF/Ollama | v2 val 1.6038 / rep-4 0.066 |
+| 2026-11-19 → 11-20 | v2c/v2d/v2e 数据迭代 + 八版评测 | v2e rep-4 0.055 / dev 17/18（2 残留） |
+| 2026-11-20 | 部署切 v2e-q8 + 终检 + 30 题 holdout | Q4 不保真 → Q8；F16 5/5 |
+| 2026-11-20 | 去重假阴性修复 + holdout v2 | 干净子集 15/16；v2e=v2=23/30 |
+| 2026-11-21 | 90 题 holdout + LoRA 2ep + 分语言 val | audit +6 / 重判 +7；McNemar p=0.0923；val 1.7921 |
+| 2026-11-21 | 公开发布 Phase 1/2 | License/README/docs/模型导出/CI；900 标签 + McNemar |
+| 2026-11-21 | 文档口径收敛 + HISTORY + push | 日期化、无工期卖点、AI 披露一处；远端 README 更新 |
 
 ## 4. 锚点速查（对账用已知答案）
 
@@ -112,84 +99,77 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | 32k BPE | 词表 32,000 · specials 0/1/2 · zh 1.841 / en 4.226 chars/token · sha `05e9ef17…` |
 | 3B 训练集 | 3,000,000,000 token · en 60%/zh 40% · 6×1GB + val 4M · max_id 31999 |
 | SFT 集 | 250,001,408 token · 244,142 块 · 25% 预训练混入 · val 2,001,920 token |
-| 评测集 | **dev 18 题 / 13 tag**（sha `6c5bd1e9`）+ **holdout 30 题**（sha `e6e31aaa`）+ **holdout v3 90 题**（sha `2539aa2b`；math 14 / translate 14 / calib 6 能力块）· 双向三层去重 |
-| **dev 去重残留** | **2 题**：`fact-months`「一年有几个月」/ `math-add`「3 加 5」= format brevity extras（各 2 条）；旧断言 `len>=8` 守卫假阴性；干净子集 = 16 题：v1 14 / v2 14 / v2c 15 / **v2e 15** / v2b/v2d/LoRA 13 |
+| 评测集 | dev 18 题 / 13 tag（sha `6c5bd1e9`）+ holdout 30 题（sha `e6e31aaa`）+ holdout v3 90 题（sha `2539aa2b`） |
+| dev 残留 | 2 题（`fact-months` / `math-add`，format brevity extras）；干净子集 v2e 15/16 |
 
 **训练与评测**
 
 | 锚 | 值 |
 |---|---|
-| 主模型配置 | 140M = d768/L16/H12 **137,847,552** · 50M = d576/L8/H9 50,292,288 |
+| 主模型 | d768/L16/H12 · **137,847,552** · 50M = d576/L8/H9 50,292,288 |
 | 门① / 门② | **PASS 52,250 tok/s**（≥35k）· **不触发**（0.0134 / 0.0051） |
-| micro-bs 边界 | 50M=16 · 140M=8（bs10 需 expandable_segments；bs12 OOM）；compile 4,077 弃用 |
 | 主训练 | bs8×accum8×T1024 · 45,777 步 · lr 6e-4 · 16h07m41s · peak 10.51GB · **val 2.7709** |
-| SFT v1 | 3,815 步 / 1h19m26s / val 1.5515 / peak 12.09GB |
-| SFT v2 | val 1.6038 / rep-4 0.066 / 1h19m46s / 52,825 tok/s |
-| SFT v2b | val 1.5981 / rep-4 0.117 / math 8-42 / 不部署 |
-| SFT v2c | val 1.6018 / 题库 17-18 / rep-4 0.135 / en-fluency 首修 / 不部署 |
-| SFT v2d | val 1.6059 / rep-4 0.084 / rubric 6-8 / math-mul 72 / 不部署 |
-| **SFT v2e（部署）** | val 1.6065 / **rep-4 0.055** / **题库 17/18（2 残留；干净 15/16）** / rubric 6/8 / translate 精确句式 / math 8-42（字面） / 1h19m19s / 53,098 tok/s |
-| LoRA r8 / r12 / r12-2ep | 1.20% / val 1.8253 / rep-4 0.260；1.79% / val 1.8054 / rubric 5-8 / rep-4 0.249；**r12-2ep（Day 12）/ val 1.7921 / rep-4 0.176 / holdout3 人工 48**——rank 与 epochs 单独加码都不够（−0.020 / −0.013），均不部署 |
-| 评测协议 | greedy + 关键词 + distinct-2/rep-4 + 人工 rubric；**holdout 另表 + 人工复核**；demo 端 **T0.3**/top-p0.9 单独声明 |
-| **holdout v2（人工复核）** | base 12 / v1 21 / v2 **23** / v2b 21 / v2c 21 / v2d 22 / v2e **23** / lora8 19 / lora12 19（30 题）；**dev 排名不复现**；13×5/17+6/100−37 全错；translate 只认句式；calibration 稳定 |
-| **holdout v3（90 题 · 人工校准）** | base 12 / v1 47 / v2 47 / v2b 44 / v2c 45 / v2d 48 / **v2e 53** / lora8 43 / lora12 42 / lora12-2ep 48；**数学 0~3/14 ✗ · 翻译 0~5/14 ✗ · calibration v2 系 5~6/6 ✓ · v2e−v2=+6 ✓（贴阈值）**；lightspeed 9/10 版答对 299,792 而关键词全灭（FN 展示）；`今天非常冷`全员译 hot（先验反扑探针） |
-| GGUF/Ollama | 部署 **v2e-q8**（173MB）；F16 326MB（对拍 5/5）；**Q4_K_M 不保真**（42→72 / translate 回英文）；demo 7860（T0.3）；回滚 tag v2-q4 保留 |
+| SFT v2e（部署） | val 1.6065 / **rep-4 0.055** / dev 17/18（2 残留；干净 15/16）/ rubric 6/8 |
+| LoRA r8 / r12 / r12-2ep | val 1.8253 / 1.8054 / **1.7921**；rep-4 0.260 / 0.249 / 0.176；均不部署 |
+| holdout v3（90 题人工） | base 12 / v1 47 / v2 47 / v2b 44 / v2c 45 / v2d 48 / **v2e 53** / lora8 43 / lora12 42 / lora12-2ep 48 |
+| 能力块 | 数学 0~3/14 ✗ · 翻译 0~5/14 ✗ · calibration v2 系 5~6/6 ✓ |
+| v2e vs v2 | audit +6；重判 +7；**McNemar p=0.0923 不显著**、CI [0,0.156]；增量在英文流畅度 |
+| 部署 | Q8_0 174MB（默认）/ F16 326MB；**Q4_K_M 不保真**（math 42→72 / translate 回退）；demo T0.3 |
 
-**指纹与待办**
+**指纹与发布**
 
 | 项 | 值 |
 |---|---|
-| 数据指纹 | raw 17 · 字符级 3 · tokenizer 3 · 分片 7 · SFT v1/v2/v2b/v2c/v2d/v2e 各 4 · 补充样本 5 · 评测 2（`data/eval/SHA256SUMS`） |
-| ckpt 指纹 | main140m `0c0096cc172e8a58` · sft-v1 `853322df4583bfa2` · sft-v2 `a81c3480f4b63366` · v2b `44856617008a1e10` · v2c `6c12947bb3a56dd5` · v2d `fe972eed11aa599b` · **v2e `984a25c4d59e36a4`** · lora-r8 `81fbbf0840ed56c1` · lora-r12 `4d57b10cb7bcf169` · **lora-r12-2ep `6eb9a7e6018276a2`（Day 12）** |
-| 待回填 | **无**（10 天计划 + 收官复核 + Day 12 深化完成）；剩余可选见 §7（需新 spec） |
+| 数据指纹 | raw 17 · 字符级 3 · tokenizer 3 · 分片 7 · SFT v1/v2/v2b/v2c/v2d/v2e 各 4 · 补充样本 5 · 评测 2 |
+| ckpt 指纹 | main140m `0c0096cc172e8a58` · sft-v1 `853322df4583bfa2` · sft-v2 `a81c3480f4b63366` · v2b `44856617008a1e10` · v2c `6c12947bb3a56dd5` · v2d `fe972eed11aa599b` · **v2e `984a25c4d59e36a4`** · lora-r8 `81fbbf0840ed56c1` · lora-r12 `4d57b10cb7bcf169` · lora-r12-2ep `6eb9a7e6018276a2` |
+| 发布指纹 | HF `7d1c2f0c…` · Q8 `8b64b668…` · F16 `eee10822…`；`RELEASE_SHA256SUMS` |
+| 待回填 | **无**；剩余可选项见 §7 |
 
-## 5. 波次队列与日程（**实际执行 = 11-18 ~ 11-20**）
+## 5. 波次队列与下一步
 
 | 波次 | 状态 |
 |---|---|
-| Day 0 ~ Day 8（环境 → 主训练 → SFT v1 → 门② → v2/v2b/LoRA/部署 → v2c） | ✅ 完成 |
-| 机动 v2d / v2e（复读压制 / 去污轮） | ✅ 完成 |
-| 最终阶段（部署切 v2e-q8 + 报告扩写） | ✅ 完成 |
-| **Day 9（11-26 硬缓冲）** | 未用（提前收官） |
-| **Day 10（实际 11-20）** | ✅ 完成（终检 T4 五项） |
-| **Day 11（11-20 收官后复核）** | ✅ 完成（去重假阴性 + holdout v2） |
-| **Day 12（11-21 收官后深化）** | ✅ 完成（§7 项 1/2/3：holdout 90 题 + LoRA 2ep + 分语言 val） |
-| **公开发布 Phase 1/2（11-21）** | ✅ Phase 1 完成；⚠️ Phase 2 部分完成（标签 + McNemar p=0.0923；独立复核/v2f 待） |
+| 2026-11-18 ~ 11-20（环境 → 主训练 → SFT v1 → 门② → v2/v2b/LoRA/部署 → v2c/v2d/v2e） | ✅ 完成 |
+| 2026-11-20（部署 v2e-q8 + 终检 + holdout v2 + 去重修复） | ✅ 完成 |
+| 2026-11-21（90 题 holdout + LoRA 2ep + 分语言 val） | ✅ 完成 |
+| 2026-11-21（公开发布 Phase 1/2） | ✅ Phase 1；⚠️ Phase 2 部分 |
+| 2026-11-21（文档口径 + HISTORY + push） | ✅ 完成；远端 README 已新版 |
+| 公开发布 Phase 3 | ⏳ pending（HF Hub / GitHub Release / 长文） |
 
-**关键路径（终版）**：Day 3 框架+门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② ✅ → Day 7 v2/v2b + LoRA + 部署 ✅ → Day 8 v2c + 六版评测 ✅ → 机动 v2d/v2e ✅ → 最终阶段 v2e-q8 ✅ → **Day 10 终检 ✅ → Day 11 复核 ✅**。原缓冲（11-22~25 + Day 9）全部未用——8 天完成 10 天计划。
+**下一步优先级**：
+1. **Phase 3**（需用户确认）：HF Hub 仓库（base / v2e / GGUF）、GitHub Release v1.0.0、长文 + 3 分钟视频；可选 Zenodo/Ollama registry。
+2. **Phase 2 剩余**：独立复核 30~50 题 + kappa；v2f 决策（重训会动 +7，不阻塞 v1.0）。
+3. **qa 复核**（学习项）：`notes/qa-day-*.md` 先自答再对照 `notes/qa-rubric.md`。
+4. **求职叙事（仓外）**：`~/job-search/pretrain-lab/` 的 7 天 B 路径计划 + 9 题答案；判据 7/9 脱稿再发布；三个真实 JD 到手后再裁 bullet。
 
 ## 6. 惯例与红线
 
-- **仓内 skill 优先**：跑批/排障/红线按 `SKILL.md`（§3 预训练、§3.2 SFT+评测、**§3.4 评测集/holdout**、§6 收波）。
-- **qa**：qa-day-2~5/7/10 已 agent 预答（23 题，qa-day-8 模式），**待用户复核/改写**；评分要点 [notes/qa-rubric.md](notes/qa-rubric.md)。
-- **证据纪律**：`reports/` 只增不改（改错走勘误追加）；每次 run 三分 = md + csv + log。
-- **指纹纪律**：每份数据/ckpt 落位即录（`SHA256SUMS` 入库；数据本体 gitignore）。
-- **git**：develop 直提（`day-N` 标签）；模型/checkpoint/语料/原始 logs 不入库。
-- **决策门**：①/② 已判定且口径跑前未改（PLAN §4.1），不得事后改口径。
-- **评测红线（Day 10~12 加严）**：① dev 只用于迭代，验收必须有 holdout（≥30 题，**双向**三层去重 0 撞车；能力验收用 90 题 v3）；② 关键词分必须配人工复核；③ 版本读数标 **完全干净/部分干净/含记忆** + 干净子集；④ **去重检查器先自测**（已知撞车必须被抓）；⑤ 报告 `check_eval_leak.py` 的 EXIT 码；⑥ **判"持平/无差异"前先算功效**（30 题 CI ±4；检测 +6 差需 ≥70 题——Day 12 的 90 题推翻了 30 题"持平"）；⑦ **expect 表数值写法变体要收口**（299,792 vs 30万——lightspeed 9/10 版答对而关键词全灭）。
-- **上游知识指针**：finetune-lab `notes/lessons.md` · `ms-swift-finetune` skill · nl2fem `notes/ref-*-concepts.md`。
+- **对外叙事**：日期，不写 day/工期；不把"10 天/60 小时"当卖点；AI 披露只 README 底部一处；不称 hand-written/独立；旧 commit 由 HISTORY.md 解释，不重写历史。
+- **评测**：dev 只用于迭代，验收看 holdout；关键词分 + 人工复核并列；版本读数标"完全干净/部分干净/含记忆" + 干净子集；去重检查器先自测（已知撞车必须被抓）；判"持平"前算功效；**阈值 ≠ 显著**（McNemar p=0.0923）。
+- **发布**：License/NOTICE/CITATION/CHANGELOG；HF/GGUF 三同对拍 + 新学能力抽检；`RELEASE_SHA256SUMS`；链接/schema/leak/compile；**push 后验证远端 README**。
+- **证据/指纹**：`reports/` 只增不改；每次 run 三分 md + csv + log；数据/ckpt 落位即录 SHA256。
+- **git**：develop 直提；模型/checkpoint/语料/原始 logs 不入库；commit message 是历史，不改写。
+- **边界**：nl2fem / finetune-lab 是知识上游非资产上游；只引用知识不改其档案。
 
-## 7. 收官后可选工作（**均需新 spec；不阻塞交付**）
+## 7. 可选工作（均需新 spec；不阻塞交付）
 
 | 优先级 | 事项 | 成本 | 收益/判据 |
 |---|---|---|---|
-| ~~1~~ ✅ | **holdout 扩到 60~100 题 + 能力型测试**——**Day 12 完成**（90 题，sha `2539aa2b`）：数学 0~3/14 ✗ · 翻译 0~5/14 ✗ · calibration ✓ · **v2e 校准 53 vs v2 47（+6 达阈值，"持平"系 30 题欠功效）** | ~2h | 已兑现——证据 `reports/2026-11-21-holdout-audit-v3.md` |
-| ~~2~~ ✅ | **LoRA 2 epochs**（r=12）——**Day 12 完成**：val 1.7921（1.75~1.80 档）→ **epochs 与 rank 单独加码都不够**；能力维度 42→48 有实效，2 epochs 是 LoRA 下限 | ~2.6h GPU | 已兑现——证据 `reports/2026-11-21-lora-r12-2ep.md` |
-| ~~3~~ ✅ | **分语言 val**（中/英 PPL 分项）——**Day 12 完成**：英文上采样对 zh sup ±0.15%，**无稀释**（Day 8 遗留疑问收口） | ~45min | 已兑现——证据 `reports/2026-11-21-langval.md` |
-| 4 | **v2f：去 brevity 残留重建 + 重训** | ~1h20m + 重跑八版 | 换取完全干净的 dev 读数；代价 = 打乱八版可比、两轮为限精神；**对外发布触发条件已满足，但建议 Phase 2 后做**（重训会动 +6，不阻塞 v1.0） |
-| 5 | qa 复核（学习项） | 自定 | 先自答再对照 `qa-rubric.md` |
+| 1 | **Phase 3：HF Hub + GitHub Release + 长文** | 0.5 天 | 对外可访问的模型/发布页/文章；需用户确认仓库名与凭据 |
+| 2 | **独立复核 30~50 题 + kappa** | 0.5 天 | 缓解"同 agent 出题/判分"的保留意见；公开 900 标签已可审 |
+| 3 | **v2f：去 brevity 残留重建 + 重训** | ~1h20m + 重跑八版 | 换完全干净 dev 读数；会动 +7，发布后做 |
+| 4 | qa 复核（学习项） | 自定 | 先自答再对照 qa-rubric |
 | — | DPO | — | **不建议**（新方向 + 翻新伤口风险） |
 
-**新增候选（Day 12 收波提出，均需新 spec）**：①holdout 扩到 150~200 题 + **独立复核者**复验 v2e 的 +6（贴阈值 + 同 style 偏差）；②关键词 expect 表半自动生成（数值写法收口：299,792 vs 30万——lightspeed 全员假阴教训）；③翻译 zh2en 可译/en2zh 全灭的不对称归因（extras 双向配比 vs 语言先验）。**建议顺序**：4 只在有对外发布需求时做；5 随时；新候选按需。
-
-## 7.1 公开发布（2026-11-21 起，新 spec）
-
-- 状态：**Phase 1 ✅**；**Phase 2 部分完成**（900 格标签 + McNemar p=0.0923 不显著；独立复核/v2f 待执行）；Phase 3 待用户确认（**未做公网上传**）。
-- 详见 §1.1 与 [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)。
+**Phase 3 建议结构**：
+- HF：`pretrain-lab-140m-base` / `pretrain-lab-140m-sft-v2e` / `...-GGUF`；英文 model card + license + eval 集。
+- GitHub Release `v1.0.0`：release notes + GGUF 资产（或 HF 链接）。
+- 长文：标题围绕"评测污染 + 90 题 holdout + McNemar 降级"，不是"140M 模型"。
+- 视频：3 分钟 demo（本地 Ollama + 3 个工作流 + 限制）。
 
 ## 8. 参考实现与出处
 
 - minimind @ `233d00f` · nanoGPT @ `3adf61e`（`~/projects/`，只读借鉴）
-- 底稿：NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`
-- 全部证据：`reports/2026-11-18-day*` ~ `reports/2026-11-20-*`（含 holdout / eval-leak-recheck / lora-r12 / deploy-v2e-recheck）
-- 当前 commit 链：`d0c973d`（spec）→ `5fc4d2c`（部署+报告）→ `d00ffad`（Day 10）→ `f7bc170`/`36e96b6`（qa）→ `7352e74`（holdout）→ Day 11 复核提交
+- 全部证据：`reports/2026-11-18-*` ~ `reports/2026-11-21-*`（含 holdout / eval-leak-recheck / release-model-export / manual-labels-audit）
+- 历史 commit 说明：[HISTORY.md](HISTORY.md)
+- 求职材料（仓外）：`~/job-search/pretrain-lab/`

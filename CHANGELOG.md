@@ -20,6 +20,8 @@ The project follows a "evidence first" convention: every run has a summary
 - Per-item manual labels for the 90-question holdout
   (`reports/2026-11-21-holdout-v3-manual-labels.csv`, 900 rows) and a
   re-scoring/McNemar audit (`reports/2026-11-21-manual-labels-audit.md`).
+- `HISTORY.md`: a correction table for old commit-message claims (day labels,
+  +6, "five criteria", dedup, "hand-written", deployment).
 - Lightweight CI: evaluation-set schema checks, leak-checker positive
   control, local link check, and `compileall`.
 
@@ -31,6 +33,9 @@ The project follows a "evidence first" convention: every run has a summary
   (audit +6; re-judgment +7) but is **not statistically significant**
   (McNemar p=0.0923; 95% CI [0.000, 0.156]); the advantage is concentrated
   in English fluency.
+- Public docs use dates; no day/duration selling points; AI disclosure is one
+  Implementation note. Historical commit messages are not rewritten (see
+  HISTORY.md). The repository is pushed; the remote README is current.
 
 ## [1.0.0] — project complete (2026-11-20; follow-up 2026-11-21)
 

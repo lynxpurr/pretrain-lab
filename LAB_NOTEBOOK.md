@@ -149,6 +149,13 @@
 - 疑问：①独立复核 30~50 题的 kappa 会落在哪档（同 agent 重判仍有自评偏差）？②v2f 重训后 +7 会不会回到 +5 以下（不阻塞 v1.0）？③对外保留"+6（audit）/ +7（重判）"双读数并明确口径，是否比只写一个数更稳？——建议双读数。
 - 补记（发布口径，2026-11-21）：对外统一为 **"AI-assisted implementation, human-verified"**；README 底部 "Implementation note" 为唯一披露点；不再宣称"独立训练"。
 
+## 2026-11-21（发布维护）· 口径收敛 + HISTORY + push
+
+- 决策：用户反馈"AI 披露要克制、不要强调 day/工期"→ 公开文档只保留 README 底部一处 Implementation note；README/REPORT/PLAN/CHANGELOG 用日期、不写 10 天/60 小时；旧 commit 不重写，新增 HISTORY.md。
+- 现象：①本地/HEAD README 已新版，但 GitHub 仍是旧标题——8 个 release commit 未 push；②GitHub 文件列表按"最后 touch 的 commit"显示，旧 day-12 消息仍会在 14 个文件上看到；③HISTORY.md 对照 6 类旧说法（+6、五项全过、0 撞车、手写、部署、day/内部引用）。
+- 读数：push `e81669e..814b494`；远端 README 首行 `# pretrain-lab`；链接/compile 通过；Phase 1 ✅ / Phase 2 部分 / Phase 3 pending。
+- 疑问：①Phase 3 何时做（HF/GitHub Release/长文）？②独立复核 30~50 题是否值得在发布前做？③v2f 是否等发布后？
+
 <!-- 模板（复制使用）：
 ## YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）
