@@ -14,6 +14,10 @@ tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 
 - **硬件/时间**：单卡 RTX 5070 Ti 16GB · 2026-11-18 08:08 → 11-20 20:10，**约 60 小时墙钟**（含过夜训练）· 约 30 GPU 小时
 - **部署**：Q8_0 GGUF（174 MB）→ Ollama → 零依赖本地聊天页
 
+## 怎么做的
+
+AI 辅助实现，人工主导范围、预注册判据、实验、评测与发布；每个关键结论都独立验证（bit-for-bit 数据、18/18 逐字节、F16 5/5、已知撞车阳性对照、McNemar）。代码自包含，但不宣称"逐行手写"。
+
 ## 快速开始
 
 > Hugging Face 仓库是 v1.0 发布的一部分。如果 `scripts/download_model.sh`

@@ -73,7 +73,7 @@ The project follows a "evidence first" convention: every run has a summary
 
 | Date | Milestone |
 |---|---|
-| 2026-11-18 | Environment, hand-written model, char-level 20M loop, 32k BPE, 3B memmap shards, 140M probe (52,250 tok/s, gate ① PASS) |
+| 2026-11-18 | Environment, self-contained model implementation (AI-assisted), char-level 20M loop, 32k BPE, 3B memmap shards, 140M probe (52,250 tok/s, gate ① PASS) |
 | 2026-11-18 → 11-19 | 140M × 3B pre-training, 16h07m, val 2.7709 |
 | 2026-11-19 | SFT v1 + evaluation framework; gate ② not triggered |
 | 2026-11-19 | SFT v2/v2b, LoRA r8, GGUF/Ollama demo |

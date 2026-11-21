@@ -145,6 +145,7 @@
 - 现象：①复算总表 **v2e 52 vs v2 45（+7；audit 53 vs 47 = +6）**，各版与 audit 差 −6~+1 不等——原始判定不可恢复是事实，已把 900 行标签落盘（`reports/2026-11-21-holdout-v3-manual-labels.csv`）；②**McNemar 精确 p=0.0923 > 0.05**，bootstrap 95% CI [0.000,0.156] 下界≈0 → **统计上不显著**；③+7 的增量集中在 **fluency-en（v2e 5/5 vs v2 0/5，+5）** 与 reason（+2），数学 −1、翻译/calibration 持平；old30 +2 / new60 +5；④CI 公式修正：n=90 单比例 ±9~10 题，配对差值 CI [0,+14] 题（audit 旧口径"±3~4"过于乐观）。
 - 读数：v2e 52 / v2 45 / v2d 49 / v1 46 / lora12-2ep 42 / v2b 41 / v2c 41 / lora8 40 / lora12 39 / base 10；McNemar p=0.0923；CI [0.000,0.156]。证据 = [reports/2026-11-21-manual-labels-audit.md](reports/2026-11-21-manual-labels-audit.md) + labels CSV。
 - 疑问：①独立复核 30~50 题的 kappa 会落在哪档（同 agent 重判仍有自评偏差）？②v2f 重训后 +7 会不会回到 +5 以下（不阻塞 v1.0）？③对外保留"+6（audit）/ +7（重判）"双读数并明确口径，是否比只写一个数更稳？——建议双读数。
+- 补记（发布口径，2026-11-21）：作者自评训练 internals 可 defend 题 <10/20 → 对外叙事改为 **"AI-assisted implementation, human-verified"**；README/MODEL_CARD/REPORT/docs 移除"手写/全手写"，新增 README "How this was built" 与 FAQ "Was this project AI-generated?"；CASE_STUDY/简历改为 "directed and verified"；优先应用叙事（B 路径），不再宣称"独立训练"。
 
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>

@@ -45,6 +45,7 @@
 - spec = [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)（用户 2026-11-21 拍板"对外发布"）。
 - **Phase 1 完成**：Apache-2.0/CC-BY-4.0/NOTICE/CITATION/CHANGELOG · 英文 README + 中文 README + `docs/` 五件 · requirements + `scripts/` · v2e HF fp16（137,847,552 参数 / 262.9 MiB / greedy 30/30 与 PyTorch 一致）· 独立 Q8_0 GGUF（174 MB / sha `8b64b668…` / Ollama 输出与部署 tag 逐字一致）· 轻量 CI 四项全过。证据 [`reports/2026-11-21-release-model-export.md`](reports/2026-11-21-release-model-export.md) · LAB_NOTEBOOK Release Phase 1 段。
 - **Phase 2 部分完成（2026-11-21）**：900 格逐题标签已落盘（`reports/2026-11-21-holdout-v3-manual-labels.csv`）· 复算 + McNemar：v2e 52 vs v2 45（+7）· **p=0.0923（不显著；bootstrap 95% CI [0,0.156]）** · 分 tag：fluency-en +5、reason +2，数学 −1、翻译/calibration 持平；**对外措辞已降级为"达到预注册阈值、统计上不显著"**。剩余：独立复核 30~50 题（kappa）· v2f 决策。
+- **发布口径修正（2026-11-21）**：作者自评训练 internals 可 defend 题 <10/20 → 对外定位改为 **"AI-assisted implementation, human-verified"**；README/MODEL_CARD/REPORT/docs 移除"手写"；新增 README "How this was built" + FAQ "Was this project AI-generated?"；应用叙事（B 路径）优先，不再宣称"独立训练 LLM"。
 - **Phase 3 待用户确认**：HF Hub 仓库 / GitHub Release / 长文；**目前未做任何公网推送或上传**。README 中的 HF 仓库名是目标名，尚未创建。
 - 新会话若继续发布：先读 spec §4 Phase 2 AC10~AC14，再按 §5 措辞红线（McNemar 已做：p=0.0923 不显著；只能写"达到预注册阈值、统计上不显著"；时间写约 60 小时，不写"8 天"）。
 

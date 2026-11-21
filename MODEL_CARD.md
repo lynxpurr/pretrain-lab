@@ -1,6 +1,6 @@
 # Model Card — pretrain-lab 140M（SFT v2e，部署 Q8_0）
 
-> 一个**从零手写并训练**的中英双语 ~140M 小模型：3B token 预训练 + 250M token SFT。定位 = 学习/本地 demo，**不是**生产模型，也不对标开源大模型。**部署模型 = `pretrain-lab-sft-v2e-q8`**（2026-11-20 起；v2 全 tag 保留可回滚）。
+> 一个**从零训练**（自包含实现，AI 辅助、人工验收）的中英双语 ~140M 小模型：3B token 预训练 + 250M token SFT。定位 = 学习/本地 demo，**不是**生产模型，也不对标开源大模型。**部署模型 = `pretrain-lab-sft-v2e-q8`**（2026-11-20 起；v2 全 tag 保留可回滚）。
 
 ## 1. 模型详情
 
@@ -88,7 +88,7 @@ OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfi
 
 ```bibtex
 @misc{pretrainlab2026,
-  title  = {pretrain-lab: a 140M bilingual language model trained from scratch on one 16GB GPU},
+  title  = {pretrain-lab: a 140M bilingual language model trained from random initialization on one 16GB GPU},
   author = {lynxpurr},
   year   = {2026},
   url    = {https://github.com/lynxpurr/pretrain-lab},

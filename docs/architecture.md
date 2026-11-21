@@ -2,8 +2,9 @@
 
 ## 1. Model
 
-A decoder-only Transformer, hand-written in `tools/model.py` with no external
-model code (PyTorch only).
+A decoder-only Transformer implemented in `tools/model.py` with no external
+model code (PyTorch only). The implementation is self-contained and
+AI-assisted; the design decisions and evaluation were human-directed.
 
 | Item | Value |
 |---|---|

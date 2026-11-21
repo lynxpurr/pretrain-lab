@@ -8,6 +8,7 @@ pipeline_tag: text-generation
 tags:
   - llama
   - from-scratch
+  - ai-assisted
   - 140m
   - bilingual
   - chinese
@@ -22,11 +23,12 @@ datasets:
 
 # pretrain-lab 140M — SFT v2e
 
-A **from-scratch** Chinese–English decoder-only language model:
-137,847,552 parameters, 3B-token pre-training, 250M-token SFT, trained on a
-single RTX 5070 Ti 16 GB GPU in about 60 wall-clock hours. This is a
-learning/research artifact, **not** a production model and **not** a
-competitor to modern open models.
+A Chinese–English decoder-only language model **trained from random
+initialization**: 137,847,552 parameters, 3B-token pre-training, 250M-token
+SFT, trained on a single RTX 5070 Ti 16 GB GPU in about 60 wall-clock hours.
+The implementation is AI-assisted; the scope, experiments, evaluation, and
+release were human-directed. This is a learning/research artifact, **not** a
+production model and **not** a competitor to modern open models.
 
 ## Model details
 
@@ -174,7 +176,7 @@ Ollama tag verbatim. See `reports/2026-11-21-release-model-export.md`.
 
 ```bibtex
 @misc{pretrainlab2026,
-  title  = {pretrain-lab: a 140M bilingual language model trained from scratch on one 16GB GPU},
+  title  = {pretrain-lab: a 140M bilingual language model trained from random initialization on one 16GB GPU},
   author = {lynxpurr},
   year   = {2026},
   url    = {https://github.com/lynxpurr/pretrain-lab},

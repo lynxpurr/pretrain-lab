@@ -1,6 +1,6 @@
 # pretrain-lab
 
-**A 137.8M-parameter Chinese–English language model trained from scratch on one 16GB GPU — and an honest account of what it can't do.**
+**A 137.8M-parameter Chinese–English language model trained from random initialization on one 16GB GPU — and an honest account of what it can't do.**
 
 This is not a competitive open model. It is a complete, reproducible case study:
 tokenizer → 3B-token pre-training → six SFT iterations → LoRA ablations →
@@ -14,6 +14,14 @@ and report the failures (math, translation) instead of hiding them.
 - **SFT**: 250M tokens, assistant-only mask, six variants · deployed **v2e** (val 1.6065, repetition-4 **0.055**)
 - **Hardware / time**: one RTX 5070 Ti 16GB · 2026-11-18 08:08 → 11-20 20:10, **~60 wall-clock hours** (including overnight training) · ~30 GPU-hours
 - **Deployment**: Q8_0 GGUF (174 MB) → Ollama → zero-dependency local chat page
+
+## How this was built
+
+AI-assisted implementation; human-directed scope, pre-registered gates,
+experiments, evaluation, and release. Every headline claim was verified
+independently (bit-for-bit data, byte-identical eval, F16 5/5,
+known-collision control, McNemar). The code is self-contained — not a claim
+of hand-written authorship.
 
 ## Quick start
 

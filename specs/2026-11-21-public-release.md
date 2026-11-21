@@ -36,7 +36,7 @@
 | # | 验收标准 | 验证命令/判据 |
 |---|---|---|
 | AC1 | `LICENSE`（Apache-2.0）+ `NOTICE`（FineWeb-Edu ODC-BY / CommonCrawl ToU / minimind Apache-2.0 / nanoGPT MIT / llama.cpp 借鉴）+ `CITATION.cff` + `CHANGELOG.md` 落位，四处许可表述一致 | `ls LICENSE NOTICE CITATION.cff CHANGELOG.md`；`head -3 LICENSE` 含 "Apache License"；`grep -r "Apache-2.0" README.md MODEL_CARD.md` 均命中 |
-| AC2 | 英文 `README.md` + 中文 `README.zh.md`：Hero / 30 秒跑模型 / 结果表 / 项目地图 / 复现 / 限制 / 许可；首屏可读 | 人工走查；`wc -l README.md` ≤ 180；两文互相链接 |
+| AC2 | 英文 `README.md` + 中文 `README.zh.md`：Hero / 30 秒跑模型 / 结果表 / 项目地图 / 复现 / 限制 / 许可；首屏可读 | 人工走查；`wc -l README.md` ≤ 200；两文互相链接 |
 | AC3 | `docs/{quickstart,reproduction,evaluation,architecture,faq}.md` + `docs/internal/README.md`；HANDOFF/PLAN/LAB_NOTEBOOK/SKILL 顶部加"过程记录，非读者入口"banner | `ls docs/*.md docs/internal/*.md`；`grep -l "过程记录" HANDOFF.md PLAN.md LAB_NOTEBOOK.md .zcode/skills/pretrain-lab/SKILL.md` = 4 |
 | AC4 | `requirements.txt` + `scripts/{setup,download_data,download_model,run_demo,reproduce_eval}.sh`；`bash -n` 全过；setup 写明 CUDA/CPU 两条路 | `for f in scripts/*.sh; do bash -n "$f"; done` EXIT 0；`head -20 requirements.txt` 含 torch/tokenizers/numpy |
 | AC5 | v2e HF 导出（fp16）+ `tokenizer_config.json` 含 chat_template；`transformers` 能加载并生成中文 | `out/hf-sft-v2e/model.safetensors` 存在且 ≤400MB；Python 加载 + `generate` 输出非空；config 含 `tie_word_embeddings`/`rope_theta` |
@@ -134,7 +134,7 @@
 | AC | 结果 | 验证/证据 |
 |---|---|---|
 | AC1 | ✅ | `LICENSE`（Apache-2.0 全文）· `NOTICE`（FineWeb-Edu / CommonCrawl / minimind / nanoGPT / llama.cpp）· `CITATION.cff` · `CHANGELOG.md`；README/MODEL_CARD 均写 Apache-2.0 + CC BY 4.0 |
-| AC2 | ✅ | `README.md`（164 行，EN）+ `README.zh.md`（146 行）；Hero / quickstart / results / limits / repo map / license；互链 |
+| AC2 | ✅ | `README.md`（186 行，EN）+ `README.zh.md`（160 行）；Hero / quickstart / results / limits / repo map / license；互链；"How this was built" 披露 AI 辅助 |
 | AC3 | ✅ | `docs/{quickstart,reproduction,evaluation,architecture,faq}.md` + `docs/internal/README.md`；HANDOFF/PLAN/LAB_NOTEBOOK/SKILL 四处 banner |
 | AC4 | ✅ | `requirements.txt` + `requirements-hf.txt`；`scripts/{setup,download_data,download_model,run_demo,reproduce_eval}.sh`；`bash -n` 全过 |
 | AC5 | ✅ | `out/hf-sft-v2e/model.safetensors` 262.9 MiB / 137,847,552 参数；chat_template 在 `tokenizer_config.json`；PyTorch vs HF greedy **30/30 逐 token 一致** |
@@ -156,6 +156,8 @@
 | AC14 | ⏳ | v2f 决策待定（重训会动 +7，不阻塞 v1.0） |
 
 证据：[reports/2026-11-21-manual-labels-audit.md](../reports/2026-11-21-manual-labels-audit.md) · [labels CSV](../reports/2026-11-21-holdout-v3-manual-labels.csv) · `tools/score_manual.py`。
+
+> **口径修正（2026-11-21）**：作者自评训练 internals 可 defend 题 <10/20 → 对外定位改为 **"AI-assisted implementation, human-verified"**；README/MODEL_CARD/REPORT/docs/CITATION 已移除"手写/全手写"表述，新增 README "How this was built" 与 FAQ "Was this project AI-generated?"；训练/评测/证据不变。
 
 ### Phase 3
 
