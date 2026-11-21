@@ -1,6 +1,6 @@
 # SPEC · 公开发布准备（Public Release Readiness）
 
-- **Status**: **IN PROGRESS — Phase 1 COMPLETED**（2026-11-21 立；Phase 2/3 待执行；验收记录见 §10）
+- **Status**: **IN PROGRESS — Phase 1 COMPLETED; Phase 2 PARTIAL**（2026-11-21；900 格标签 + McNemar/CI 已完成，独立复核/v2f 待执行；Phase 3 待用户确认）
 - **Owner**: 用户拍板（2026-11-21："同意建议，执行"）· agent 执行
 - **Scope 一句话**：把当前"内部收官态"仓库整理成可对外发布的 **代码 + 文档 + 模型 + 证据** 四件套：Phase 1 清发布阻断项（许可证/README/依赖/模型导出/CI），Phase 2 加固可信度（900 格人工标签落盘 + McNemar/CI + 独立复核），Phase 3 打包发布（HF Hub + GitHub Release + 长文）。**本 spec 不包含任何未经用户确认的公网推送/上传。**
 
@@ -49,11 +49,11 @@
 
 | # | 验收标准 | 验证命令/判据 |
 |---|---|---|
-| AC10 | 900 格人工标签落盘 `reports/2026-11-21-holdout-v3-manual-labels.csv` + `tools/score_manual.py` 复算总表与 audit §2 一致 | CSV 行数 = 900 + 表头；复算 10 版总分 = 12/47/47/44/45/48/53/43/42/48 |
-| AC11 | McNemar 精确检验 + bootstrap 95% CI（v2e vs v2 配对）；按结果更新措辞 | 报告给出 p 值/CI；p>0.05 时全文改"达到预注册阈值，噪声边缘" |
-| AC12 | 独立复核 30~50 题（冻结 rubric、盲评）；报 Cohen's kappa/一致率 | 复核记录 + kappa 写入 audit |
-| AC13 | 90 题按"旧 30/新 60"与 tag 分拆的 v2e−v2 差值表 | 报告表格 |
-| AC14 | （可选）v2f：改 2 条 brevity extras → 严格断言重建 → 重训 → 评测；若不执行，记录决策 | 若执行：`check_eval_leak.py` EXIT 0 + v2f 读数落档 |
+| AC10 ⚠️ | 900 格人工标签落盘 + `tools/score_manual.py` 复算；**原判定未落盘，重判总分与 audit §2 不完全一致（v2e 52 vs 53 等），已披露** | CSV 900 行 + 表头；audit 对比表见 `reports/2026-11-21-manual-labels-audit.md` §1 |
+| AC11 ✅ | McNemar 精确检验 + bootstrap 95% CI（v2e vs v2 配对）；按结果更新措辞 | **p=0.0923**；CI [0.000, 0.156]；全文已改"达到预注册阈值，统计上不显著" |
+| AC12 ⏳ | 独立复核 30~50 题（冻结 rubric、盲评）；报 Cohen's kappa/一致率 | 复核记录 + kappa 写入 audit（待执行） |
+| AC13 ✅ | 90 题按"旧 30/新 60"与 tag 分拆的 v2e−v2 差值表 | `reports/2026-11-21-manual-labels-audit.md` §3/§4 |
+| AC14 ⏳ | （可选）v2f：改 2 条 brevity extras → 严格断言重建 → 重训 → 评测；若不执行，记录决策 | 待决策 |
 
 ### Phase 3（需用户确认）
 
@@ -65,7 +65,7 @@
 
 ## 5. 预注册的对外措辞（跑前冻结，避免发布时漂移）
 
-1. **+6**：在 McNemar 结果出来前，只写"达到预注册阈值（≥5/90），贴阈值"，**不写"统计显著"**；p 值出来后按 AC11 更新。
+1. **+6/+7**：audit +6（53 vs 47）/ 重判 +7（52 vs 45），达到预注册阈值（≥5/90）；但 **McNemar p=0.0923 > 0.05**，只能写"达到预注册阈值、方向一致、统计上不显著"，**不得写"显著优于"**。
 2. **时间**：统一写"2026-11-18 08:08 → 11-20 20:10，约 60 小时（含过夜训练）"，不写"实际 8 天"。
 3. **能力**：数学 = "窄查表，不是算术"；翻译 = "句式级，不是通用翻译"；calibration = "唯一稳定泛化项"。不得用单题修复代表能力。
 4. **版本读数**：必须标"完全干净 / 部分干净 / 含记忆"，v2e = 部分干净（2 题残留，干净子集 15/16）。
@@ -90,10 +90,10 @@
 
 ### Phase 2（下一步）
 
-- [ ] T9 900 格标签 CSV + `tools/score_manual.py`
-- [ ] T10 McNemar + bootstrap CI + 措辞更新
+- [x] T9 900 格标签 CSV + `tools/score_manual.py`
+- [x] T10 McNemar + bootstrap CI + 措辞更新
 - [ ] T11 独立复核 30~50 题 + kappa
-- [ ] T12 旧 30/新 60 + per-tag 分拆
+- [x] T12 旧 30/新 60 + per-tag 分拆
 - [ ] T13 （可选）v2f 决策与执行
 
 ### Phase 3（需用户确认）
@@ -139,12 +139,24 @@
 | AC4 | ✅ | `requirements.txt` + `requirements-hf.txt`；`scripts/{setup,download_data,download_model,run_demo,reproduce_eval}.sh`；`bash -n` 全过 |
 | AC5 | ✅ | `out/hf-sft-v2e/model.safetensors` 262.9 MiB / 137,847,552 参数；chat_template 在 `tokenizer_config.json`；PyTorch vs HF greedy **30/30 逐 token 一致** |
 | AC6 | ✅ | `out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf` 174 MB / sha `8b64b668…`；`GGUFReader` file_type=7 / 147 tensors（114 Q8_0 + 33 F32）；Ollama 从文件建模型输出与部署 tag 逐字一致 |
-| AC7 | ✅ | `tests/test_eval_schema.py` · `tests/test_leak_checker.py`（6 字已知撞车必被抓 + holdout v3 0 撞车）· `tests/check_links.py`（11 docs 0 broken）· `compileall` 全 EXIT 0 |
+| AC7 | ✅ | `tests/test_eval_schema.py` · `tests/test_leak_checker.py`（6 字已知撞车必被抓 + holdout v3 0 撞车）· `tests/check_links.py`（12 docs 0 broken）· `compileall` 全 EXIT 0 |
 | AC8 | ✅ | 读者面文档 0 内部引用（NoteFlow/nl2fem/finetune-lab/`/home/zenz`）；secrets scan 无真密钥；`reports/` 无修改（仅新增导出报告） |
 | AC9 | ✅ | commit `release: phase 1 …`；**未 push**（待用户确认） |
 
 证据：[reports/2026-11-21-release-model-export.md](../reports/2026-11-21-release-model-export.md) · LAB_NOTEBOOK Release Phase 1 段 · `RELEASE_SHA256SUMS`。
 
-### Phase 2/3
+### Phase 2（2026-11-21，部分完成）
 
-（未执行；AC10~AC17 待回填）
+| AC | 结果 | 验证/证据 |
+|---|---|---|
+| AC10 | ⚠️ 部分 | 900 行逐题标签已落盘（`reports/2026-11-21-holdout-v3-manual-labels.csv`）；重判总分 = base 10 / v1 46 / v2 45 / v2b 41 / v2c 41 / v2d 49 / **v2e 52** / lora8 40 / lora12 39 / lora12-2ep 42——与 audit §2（12/47/47/44/45/48/53/43/42/48）不完全一致；原判定未落盘，差异已披露 |
+| AC11 | ✅ | v2e vs v2 配对：both 42 / only v2e 10 / only v2 3 / neither 35；**McNemar p=0.0923**；bootstrap 95% CI [0.000,0.156]；对外措辞已改为"达到预注册阈值，统计上不显著" |
+| AC12 | ⏳ | 独立复核 30~50 题 + kappa 待执行 |
+| AC13 | ✅ | 分 tag：fluency-en +5、reason +2、fact-zh +1、format +1；math −1、fact-en −1；translation/calibration 持平；old30 +2 / new60 +5 |
+| AC14 | ⏳ | v2f 决策待定（重训会动 +7，不阻塞 v1.0） |
+
+证据：[reports/2026-11-21-manual-labels-audit.md](../reports/2026-11-21-manual-labels-audit.md) · [labels CSV](../reports/2026-11-21-holdout-v3-manual-labels.csv) · `tools/score_manual.py`。
+
+### Phase 3
+
+（未执行；AC15~AC17 待用户确认）

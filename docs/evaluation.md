@@ -56,6 +56,10 @@ Question schema:
 | LoRA r12 | 54 | 42 | −12 | 14 | 2 | 0.309 | 0.567 |
 | LoRA r12 2ep | 56 | 48 | −8 | 12 | 4 | 0.283 | 0.601 |
 
+> **2026-11-21 re-judgment**: the original per-item labels were not persisted;
+> a full re-judgment from the stored greedy answers gives **v2e 52 vs v2 45
+> (+7)**. The audit aggregate above (53 vs 47) is kept for comparison. See §6.
+
 The keyword score is a "mention detector", not a correctness detector.
 The manual score is the primary number. The gap is largest for base and v1
 (echo/repetition tricks), smallest for v2e.
@@ -135,17 +139,30 @@ Rules used in this project:
 
 ## 6. Manual calibration and statistical caveats
 
-- 900 cells (10 models × 90 questions) were judged once, by the same agent
-  that wrote the questions. This is a **same-style + self-scoring bias**;
-  the per-question labels are being prepared for release in Phase 2.
+- The original 900 cells (10 models × 90 questions) were not persisted. On
+  2026-11-21 they were re-judged from the stored greedy answers; the
+  per-item labels are in `reports/2026-11-21-holdout-v3-manual-labels.csv`
+  (900 rows), and the recompute is in
+  `reports/2026-11-21-manual-labels-audit.md`. This is a re-judgment, not a
+  recovery of the original labels.
+- Re-judgment totals: **v2e 52/90 vs v2 45/90 = +7** (the original audit
+  was 53 vs 47 = +6). FP/FN: v2e 9/2, v2 19/3. The original aggregate is
+  therefore not exactly reproducible; the per-item labels are published so
+  others can audit the judgment.
 - The pre-registered rule was: v2e − v2 ≥ 5/90 → "significantly better".
-  Observed: **53 − 47 = +6**, so the threshold is met.
-- **Do not read "+6" as a large effect.** For a single proportion with
-  n = 90, the 95% interval is roughly ±9–10 questions at p ≈ 0.5; the paired
-  difference can be tighter if the two models disagree on few items. The
-  exact McNemar/bootstrap interval depends on the discordant pairs and is
-  **pending the per-item label release**. The earlier internal note
-  "±3–4 questions" was an approximation, not a standard CI.
+  Both the audit (+6) and the re-judgment (+7) meet the threshold.
+- **McNemar exact test (re-judgment): p = 0.0923**; paired bootstrap 95% CI
+  for the difference: **[0.000, 0.156]** (10,000 resamples), lower bound ≈0.
+  **Not significant at 0.05.** The correct public wording is "meets the
+  pre-registered threshold; directionally better; not statistically
+  significant at 0.05".
+- The advantage is concentrated in **English fluency** (v2e 5/5 vs v2 0/5)
+  and a few reason/format items; math is −1, translation/calibration are
+  tied. It is not a general capability improvement. The old-30/new-60 split
+  is +2/+5 — not driven by the old questions.
+- For a single proportion with n = 90, the 95% interval is roughly ±9–10
+  questions at p ≈ 0.5; the paired interval above is [0, +14] questions.
+  The earlier note "±3–4 questions" was an approximation, not a standard CI.
 - The 30-question holdout gave "23 vs 23"; that was **underpowered**, not
   evidence of equality. The lesson is: compute the interval before declaring
   "no difference".

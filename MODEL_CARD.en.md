@@ -84,11 +84,14 @@ per-question binary judgments.
 - Calibration: **5–6/6 ✓** — the only stable generalization (refuses to
   invent future facts).
 
-**v2e vs v2**: +6/90 manual, meeting the pre-registered threshold (≥5).
-The earlier 30-question "no difference" was underpowered. The +6 is at the
-threshold; the McNemar/bootstrap interval is pending the per-item label
-release. Read it as "meets the pre-registered threshold", not as a large
-effect.
+**v2e vs v2**: audit +6/90 (53 vs 47); a 2026-11-21 per-item re-judgment is
++7/90 (52 vs 45), both meeting the pre-registered threshold (≥5). The paired
+McNemar exact test is **p = 0.0923**, and the bootstrap 95% CI [0.000, 0.156]
+includes 0 → **not statistically significant at 0.05**. The advantage is
+concentrated in English fluency (v2e 5/5 vs v2 0/5); math is −1 and
+translation/calibration are tied. Read it as "directionally better, threshold
+met, not statistically established". The earlier 30-question "no difference"
+was underpowered.
 
 ## Limitations
 

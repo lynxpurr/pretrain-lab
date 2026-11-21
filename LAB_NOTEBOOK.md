@@ -135,9 +135,16 @@
 ## Release Phase 1 · 2026-11-21 · 公开发布准备（License/README/模型导出/CI）
 
 - 决策：用户拍板"对外发布"→ 立 spec [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)（Phase 1 发布阻断项 / Phase 2 可信度 / Phase 3 打包；**本阶段不做任何公网推送/上传**）。发布定位 = "完整可复现的案例研究 + 诚实的评测方法学"，不是"140M 挑战开源大模型"。
-- 现象：①体检四类阻断：无 LICENSE、README 是内部日志式、模型无下载入口、900 格人工分未落盘；②HF 导出加 `--dtype fp16 --tie-embeddings` → 137,847,552 参数 / 262.9 MiB，config 含 chat_template，**PyTorch vs HF greedy 30/30 逐 token 一致**（fp32 对照版也一致）；③Q8_0 独立 GGUF 从 Ollama blob 复制（`sha256-8b64…`），`GGUFReader` 确认 `file_type=7` / 147 tensors（114 Q8_0 + 33 F32），Ollama 从独立文件建模型输出与部署 tag **逐字一致**（`I love machine learning.`）；④轻量 CI：题库 schema、去重检查器阳性对照（6 字短 prompt 必被抓）、holdout v3 0 撞车、11 份读者面文档 0 断链、`compileall` 全过；⑤旧 README 归档到 `docs/internal/status-log-2026-11-21.md`，HANDOFF/PLAN/LAB_NOTEBOOK/SKILL 加"过程记录"banner；⑥时间口径统一为"2026-11-18 08:08 → 11-20 20:10 约 60 小时"（"实际 8 天"与 3 个日历日矛盾，公开稿不再用）。
+- 现象：①体检四类阻断：无 LICENSE、README 是内部日志式、模型无下载入口、900 格人工分未落盘；②HF 导出加 `--dtype fp16 --tie-embeddings` → 137,847,552 参数 / 262.9 MiB，config 含 chat_template，**PyTorch vs HF greedy 30/30 逐 token 一致**（fp32 对照版也一致）；③Q8_0 独立 GGUF 从 Ollama blob 复制（`sha256-8b64…`），`GGUFReader` 确认 `file_type=7` / 147 tensors（114 Q8_0 + 33 F32），Ollama 从独立文件建模型输出与部署 tag **逐字一致**（`I love machine learning.`）；④轻量 CI：题库 schema、去重检查器阳性对照（6 字短 prompt 必被抓）、holdout v3 0 撞车、12 份读者面文档 0 断链、`compileall` 全过；⑤旧 README 归档到 `docs/internal/status-log-2026-11-21.md`，HANDOFF/PLAN/LAB_NOTEBOOK/SKILL 加"过程记录"banner；⑥时间口径统一为"2026-11-18 08:08 → 11-20 20:10 约 60 小时"（"实际 8 天"与 3 个日历日矛盾，公开稿不再用）。
 - 读数：HF fp16 `model.safetensors` sha `7d1c2f0c…` / 262.9 MiB；Q8 GGUF sha `8b64b668…` / 174 MB；F16 GGUF sha `eee10822…` / 326 MB；`RELEASE_SHA256SUMS` 入库。CI 四项 EXIT 0。
 - 疑问：①McNemar/CI 与 900 格标签（Phase 2）会把"+6"的措辞改到哪一档（p>0.05 时只能写"达到预注册阈值"）？②独立复核 30~50 题的 kappa 会落在哪档？③v2f 是否值得在 v1.0 后做（重训会动 +6，不能阻塞首发）？——Phase 2 输入。
+
+## Release Phase 2 · 2026-11-21 · 900 格标签落盘 + McNemar/CI
+
+- 决策：用户指示"先看 diff + 继续 Phase 2"→ 从已保存的 greedy 答案逐题重判（原始 900 格未落盘；**不把总数往 audit 上凑**）；判据 = 预注册 ≥5/90 + McNemar/CI。
+- 现象：①复算总表 **v2e 52 vs v2 45（+7；audit 53 vs 47 = +6）**，各版与 audit 差 −6~+1 不等——原始判定不可恢复是事实，已把 900 行标签落盘（`reports/2026-11-21-holdout-v3-manual-labels.csv`）；②**McNemar 精确 p=0.0923 > 0.05**，bootstrap 95% CI [0.000,0.156] 下界≈0 → **统计上不显著**；③+7 的增量集中在 **fluency-en（v2e 5/5 vs v2 0/5，+5）** 与 reason（+2），数学 −1、翻译/calibration 持平；old30 +2 / new60 +5；④CI 公式修正：n=90 单比例 ±9~10 题，配对差值 CI [0,+14] 题（audit 旧口径"±3~4"过于乐观）。
+- 读数：v2e 52 / v2 45 / v2d 49 / v1 46 / lora12-2ep 42 / v2b 41 / v2c 41 / lora8 40 / lora12 39 / base 10；McNemar p=0.0923；CI [0.000,0.156]。证据 = [reports/2026-11-21-manual-labels-audit.md](reports/2026-11-21-manual-labels-audit.md) + labels CSV。
+- 疑问：①独立复核 30~50 题的 kappa 会落在哪档（同 agent 重判仍有自评偏差）？②v2f 重训后 +7 会不会回到 +5 以下（不阻塞 v1.0）？③对外保留"+6（audit）/ +7（重判）"双读数并明确口径，是否比只写一个数更稳？——建议双读数。
 
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>

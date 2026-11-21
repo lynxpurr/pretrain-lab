@@ -34,17 +34,18 @@ preserves it; F16 (326 MB) is bit-for-bit faithful in the 5/5 spot check.
 This is the "quantization eats weak memories" effect: the new behavior
 conflicts with the base prior, and quantization noise lets the prior win.
 
-### What is the "+6"? Is it statistically significant?
+### What is the "+6"/"+7"? Is it statistically significant?
 
-On the 90-question holdout, v2e's manual score is 53/90 vs v2's 47/90 —
-+6, meeting the pre-registered threshold (≥5). The earlier 30-question
-"23 vs 23" was underpowered, not evidence of equality.
+On the 90-question holdout, the original audit gave v2e 53/90 vs v2 47/90
+(+6). A 2026-11-21 per-item re-judgment from the stored answers gives
+v2e 52/90 vs v2 45/90 (+7). Both meet the pre-registered threshold (≥5).
 
-However, +6 is at the threshold. A single-proportion 95% interval at n=90 is
-roughly ±9–10 questions; the paired interval depends on how often the two
-models disagree. The exact McNemar/bootstrap interval is pending the
-per-item label release. Until then, read it as **"meets the pre-registered
-threshold"**, not as a large or certain improvement.
+However, the paired McNemar exact test on the re-judgment is **p = 0.0923**
+(not significant at 0.05), and the bootstrap 95% CI [0.000, 0.156] includes
+0. The advantage is concentrated in English fluency (v2e 5/5 vs v2 0/5);
+math is −1 and translation/calibration are tied. Read it as **"directionally
+better, threshold met, not statistically established"**, not as a large or
+certain improvement. The earlier 30-question "23 vs 23" was underpowered.
 
 ### Is it production-ready?
 

@@ -14,6 +14,9 @@ The project follows a "evidence first" convention: every run has a summary
 - `requirements.txt` and `scripts/` for setup, data download, model
   download, demo, and evaluation.
 - v2e Hugging Face export (fp16) and a standalone Q8_0 GGUF file.
+- Per-item manual labels for the 90-question holdout
+  (`reports/2026-11-21-holdout-v3-manual-labels.csv`, 900 rows) and a
+  re-scoring/McNemar audit (`reports/2026-11-21-manual-labels-audit.md`).
 - Lightweight CI: evaluation-set schema checks, leak-checker positive
   control, local link check, and `compileall`.
 
@@ -21,6 +24,10 @@ The project follows a "evidence first" convention: every run has a summary
 - Reader-facing docs are separated from the internal process record
   (`HANDOFF.md`, `PLAN.md`, `LAB_NOTEBOOK.md`, `.zcode/skills/...`).
 - The demo server binds to `127.0.0.1` by default.
+- Public wording downgraded: v2e vs v2 meets the pre-registered threshold
+  (audit +6; re-judgment +7) but is **not statistically significant**
+  (McNemar p=0.0923; 95% CI [0.000, 0.156]); the advantage is concentrated
+  in English fluency.
 
 ## [1.0.0] — project complete (2026-11-20 / Day 12 on 2026-11-21)
 

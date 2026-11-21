@@ -19,6 +19,7 @@ DOCS = [
     "MODEL_CARD.md",
     "MODEL_CARD.en.md",
     "CHANGELOG.md",
+    "REPORT.md",
     "docs/quickstart.md",
     "docs/reproduction.md",
     "docs/evaluation.md",

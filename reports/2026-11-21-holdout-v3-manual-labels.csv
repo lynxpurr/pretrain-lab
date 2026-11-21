@@ -1,0 +1,901 @@
+model,test_id,tag,kw_pass,manual_pass,note
+base,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+v1,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+v2,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+v2b,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+v2c,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+v2d,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+v2e,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+lora8,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+lora12,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+lora12-2ep,holdout-fact-ocean,fact-zh,1,1,正确（太平洋）；base 有复读但核心正确
+base,holdout-fact-moon-count,fact-zh,0,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+v1,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+v2,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+v2b,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+v2c,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+v2d,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+v2e,holdout-fact-moon-count,fact-zh,0,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+lora8,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+lora12,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+lora12-2ep,holdout-fact-moon-count,fact-zh,1,0,数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+base,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+v1,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+v2,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+v2b,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+v2c,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+v2d,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+v2e,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+lora8,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+lora12,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+lora12-2ep,holdout-fact-area,fact-zh,0,0,全错（埃及/非洲/印度/亚洲）
+base,holdout-fact-canada,fact-en,0,0,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+v1,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+v2,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+v2b,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+v2c,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+v2d,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+v2e,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+lora8,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+lora12,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+lora12-2ep,holdout-fact-canada,fact-en,1,1,base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+base,holdout-fact-ocean-en,fact-en,0,0,base 回声；其余 Pacific 正确（复读容忍）
+v1,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+v2,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+v2b,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+v2c,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+v2d,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+v2e,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+lora8,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+lora12,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+lora12-2ep,holdout-fact-ocean-en,fact-en,1,1,base 回声；其余 Pacific 正确（复读容忍）
+base,holdout-math-add2,math,0,0,全错（13/18/19）
+v1,holdout-math-add2,math,0,0,全错（13/18/19）
+v2,holdout-math-add2,math,0,0,全错（13/18/19）
+v2b,holdout-math-add2,math,0,0,全错（13/18/19）
+v2c,holdout-math-add2,math,0,0,全错（13/18/19）
+v2d,holdout-math-add2,math,0,0,全错（13/18/19）
+v2e,holdout-math-add2,math,0,0,全错（13/18/19）
+lora8,holdout-math-add2,math,0,0,全错（13/18/19）
+lora12,holdout-math-add2,math,0,0,全错（13/18/19）
+lora12-2ep,holdout-math-add2,math,0,0,全错（13/18/19）
+base,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+v1,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+v2,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+v2b,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+v2c,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+v2d,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+v2e,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+lora8,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+lora12,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+lora12-2ep,holdout-math-mul2,math,0,0,全错（35/56/50/40/45）
+base,holdout-math-sub,math,0,0,全错（37）
+v1,holdout-math-sub,math,0,0,全错（37）
+v2,holdout-math-sub,math,0,0,全错（37）
+v2b,holdout-math-sub,math,0,0,全错（37）
+v2c,holdout-math-sub,math,0,0,全错（37）
+v2d,holdout-math-sub,math,0,0,全错（37）
+v2e,holdout-math-sub,math,0,0,全错（37）
+lora8,holdout-math-sub,math,0,0,全错（37）
+lora12,holdout-math-sub,math,0,0,全错（37）
+lora12-2ep,holdout-math-sub,math,0,0,全错（37）
+base,holdout-identity-self,identity,1,0,base 跑题；其余含 AI/助手/minimind
+v1,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+v2,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+v2b,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+v2c,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+v2d,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+v2e,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+lora8,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+lora12,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+lora12-2ep,holdout-identity-self,identity,1,1,base 跑题；其余含 AI/助手/minimind
+base,holdout-identity-dev,identity,1,0,base 回声；其余 jingyaogong/minimind
+v1,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+v2,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+v2b,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+v2c,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+v2d,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+v2e,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+lora8,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+lora12,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+lora12-2ep,holdout-identity-dev,identity,1,1,base 回声；其余 jingyaogong/minimind
+base,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+v1,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+v2,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+v2b,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+v2c,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+v2d,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+v2e,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+lora8,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+lora12,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+lora12-2ep,holdout-explain-ai,explain,1,1,引力=物质相互吸引；复读容忍
+base,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+v1,holdout-explain-photo,explain,1,1,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+v2,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+v2b,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+v2c,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+v2d,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+v2e,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+lora8,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+lora12,holdout-explain-photo,explain,1,1,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+lora12-2ep,holdout-explain-photo,explain,1,0,细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+base,holdout-trans-zh2en-hometown,translate,0,0,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+v1,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+v2,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+v2b,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+v2c,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+v2d,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+v2e,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+lora8,holdout-trans-zh2en-hometown,translate,1,1,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+lora12,holdout-trans-zh2en-hometown,translate,1,0,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+lora12-2ep,holdout-trans-zh2en-hometown,translate,1,0,base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+base,holdout-trans-en2zh-weather,translate,0,0,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+v1,holdout-trans-en2zh-weather,translate,1,1,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+v2,holdout-trans-en2zh-weather,translate,0,1,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+v2b,holdout-trans-en2zh-weather,translate,0,0,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+v2c,holdout-trans-en2zh-weather,translate,0,0,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+v2d,holdout-trans-en2zh-weather,translate,0,0,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+v2e,holdout-trans-en2zh-weather,translate,0,1,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+lora8,holdout-trans-en2zh-weather,translate,0,0,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+lora12,holdout-trans-en2zh-weather,translate,0,0,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+lora12-2ep,holdout-trans-en2zh-weather,translate,0,1,v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+base,holdout-trans-en2zh-knowledge,translate,0,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+v1,holdout-trans-en2zh-knowledge,translate,1,1,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+v2,holdout-trans-en2zh-knowledge,translate,0,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+v2b,holdout-trans-en2zh-knowledge,translate,0,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+v2c,holdout-trans-en2zh-knowledge,translate,0,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+v2d,holdout-trans-en2zh-knowledge,translate,0,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+v2e,holdout-trans-en2zh-knowledge,translate,0,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+lora8,holdout-trans-en2zh-knowledge,translate,1,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+lora12,holdout-trans-en2zh-knowledge,translate,1,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+lora12-2ep,holdout-trans-en2zh-knowledge,translate,1,0,v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+base,holdout-summary-watch,summary,0,0,base 乱码；其余含手表/心率/续航
+v1,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+v2,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+v2b,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+v2c,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+v2d,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+v2e,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+lora8,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+lora12,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+lora12-2ep,holdout-summary-watch,summary,1,1,base 乱码；其余含手表/心率/续航
+base,holdout-summary-library,summary,1,0,base 回声输入句；其余正确
+v1,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+v2,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+v2b,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+v2c,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+v2d,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+v2e,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+lora8,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+lora12,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+lora12-2ep,holdout-summary-library,summary,1,1,base 回声输入句；其余正确
+base,holdout-format-env,format,1,0,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+v1,holdout-format-env,format,1,0,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+v2,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+v2b,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+v2c,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+v2d,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+v2e,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+lora8,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+lora12,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+lora12-2ep,holdout-format-env,format,1,1,base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+base,holdout-format-fruit,format,0,0,base 乱码；其余三种水果正确
+v1,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+v2,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+v2b,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+v2c,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+v2d,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+v2e,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+lora8,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+lora12,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+lora12-2ep,holdout-format-fruit,format,1,1,base 乱码；其余三种水果正确
+base,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+v1,holdout-code-max,code,1,1,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+v2,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+v2b,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+v2c,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+v2d,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+v2e,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+lora8,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+lora12,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+lora12-2ep,holdout-code-max,code,1,0,仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+base,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+v1,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+v2,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+v2b,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+v2c,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+v2d,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+v2e,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+lora8,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+lora12,holdout-code-sum,code,1,1,仅 lora12-2ep 只加奇数，错；其余正确
+lora12-2ep,holdout-code-sum,code,1,0,仅 lora12-2ep 只加奇数，错；其余正确
+base,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+v1,holdout-reason-keys,reason,1,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+v2,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+v2b,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+v2c,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+v2d,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+v2e,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+lora8,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+lora12,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+lora12-2ep,holdout-reason-keys,reason,0,0,全员未给出开锁/家人/备用/房东/物业等有效建议
+base,holdout-reason-cold,reason,0,0,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+v1,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+v2,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+v2b,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+v2c,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+v2d,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+v2e,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+lora8,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+lora12,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+lora12-2ep,holdout-reason-cold,reason,1,1,base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+base,holdout-zhflu-shanghai,fluency-zh,1,0,base 复读自我介绍；其余成都介绍含四川/美食/景点
+v1,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+v2,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+v2b,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+v2c,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+v2d,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+v2e,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+lora8,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+lora12,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+lora12-2ep,holdout-zhflu-shanghai,fluency-zh,1,1,base 复读自我介绍；其余成都介绍含四川/美食/景点
+base,holdout-zhflu-winter,fluency-zh,0,0,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+v1,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+v2,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+v2b,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+v2c,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+v2d,holdout-zhflu-winter,fluency-zh,0,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+v2e,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+lora8,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+lora12,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+lora12-2ep,holdout-zhflu-winter,fluency-zh,1,1,base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+base,holdout-enflu-moon,fluency-en,1,0,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+v1,holdout-enflu-moon,fluency-en,1,0,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+v2,holdout-enflu-moon,fluency-en,1,0,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+v2b,holdout-enflu-moon,fluency-en,1,1,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+v2c,holdout-enflu-moon,fluency-en,1,1,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+v2d,holdout-enflu-moon,fluency-en,1,1,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+v2e,holdout-enflu-moon,fluency-en,1,1,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+lora8,holdout-enflu-moon,fluency-en,1,0,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+lora12,holdout-enflu-moon,fluency-en,1,0,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+lora12-2ep,holdout-enflu-moon,fluency-en,1,0,base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+base,holdout-enflu-cat,fluency-en,1,0,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+v1,holdout-enflu-cat,fluency-en,1,1,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+v2,holdout-enflu-cat,fluency-en,1,0,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+v2b,holdout-enflu-cat,fluency-en,1,1,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+v2c,holdout-enflu-cat,fluency-en,1,0,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+v2d,holdout-enflu-cat,fluency-en,1,0,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+v2e,holdout-enflu-cat,fluency-en,1,1,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+lora8,holdout-enflu-cat,fluency-en,1,1,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+lora12,holdout-enflu-cat,fluency-en,1,1,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+lora12-2ep,holdout-enflu-cat,fluency-en,1,1,v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+base,holdout-calib-olympics,calibration,0,0,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+v1,holdout-calib-olympics,calibration,0,0,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+v2,holdout-calib-olympics,calibration,1,1,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+v2b,holdout-calib-olympics,calibration,1,1,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+v2c,holdout-calib-olympics,calibration,1,0,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+v2d,holdout-calib-olympics,calibration,1,1,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+v2e,holdout-calib-olympics,calibration,1,1,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+lora8,holdout-calib-olympics,calibration,0,0,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+lora12,holdout-calib-olympics,calibration,0,0,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+lora12-2ep,holdout-calib-olympics,calibration,0,1,v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+base,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+v1,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+v2,holdout-calib-winter,calibration,1,1,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+v2b,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+v2c,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+v2d,holdout-calib-winter,calibration,1,1,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+v2e,holdout-calib-winter,calibration,1,1,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+lora8,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+lora12,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+lora12-2ep,holdout-calib-winter,calibration,0,0,v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+base,holdout-calib-ballon,calibration,0,0,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+v1,holdout-calib-ballon,calibration,0,1,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+v2,holdout-calib-ballon,calibration,1,1,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+v2b,holdout-calib-ballon,calibration,1,1,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+v2c,holdout-calib-ballon,calibration,1,1,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+v2d,holdout-calib-ballon,calibration,1,1,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+v2e,holdout-calib-ballon,calibration,1,1,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+lora8,holdout-calib-ballon,calibration,0,0,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+lora12,holdout-calib-ballon,calibration,0,0,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+lora12-2ep,holdout-calib-ballon,calibration,0,0,v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+base,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+v1,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+v2,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+v2b,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+v2c,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+v2d,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+v2e,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+lora8,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+lora12,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+lora12-2ep,holdout3-math-mul-commute,math,0,0,3×13=39；全错（35/13/56/63/378/3/21）
+base,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+v1,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+v2,holdout3-math-mul-4x15,math,1,1,4×15=60；仅 v2/lora12 对
+v2b,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+v2c,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+v2d,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+v2e,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+lora8,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+lora12,holdout3-math-mul-4x15,math,1,1,4×15=60；仅 v2/lora12 对
+lora12-2ep,holdout3-math-mul-4x15,math,0,0,4×15=60；仅 v2/lora12 对
+base,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+v1,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+v2,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+v2b,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+v2c,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+v2d,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+v2e,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+lora8,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+lora12,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+lora12-2ep,holdout3-math-mul-23x5,math,0,0,23×5=115；全错（45/23/56/40）
+base,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+v1,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+v2,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+v2b,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+v2c,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+v2d,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+v2e,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+lora8,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+lora12,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+lora12-2ep,holdout3-math-add-34-28,math,0,0,34+28=62；全错（31/55/46/56/42）
+base,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+v1,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+v2,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+v2b,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+v2c,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+v2d,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+v2e,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+lora8,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+lora12,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+lora12-2ep,holdout3-math-sub-50-18,math,0,0,50−18=32；全错（10/18/42/6/45）
+base,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+v1,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+v2,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+v2b,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+v2c,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+v2d,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+v2e,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+lora8,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+lora12,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+lora12-2ep,holdout3-math-multi-1,math,0,0,(5+4)×2=18；全错（9/12/20/10）
+base,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+v1,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+v2,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+v2b,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+v2c,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+v2d,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+v2e,holdout3-math-multi-2,math,0,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+lora8,holdout3-math-multi-2,math,1,1,12−5+3=10；仅 lora8 对；lora12 终答 8
+lora12,holdout3-math-multi-2,math,1,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+lora12-2ep,holdout3-math-multi-2,math,1,0,12−5+3=10；仅 lora8 对；lora12 终答 8
+base,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+v1,holdout3-math-multi-3,math,1,0,20−8+6=18；全错（24/36/12/30/21/10）
+v2,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+v2b,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+v2c,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+v2d,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+v2e,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+lora8,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+lora12,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+lora12-2ep,holdout3-math-multi-3,math,0,0,20−8+6=18；全错（24/36/12/30/21/10）
+base,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+v1,holdout3-math-repeat-add,math,1,1,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+v2,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+v2b,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+v2c,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+v2d,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+v2e,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+lora8,holdout3-math-repeat-add,math,0,0,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+lora12,holdout3-math-repeat-add,math,1,1,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+lora12-2ep,holdout3-math-repeat-add,math,1,1,3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+base,holdout3-math-en,math,0,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+v1,holdout3-math-en,math,1,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+v2,holdout3-math-en,math,0,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+v2b,holdout3-math-en,math,1,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+v2c,holdout3-math-en,math,1,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+v2d,holdout3-math-en,math,1,1,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+v2e,holdout3-math-en,math,1,1,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+lora8,holdout3-math-en,math,0,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+lora12,holdout3-math-en,math,0,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+lora12-2ep,holdout3-math-en,math,0,0,9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+base,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+v1,holdout3-math-word,math,0,0,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+v2,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+v2b,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+v2c,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+v2d,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+v2e,holdout3-math-word,math,0,0,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+lora8,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+lora12,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+lora12-2ep,holdout3-math-word,math,1,1,12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+base,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+v1,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+v2,holdout3-trans-en2zh-dogs,translate,1,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+v2b,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+v2c,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+v2d,holdout3-trans-en2zh-dogs,translate,1,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+v2e,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+lora8,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+lora12,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+lora12-2ep,holdout3-trans-en2zh-dogs,translate,0,0,除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+base,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+v1,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+v2,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+v2b,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+v2c,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+v2d,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+v2e,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+lora8,holdout3-trans-en2zh-time,translate,0,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+lora12,holdout3-trans-en2zh-time,translate,1,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+lora12-2ep,holdout3-trans-en2zh-time,translate,1,0,全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+base,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+v1,holdout3-trans-en2zh-books,translate,1,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+v2,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+v2b,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+v2c,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+v2d,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+v2e,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+lora8,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+lora12,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+lora12-2ep,holdout3-trans-en2zh-books,translate,0,0,全回声英文；v1 只译“阅读书籍”漏“晚上”
+base,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+v1,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+v2,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+v2b,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+v2c,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+v2d,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+v2e,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+lora8,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+lora12,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+lora12-2ep,holdout3-trans-en2zh-meeting,translate,0,0,全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+base,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+v1,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+v2,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+v2b,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+v2c,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+v2d,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+v2e,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+lora8,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+lora12,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+lora12-2ep,holdout3-trans-en2zh-idiom,translate,0,0,全未译出“熟能生巧”
+base,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+v1,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+v2,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+v2b,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+v2c,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+v2d,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+v2e,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+lora8,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+lora12,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+lora12-2ep,holdout3-trans-en2zh-life,translate,0,0,全回声英文/拼音乱码
+base,holdout3-trans-zh2en-learning,translate,0,0,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+v1,holdout3-trans-zh2en-learning,translate,1,0,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+v2,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+v2b,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+v2c,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+v2d,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+v2e,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+lora8,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+lora12,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+lora12-2ep,holdout3-trans-zh2en-learning,translate,1,1,v1 未给出译文；其余 I'm learning/studying Chinese 正确
+base,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+v1,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+v2,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+v2b,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+v2c,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+v2d,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+v2e,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+lora8,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+lora12,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+lora12-2ep,holdout3-trans-zh2en-wait,translate,0,0,全员“Please provide the text”，把指令当请求（audit 已记）
+base,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+v1,holdout3-trans-zh2en-hard,translate,1,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+v2,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+v2b,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+v2c,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+v2d,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+v2e,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+lora8,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+lora12,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+lora12-2ep,holdout3-trans-zh2en-hard,translate,0,0,今天非常冷→全员 hot（先验反扑）；v2e 元话语
+base,holdout3-trans-zh2en-book,translate,0,0,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+v1,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+v2,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+v2b,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+v2c,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+v2d,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+v2e,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+lora8,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+lora12,holdout3-trans-zh2en-book,translate,1,0,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+lora12-2ep,holdout3-trans-zh2en-book,translate,1,1,这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+base,holdout3-trans-zh2en-music,translate,0,0,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+v1,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+v2,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+v2b,holdout3-trans-zh2en-music,translate,0,0,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+v2c,holdout3-trans-zh2en-music,translate,0,0,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+v2d,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+v2e,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+lora8,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+lora12,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+lora12-2ep,holdout3-trans-zh2en-music,translate,1,1,base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+base,holdout3-calib-wc2046,calibration,0,0,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+v1,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+v2,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+v2b,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+v2c,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+v2d,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+v2e,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+lora8,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+lora12,holdout3-calib-wc2046,calibration,1,0,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+lora12-2ep,holdout3-calib-wc2046,calibration,1,1,v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+base,holdout3-calib-olympics2044,calibration,0,0,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+v1,holdout3-calib-olympics2044,calibration,0,0,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+v2,holdout3-calib-olympics2044,calibration,0,1,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+v2b,holdout3-calib-olympics2044,calibration,0,1,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+v2c,holdout3-calib-olympics2044,calibration,1,1,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+v2d,holdout3-calib-olympics2044,calibration,0,1,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+v2e,holdout3-calib-olympics2044,calibration,1,1,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+lora8,holdout3-calib-olympics2044,calibration,0,0,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+lora12,holdout3-calib-olympics2044,calibration,0,0,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+lora12-2ep,holdout3-calib-olympics2044,calibration,1,1,v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+base,holdout3-calib-nobel2045,calibration,0,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+v1,holdout3-calib-nobel2045,calibration,0,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+v2,holdout3-calib-nobel2045,calibration,1,1,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+v2b,holdout3-calib-nobel2045,calibration,1,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+v2c,holdout3-calib-nobel2045,calibration,0,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+v2d,holdout3-calib-nobel2045,calibration,1,1,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+v2e,holdout3-calib-nobel2045,calibration,1,1,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+lora8,holdout3-calib-nobel2045,calibration,0,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+lora12,holdout3-calib-nobel2045,calibration,0,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+lora12-2ep,holdout3-calib-nobel2045,calibration,0,0,v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+base,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+v1,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+v2,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+v2b,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+v2c,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+v2d,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+v2e,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+lora8,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+lora12,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+lora12-2ep,holdout3-fact-mountain,fact-zh,1,1,月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+base,holdout3-fact-boil,fact-zh,0,0,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+v1,holdout3-fact-boil,fact-zh,1,1,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+v2,holdout3-fact-boil,fact-zh,1,0,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+v2b,holdout3-fact-boil,fact-zh,1,1,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+v2c,holdout3-fact-boil,fact-zh,0,0,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+v2d,holdout3-fact-boil,fact-zh,0,0,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+v2e,holdout3-fact-boil,fact-zh,1,1,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+lora8,holdout3-fact-boil,fact-zh,1,1,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+lora12,holdout3-fact-boil,fact-zh,1,1,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+lora12-2ep,holdout3-fact-boil,fact-zh,1,1,水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+base,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+v1,holdout3-fact-continent,fact-zh,1,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+v2,holdout3-fact-continent,fact-zh,1,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+v2b,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+v2c,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+v2d,holdout3-fact-continent,fact-zh,1,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+v2e,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+lora8,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+lora12,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+lora12-2ep,holdout3-fact-continent,fact-zh,0,0,七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+base,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+v1,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+v2,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+v2b,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+v2c,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+v2d,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+v2e,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+lora8,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+lora12,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+lora12-2ep,holdout3-fact-sun-direction,fact-zh,1,1,太阳从东方升起；全对（base 复读但核心对）
+base,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+v1,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+v2,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+v2b,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+v2c,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+v2d,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+v2e,holdout3-fact-skin,fact-zh,1,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+lora8,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+lora12,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+lora12-2ep,holdout3-fact-skin,fact-zh,0,0,运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+base,holdout3-fact-lightspeed,fact-zh,0,0,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+v1,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+v2,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+v2b,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+v2c,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+v2d,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+v2e,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+lora8,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+lora12,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+lora12-2ep,holdout3-fact-lightspeed,fact-zh,0,1,"299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）"
+base,holdout3-fact-everest-en,fact-en,0,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+v1,holdout3-fact-everest-en,fact-en,1,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+v2,holdout3-fact-everest-en,fact-en,1,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+v2b,holdout3-fact-everest-en,fact-en,1,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+v2c,holdout3-fact-everest-en,fact-en,0,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+v2d,holdout3-fact-everest-en,fact-en,1,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+v2e,holdout3-fact-everest-en,fact-en,1,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+lora8,holdout3-fact-everest-en,fact-en,0,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+lora12,holdout3-fact-everest-en,fact-en,0,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+lora12-2ep,holdout3-fact-everest-en,fact-en,0,0,吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+base,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+v1,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+v2,holdout3-fact-jupiter,fact-en,1,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+v2b,holdout3-fact-jupiter,fact-en,1,1,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+v2c,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+v2d,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+v2e,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+lora8,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+lora12,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+lora12-2ep,holdout3-fact-jupiter,fact-en,0,0,木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+base,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+v1,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+v2,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+v2b,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+v2c,holdout3-fact-hours,fact-en,1,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+v2d,holdout3-fact-hours,fact-en,1,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+v2e,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+lora8,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+lora12,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+lora12-2ep,holdout3-fact-hours,fact-en,0,0,一天 24 小时；全员错/拒答（5/8/2 小时）
+base,holdout3-fact-bees,fact-en,0,0,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+v1,holdout3-fact-bees,fact-en,0,0,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+v2,holdout3-fact-bees,fact-en,1,1,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+v2b,holdout3-fact-bees,fact-en,0,0,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+v2c,holdout3-fact-bees,fact-en,0,0,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+v2d,holdout3-fact-bees,fact-en,1,1,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+v2e,holdout3-fact-bees,fact-en,0,0,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+lora8,holdout3-fact-bees,fact-en,1,1,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+lora12,holdout3-fact-bees,fact-en,1,1,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+lora12-2ep,holdout3-fact-bees,fact-en,1,1,蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+base,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+v1,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+v2,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+v2b,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+v2c,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+v2d,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+v2e,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+lora8,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+lora12,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+lora12-2ep,holdout3-fact-mars,fact-en,1,0,火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+base,holdout3-identity-intro,identity,0,0,base 乱码；其余 AI/助手/minimind 自我介绍
+v1,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+v2,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+v2b,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+v2c,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+v2d,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+v2e,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+lora8,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+lora12,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+lora12-2ep,holdout3-identity-intro,identity,1,1,base 乱码；其余 AI/助手/minimind 自我介绍
+base,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+v1,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+v2,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+v2b,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+v2c,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+v2d,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+v2e,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+lora8,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+lora12,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+lora12-2ep,holdout3-identity-robot,identity,1,1,全员以 AI/模型/助手身份回应
+base,holdout3-identity-lang,identity,0,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+v1,holdout3-identity-lang,identity,1,1,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+v2,holdout3-identity-lang,identity,1,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+v2b,holdout3-identity-lang,identity,0,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+v2c,holdout3-identity-lang,identity,1,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+v2d,holdout3-identity-lang,identity,0,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+v2e,holdout3-identity-lang,identity,1,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+lora8,holdout3-identity-lang,identity,0,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+lora12,holdout3-identity-lang,identity,0,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+lora12-2ep,holdout3-identity-lang,identity,0,0,仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+base,holdout3-explain-democracy,explain,0,0,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+v1,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+v2,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+v2b,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+v2c,holdout3-explain-democracy,explain,0,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+v2d,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+v2e,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+lora8,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+lora12,holdout3-explain-democracy,explain,0,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+lora12-2ep,holdout3-explain-democracy,explain,1,1,base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+base,holdout3-explain-evaporation,explain,1,1,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+v1,holdout3-explain-evaporation,explain,1,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+v2,holdout3-explain-evaporation,explain,1,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+v2b,holdout3-explain-evaporation,explain,1,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+v2c,holdout3-explain-evaporation,explain,1,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+v2d,holdout3-explain-evaporation,explain,1,1,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+v2e,holdout3-explain-evaporation,explain,1,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+lora8,holdout3-explain-evaporation,explain,1,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+lora12,holdout3-explain-evaporation,explain,0,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+lora12-2ep,holdout3-explain-evaporation,explain,0,0,base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+base,holdout3-explain-shadow,explain,0,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+v1,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+v2,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+v2b,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+v2c,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+v2d,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+v2e,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+lora8,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+lora12,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+lora12-2ep,holdout3-explain-shadow,explain,1,0,影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+base,holdout3-summary-metro,summary,0,0,base 乱码；其余含地铁/机场/线路
+v1,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+v2,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+v2b,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+v2c,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+v2d,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+v2e,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+lora8,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+lora12,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+lora12-2ep,holdout3-summary-metro,summary,1,1,base 乱码；其余含地铁/机场/线路
+base,holdout3-summary-restaurant,summary,0,0,base 乱码；其余含餐厅/最佳/奖
+v1,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+v2,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+v2b,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+v2c,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+v2d,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+v2e,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+lora8,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+lora12,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+lora12-2ep,holdout3-summary-restaurant,summary,1,1,base 乱码；其余含餐厅/最佳/奖
+base,holdout3-summary-rain-warning,summary,1,0,base 回声输入句（audit 已记 FP）；其余正确
+v1,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+v2,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+v2b,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+v2c,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+v2d,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+v2e,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+lora8,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+lora12,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+lora12-2ep,holdout3-summary-rain-warning,summary,1,1,base 回声输入句（audit 已记 FP）；其余正确
+base,holdout3-format-seasons,format,0,0,base “星期三”；其余四季
+v1,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+v2,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+v2b,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+v2c,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+v2d,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+v2e,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+lora8,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+lora12,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+lora12-2ep,holdout3-format-seasons,format,1,1,base “星期三”；其余四季
+base,holdout3-format-transport,format,0,0,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+v1,holdout3-format-transport,format,1,0,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+v2,holdout3-format-transport,format,1,0,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+v2b,holdout3-format-transport,format,1,0,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+v2c,holdout3-format-transport,format,1,0,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+v2d,holdout3-format-transport,format,1,0,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+v2e,holdout3-format-transport,format,1,1,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+lora8,holdout3-format-transport,format,1,1,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+lora12,holdout3-format-transport,format,1,1,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+lora12-2ep,holdout3-format-transport,format,1,1,base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+base,holdout3-format-pets,format,0,0,base “饲养员”；其余猫/狗/鱼等三种
+v1,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+v2,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+v2b,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+v2c,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+v2d,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+v2e,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+lora8,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+lora12,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+lora12-2ep,holdout3-format-pets,format,1,1,base “饲养员”；其余猫/狗/鱼等三种
+base,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+v1,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+v2,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+v2b,holdout3-code-parity,code,0,0,base~lora 均正确 is_even；v2b 只给步骤无代码
+v2c,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+v2d,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+v2e,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+lora8,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+lora12,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+lora12-2ep,holdout3-code-parity,code,1,1,base~lora 均正确 is_even；v2b 只给步骤无代码
+base,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+v1,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+v2,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+v2b,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+v2c,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+v2d,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+v2e,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+lora8,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+lora12,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+lora12-2ep,holdout3-code-swap,code,1,0,"全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）"
+base,holdout3-code-loop,code,1,0,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+v1,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+v2,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+v2b,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+v2c,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+v2d,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+v2e,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+lora8,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+lora12,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+lora12-2ep,holdout3-code-loop,code,1,1,"base 打印 100 遍 Hello, world!；其余 for+range+print 正确"
+base,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+v1,holdout3-reason-phone,reason,1,1,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+v2,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+v2b,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+v2c,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+v2d,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+v2e,holdout3-reason-phone,reason,1,1,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+lora8,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+lora12,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+lora12-2ep,holdout3-reason-phone,reason,0,0,v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+base,holdout3-reason-late,reason,0,0,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+v1,holdout3-reason-late,reason,1,1,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+v2,holdout3-reason-late,reason,0,0,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+v2b,holdout3-reason-late,reason,1,0,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+v2c,holdout3-reason-late,reason,1,1,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+v2d,holdout3-reason-late,reason,1,1,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+v2e,holdout3-reason-late,reason,1,1,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+lora8,holdout3-reason-late,reason,0,0,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+lora12,holdout3-reason-late,reason,1,1,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+lora12-2ep,holdout3-reason-late,reason,1,1,v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+base,holdout3-reason-slow,reason,0,0,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+v1,holdout3-reason-slow,reason,0,0,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+v2,holdout3-reason-slow,reason,1,1,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+v2b,holdout3-reason-slow,reason,1,0,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+v2c,holdout3-reason-slow,reason,1,1,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+v2d,holdout3-reason-slow,reason,1,1,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+v2e,holdout3-reason-slow,reason,1,1,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+lora8,holdout3-reason-slow,reason,1,1,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+lora12,holdout3-reason-slow,reason,0,0,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+lora12-2ep,holdout3-reason-slow,reason,1,1,v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+base,holdout3-zhflu-duanwu,fluency-zh,1,1,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+v1,holdout3-zhflu-duanwu,fluency-zh,1,1,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+v2,holdout3-zhflu-duanwu,fluency-zh,1,1,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+v2b,holdout3-zhflu-duanwu,fluency-zh,1,0,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+v2c,holdout3-zhflu-duanwu,fluency-zh,1,0,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+v2d,holdout3-zhflu-duanwu,fluency-zh,1,0,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+v2e,holdout3-zhflu-duanwu,fluency-zh,1,1,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+lora8,holdout3-zhflu-duanwu,fluency-zh,1,0,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+lora12,holdout3-zhflu-duanwu,fluency-zh,1,0,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+lora12-2ep,holdout3-zhflu-duanwu,fluency-zh,1,0,base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+base,holdout3-zhflu-summer,fluency-zh,0,0,base 复读“夏天”；其余炎热/季节/游泳等
+v1,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+v2,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+v2b,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+v2c,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+v2d,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+v2e,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+lora8,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+lora12,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+lora12-2ep,holdout3-zhflu-summer,fluency-zh,1,1,base 复读“夏天”；其余炎热/季节/游泳等
+base,holdout3-zhflu-xian,fluency-zh,0,0,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+v1,holdout3-zhflu-xian,fluency-zh,1,1,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+v2,holdout3-zhflu-xian,fluency-zh,1,1,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+v2b,holdout3-zhflu-xian,fluency-zh,1,1,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+v2c,holdout3-zhflu-xian,fluency-zh,1,1,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+v2d,holdout3-zhflu-xian,fluency-zh,1,1,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+v2e,holdout3-zhflu-xian,fluency-zh,1,1,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+lora8,holdout3-zhflu-xian,fluency-zh,1,0,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+lora12,holdout3-zhflu-xian,fluency-zh,1,0,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+lora12-2ep,holdout3-zhflu-xian,fluency-zh,1,0,base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+base,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+v1,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+v2,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+v2b,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+v2c,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+v2d,holdout3-enflu-birds,fluency-en,1,1,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+v2e,holdout3-enflu-birds,fluency-en,1,1,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+lora8,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+lora12,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+lora12-2ep,holdout3-enflu-birds,fluency-en,1,0,base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+base,holdout3-enflu-morning,fluency-en,1,0,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+v1,holdout3-enflu-morning,fluency-en,1,1,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+v2,holdout3-enflu-morning,fluency-en,1,0,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+v2b,holdout3-enflu-morning,fluency-en,1,1,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+v2c,holdout3-enflu-morning,fluency-en,1,1,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+v2d,holdout3-enflu-morning,fluency-en,1,1,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+v2e,holdout3-enflu-morning,fluency-en,1,1,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+lora8,holdout3-enflu-morning,fluency-en,1,0,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+lora12,holdout3-enflu-morning,fluency-en,1,0,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+lora12-2ep,holdout3-enflu-morning,fluency-en,1,0,base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+base,holdout3-enflu-horses,fluency-en,0,0,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+v1,holdout3-enflu-horses,fluency-en,1,1,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+v2,holdout3-enflu-horses,fluency-en,1,0,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+v2b,holdout3-enflu-horses,fluency-en,1,0,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+v2c,holdout3-enflu-horses,fluency-en,1,1,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+v2d,holdout3-enflu-horses,fluency-en,1,1,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+v2e,holdout3-enflu-horses,fluency-en,1,1,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+lora8,holdout3-enflu-horses,fluency-en,1,0,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+lora12,holdout3-enflu-horses,fluency-en,1,0,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答
+lora12-2ep,holdout3-enflu-horses,fluency-en,1,0,v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答

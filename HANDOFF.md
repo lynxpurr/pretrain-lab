@@ -21,7 +21,7 @@
 
 ## 1. 状态一段话
 
-**10 天计划于 2026-11-20 提前 7 天完成（实际 8 天）**：本地 5070 Ti 16GB 上从零训出 137,847,552 参数中英小模型（3B token 预训练 → 250M token SFT ×6 版 → LoRA ×3（r8/r12/r12-2ep）→ GGUF/Ollama demo），产出 = 经验 + 模型 + 报告 + demo。**部署 = `pretrain-lab-sft-v2e-q8`**（Q8_0 173MB；F16 326MB 可选；Q4_K_M 不保真）。**收官后复核（Day 11）修正了三处表述**：①dev 去重有 2 题残留（v2e 是"部分干净"，干净子集 15/16）；②去重检查器曾假阴性（已修 + 自带自测）；③holdout 初版 3 题近重复（换题重跑 v2）。**最终诚实结论（Day 12 升级）：dev 集 v2e 最优；holdout 90 题（v3 扩容 + 人工校准）v2e 53/90 显著优于 v2 47/90（+6 达预注册阈值——30 题时代"持平"系欠功效）；数学/翻译的修复不泛化（能力块 0~3/14、0~5/14），calibration 是唯一稳定泛化项（v2 数据系 5~6/6）。**
+**10 天计划于 2026-11-20 提前 7 天完成（约 60 小时墙钟：11-18 08:08 → 11-20 20:10）**：本地 5070 Ti 16GB 上从零训出 137,847,552 参数中英小模型（3B token 预训练 → 250M token SFT ×6 版 → LoRA ×3（r8/r12/r12-2ep）→ GGUF/Ollama demo），产出 = 经验 + 模型 + 报告 + demo。**部署 = `pretrain-lab-sft-v2e-q8`**（Q8_0 173MB；F16 326MB 可选；Q4_K_M 不保真）。**收官后复核（Day 11）修正了三处表述**：①dev 去重有 2 题残留（v2e 是"部分干净"，干净子集 15/16）；②去重检查器曾假阴性（已修 + 自带自测）；③holdout 初版 3 题近重复（换题重跑 v2）。**最终诚实结论（Day 12 升级；发布前 Phase 2 再修正）：dev 集 v2e 最优；holdout 90 题 audit v2e 53 vs v2 47（+6），2026-11-21 逐题重判 v2e 52 vs v2 45（+7）——达到预注册阈值，但 McNemar p=0.0923 不显著、CI 下界≈0，且增量集中在英文流畅度（不是数学/翻译/calibration）；数学/翻译的修复不泛化（能力块 0~3/14、0~5/14），calibration 是唯一稳定泛化项（v2 数据系 5~6/6）。**
 
 **当前手里有什么（都能直接跑）**：
 - **底座**：`out/main140m/last.pt`（137,847,552 参数 · 3B token · **val 2.7709** · sha `0c0096cc172e8a58`）+ 46 个等间隔 ckpt 谱系（≈73GB）
@@ -38,15 +38,15 @@
 - **脚本**：`tools/{model,train,sft,eval,check_eval_leak,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app,plot_loss}.py`
 - **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（0.0134 / 0.0051 双证据）
 
-**阶段结论（简版）**：Day 7 v2 = 校准/翻译/格式修好但数学回归；Day 8 v2c = 选择性保护 + en-fluency 首修；机动 v2d = 复读修复最有效（rep-4 0.084）；v2e = 去污 + 精确指令对 + math×2 → dev 判据字面全过、rep-4 0.055；最终阶段 = Q4 量化吃掉弱记忆 → 部署 Q8；Day 10 = 八版终表 + bit-for-bit 复现 + LoRA r12 + demo T0.3；**Day 11 = 去重假阴性修复 + holdout v2（v2e 与 v2 同 23/30）；Day 12 = holdout 扩容 90 题 + LoRA 2ep + 分语言 val（v2e 校准分 +6 显著 / epochs 与 rank 单独加码都不够 / 英文上采样无稀释）**。
+**阶段结论（简版）**：Day 7 v2 = 校准/翻译/格式修好但数学回归；Day 8 v2c = 选择性保护 + en-fluency 首修；机动 v2d = 复读修复最有效（rep-4 0.084）；v2e = 去污 + 精确指令对 + math×2 → dev 判据字面全过、rep-4 0.055；最终阶段 = Q4 量化吃掉弱记忆 → 部署 Q8；Day 10 = 八版终表 + bit-for-bit 复现 + LoRA r12 + demo T0.3；**Day 11 = 去重假阴性修复 + holdout v2（v2e 与 v2 同 23/30）；Day 12 = holdout 扩容 90 题 + LoRA 2ep + 分语言 val（v2e audit +6 / 重判 +7，但 McNemar p=0.092 不显著、增量集中在英文流畅度 / epochs 与 rank 单独加码都不够 / 英文上采样无稀释）**。
 
 ## 1.1 公开发布阶段（2026-11-21 起）
 
 - spec = [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)（用户 2026-11-21 拍板"对外发布"）。
 - **Phase 1 完成**：Apache-2.0/CC-BY-4.0/NOTICE/CITATION/CHANGELOG · 英文 README + 中文 README + `docs/` 五件 · requirements + `scripts/` · v2e HF fp16（137,847,552 参数 / 262.9 MiB / greedy 30/30 与 PyTorch 一致）· 独立 Q8_0 GGUF（174 MB / sha `8b64b668…` / Ollama 输出与部署 tag 逐字一致）· 轻量 CI 四项全过。证据 [`reports/2026-11-21-release-model-export.md`](reports/2026-11-21-release-model-export.md) · LAB_NOTEBOOK Release Phase 1 段。
-- **Phase 2 待执行**：900 格人工标签 CSV + `tools/score_manual.py` · McNemar/bootstrap CI · 独立复核 30~50 题（kappa）· 90 题旧 30/新 60 + per-tag 分拆 · v2f 决策（重训会动 +6，不阻塞 v1.0）。
+- **Phase 2 部分完成（2026-11-21）**：900 格逐题标签已落盘（`reports/2026-11-21-holdout-v3-manual-labels.csv`）· 复算 + McNemar：v2e 52 vs v2 45（+7）· **p=0.0923（不显著；bootstrap 95% CI [0,0.156]）** · 分 tag：fluency-en +5、reason +2，数学 −1、翻译/calibration 持平；**对外措辞已降级为"达到预注册阈值、统计上不显著"**。剩余：独立复核 30~50 题（kappa）· v2f 决策。
 - **Phase 3 待用户确认**：HF Hub 仓库 / GitHub Release / 长文；**目前未做任何公网推送或上传**。README 中的 HF 仓库名是目标名，尚未创建。
-- 新会话若继续发布：先读 spec §4 Phase 2 AC10~AC14，再按 §5 措辞红线（+6 未做 McNemar 前不得写"统计显著"；时间写约 60 小时，不写"8 天"）。
+- 新会话若继续发布：先读 spec §4 Phase 2 AC10~AC14，再按 §5 措辞红线（McNemar 已做：p=0.0923 不显著；只能写"达到预注册阈值、统计上不显著"；时间写约 60 小时，不写"8 天"）。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -151,7 +151,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | **Day 10（实际 11-20）** | ✅ 完成（终检 T4 五项） |
 | **Day 11（11-20 收官后复核）** | ✅ 完成（去重假阴性 + holdout v2） |
 | **Day 12（11-21 收官后深化）** | ✅ 完成（§7 项 1/2/3：holdout 90 题 + LoRA 2ep + 分语言 val） |
-| **公开发布 Phase 1（11-21）** | ✅ 完成（License/README/docs/模型导出/CI；Phase 2/3 待执行） |
+| **公开发布 Phase 1/2（11-21）** | ✅ Phase 1 完成；⚠️ Phase 2 部分完成（标签 + McNemar p=0.0923；独立复核/v2f 待） |
 
 **关键路径（终版）**：Day 3 框架+门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② ✅ → Day 7 v2/v2b + LoRA + 部署 ✅ → Day 8 v2c + 六版评测 ✅ → 机动 v2d/v2e ✅ → 最终阶段 v2e-q8 ✅ → **Day 10 终检 ✅ → Day 11 复核 ✅**。原缓冲（11-22~25 + Day 9）全部未用——8 天完成 10 天计划。
 
@@ -181,7 +181,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 
 ## 7.1 公开发布（2026-11-21 起，新 spec）
 
-- 状态：**Phase 1 ✅**；Phase 2 待执行；Phase 3 待用户确认（**未做公网上传**）。
+- 状态：**Phase 1 ✅**；**Phase 2 部分完成**（900 格标签 + McNemar p=0.0923 不显著；独立复核/v2f 待执行）；Phase 3 待用户确认（**未做公网上传**）。
 - 详见 §1.1 与 [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)。
 
 ## 8. 参考实现与出处

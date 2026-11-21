@@ -1,0 +1,91 @@
+# question_id	base	v1	v2	v2b	v2c	v2d	v2e	lora8	lora12	lora12-2ep	note
+holdout-fact-ocean	1	1	1	1	1	1	1	1	1	1	正确（太平洋）；base 有复读但核心正确
+holdout-fact-moon-count	0	0	0	0	0	0	0	0	0	0	数量错误（4/8/79 颗）或回声；月球只在错误计数里出现
+holdout-fact-area	0	0	0	0	0	0	0	0	0	0	全错（埃及/非洲/印度/亚洲）
+holdout-fact-canada	0	1	1	1	1	1	1	1	1	1	base 回声；其余 Ottawa 正确（v1 有多余错误细节但不影响所问）
+holdout-fact-ocean-en	0	1	1	1	1	1	1	1	1	1	base 回声；其余 Pacific 正确（复读容忍）
+holdout-math-add2	0	0	0	0	0	0	0	0	0	0	全错（13/18/19）
+holdout-math-mul2	0	0	0	0	0	0	0	0	0	0	全错（35/56/50/40/45）
+holdout-math-sub	0	0	0	0	0	0	0	0	0	0	全错（37）
+holdout-identity-self	0	1	1	1	1	1	1	1	1	1	base 跑题；其余含 AI/助手/minimind
+holdout-identity-dev	0	1	1	1	1	1	1	1	1	1	base 回声；其余 jingyaogong/minimind
+holdout-explain-ai	1	1	1	1	1	1	1	1	1	1	引力=物质相互吸引；复读容忍
+holdout-explain-photo	0	1	0	0	0	0	0	0	1	0	细胞呼吸核心=释放能量；v1/lora12 提到能量代谢，其余循环/复读
+holdout-trans-zh2en-hometown	0	1	1	1	1	1	1	1	0	0	base 错；lora12/2ep 复读模板，核心虽对但判复读垃圾
+holdout-trans-en2zh-weather	0	1	1	0	0	0	1	0	0	1	v1/v2/v2e/2ep 语义正确（阳光明媚=天气好）；其余回声英文
+holdout-trans-en2zh-knowledge	0	1	0	0	0	0	0	0	0	0	v1 知识是力量；其余回声或只译“知识”漏“就是力量”
+holdout-summary-watch	0	1	1	1	1	1	1	1	1	1	base 乱码；其余含手表/心率/续航
+holdout-summary-library	0	1	1	1	1	1	1	1	1	1	base 回声输入句；其余正确
+holdout-format-env	0	0	1	1	1	1	1	1	1	1	base 6 条、v1 多条（未守“三个”）；其余恰好 3 条
+holdout-format-fruit	0	1	1	1	1	1	1	1	1	1	base 乱码；其余三种水果正确
+holdout-code-max	0	1	0	0	0	0	0	0	0	0	仅 v1 正确返回较大值；其余返回 max+min/错误分支/递归错
+holdout-code-sum	1	1	1	1	1	1	1	1	1	0	仅 lora12-2ep 只加奇数，错；其余正确
+holdout-reason-keys	0	0	0	0	0	0	0	0	0	0	全员未给出开锁/家人/备用/房东/物业等有效建议
+holdout-reason-cold	0	1	1	1	1	1	1	1	1	1	base 表格乱码；其余含保暖/羽绒/厚衣等有效建议
+holdout-zhflu-shanghai	0	1	1	1	1	1	1	1	1	1	base 复读自我介绍；其余成都介绍含四川/美食/景点
+holdout-zhflu-winter	0	1	1	1	1	1	1	1	1	1	base 复读问候；其余冬季/寒冷/雪等（v2d 讲季节机制，语义可）
+holdout-enflu-moon	0	0	0	1	1	1	1	0	0	0	base 回声、v1/v2 拒答模板、lora 元话语；v2b~v2e 为连贯英文段落
+holdout-enflu-cat	0	1	0	1	0	0	1	1	1	1	v1/v2b/v2e/lora 连贯且切题；v2/v2c/v2d 说猫是 dog，事实错
+holdout-calib-olympics	0	0	1	1	0	1	1	0	0	1	v2/v2b/v2d/v2e/2ep 拒绝给城市；v2c 编“2030”，lora 编北京
+holdout-calib-winter	0	0	1	0	0	1	1	0	0	0	v2/v2d/v2e 拒绝；v2b/v2c 前提错误+编中国；lora 编北京
+holdout-calib-ballon	0	1	1	1	1	1	1	0	0	0	v1/v2 系拒绝；lora8 李·李、lora12 Robert Frost、2ep 先拒后编
+holdout3-math-mul-commute	0	0	0	0	0	0	0	0	0	0	3×13=39；全错（35/13/56/63/378/3/21）
+holdout3-math-mul-4x15	0	0	1	0	0	0	0	0	1	0	4×15=60；仅 v2/lora12 对
+holdout3-math-mul-23x5	0	0	0	0	0	0	0	0	0	0	23×5=115；全错（45/23/56/40）
+holdout3-math-add-34-28	0	0	0	0	0	0	0	0	0	0	34+28=62；全错（31/55/46/56/42）
+holdout3-math-sub-50-18	0	0	0	0	0	0	0	0	0	0	50−18=32；全错（10/18/42/6/45）
+holdout3-math-multi-1	0	0	0	0	0	0	0	0	0	0	(5+4)×2=18；全错（9/12/20/10）
+holdout3-math-multi-2	0	0	0	0	0	0	0	1	0	0	12−5+3=10；仅 lora8 对；lora12 终答 8
+holdout3-math-multi-3	0	0	0	0	0	0	0	0	0	0	20−8+6=18；全错（24/36/12/30/21/10）
+holdout3-math-repeat-add	0	1	0	0	0	0	0	0	1	1	3×5=15；v1/lora12/2ep 对；其余 6/10/8/7
+holdout3-math-en	0	0	0	0	0	1	1	0	0	0	9+6=15；仅 v2d/v2e 直答对；v1 推理乱、v2b 终答 0
+holdout3-math-word	1	0	1	1	1	1	0	1	1	1	12−5=7；v1 回声、v2e 答 5；其余对（base 也答 7）
+holdout3-trans-en2zh-dogs	0	0	0	0	0	0	0	0	0	0	除 v2 日语狗/v2d 部分“狗是宠物”外多为回声；均未译出“忠诚”
+holdout3-trans-en2zh-time	0	0	0	0	0	0	0	0	0	0	全未译出“时间就是金钱”；lora12/2ep 只译“时间”漏“金钱”
+holdout3-trans-en2zh-books	0	0	0	0	0	0	0	0	0	0	全回声英文；v1 只译“阅读书籍”漏“晚上”
+holdout3-trans-en2zh-meeting	0	0	0	0	0	0	0	0	0	0	全回声英文/乱码；v2d 甚至译成“早起的鸟儿在飞”
+holdout3-trans-en2zh-idiom	0	0	0	0	0	0	0	0	0	0	全未译出“熟能生巧”
+holdout3-trans-en2zh-life	0	0	0	0	0	0	0	0	0	0	全回声英文/拼音乱码
+holdout3-trans-zh2en-learning	0	0	1	1	1	1	1	1	1	1	v1 未给出译文；其余 I'm learning/studying Chinese 正确
+holdout3-trans-zh2en-wait	0	0	0	0	0	0	0	0	0	0	全员“Please provide the text”，把指令当请求（audit 已记）
+holdout3-trans-zh2en-hard	0	0	0	0	0	0	0	0	0	0	今天非常冷→全员 hot（先验反扑）；v2e 元话语
+holdout3-trans-zh2en-book	0	1	1	1	1	1	1	1	0	1	这本书很有趣；lora12 译成 story（book→story）判 0；其余正确
+holdout3-trans-zh2en-music	0	1	1	0	0	1	1	1	1	1	base 回声、v2b 只回声题干、v2c 元解释；其余 I like listening to music
+holdout3-calib-wc2046	0	1	1	1	1	1	1	1	0	1	v1 承认无官方记录；v2 系拒绝（含前提错“没有世界杯”）；lora12 编巴西夺冠
+holdout3-calib-olympics2044	0	0	1	1	1	1	1	0	0	1	v1 编圣托里尼、lora 编北京；v2 系拒绝（前提错但未编城市）；2ep 拒绝
+holdout3-calib-nobel2045	0	0	1	0	0	1	1	0	0	0	v1 编托马斯·阿奎那、v2b 列候选人、v2c 编 1960、lora 编人名；v2/v2d/v2e 拒绝
+holdout3-fact-mountain	1	1	1	1	1	1	1	1	1	1	月亮不会自己发光/反射太阳；全对（含 base 复读但核心对）
+holdout3-fact-boil	0	1	0	1	0	0	1	1	1	1	水 100°C 沸腾；v2 只说 0~100、v2c/v2d 说 0.5°C；其余终答 100
+holdout3-fact-continent	0	0	0	0	0	0	0	0	0	0	七大洲；全员说 8/30/70% 陆地（v2 的 7 来自 70%，audit 已记假阳）
+holdout3-fact-sun-direction	1	1	1	1	1	1	1	1	1	1	太阳从东方升起；全对（base 复读但核心对）
+holdout3-fact-skin	0	0	0	0	0	0	0	0	0	0	运输氧气的细胞=红细胞；v2e 主体答血红蛋白（“红细胞”只是路过，audit 已记）
+holdout3-fact-lightspeed	0	1	1	1	1	1	1	1	1	1	299,792（km/s 或 m/s）正确；base 回声；关键词全灭是数字写法 FN（audit 已记）
+holdout3-fact-everest-en	0	0	0	0	0	0	0	0	0	0	吉他 6 弦；全员答长度（6.5 inches 的 6 是假阳）或 8/12 弦
+holdout3-fact-jupiter	0	0	0	1	0	0	0	0	0	0	木星；仅 v2b 对，其余答地球/太阳/海王星/天王星
+holdout3-fact-hours	0	0	0	0	0	0	0	0	0	0	一天 24 小时；全员错/拒答（5/8/2 小时）
+holdout3-fact-bees	0	0	1	0	0	1	0	1	1	1	蜜蜂产蜂蜜；v2/v2d/lora 提到 honey，其余只讲授粉/生态
+holdout3-fact-mars	0	0	0	0	0	0	0	0	0	0	火星红=氧化铁/尘；全员复读 red planet 或编水汽/二氧化碳/red giant（audit 已记）
+holdout3-identity-intro	0	1	1	1	1	1	1	1	1	1	base 乱码；其余 AI/助手/minimind 自我介绍
+holdout3-identity-robot	1	1	1	1	1	1	1	1	1	1	全员以 AI/模型/助手身份回应
+holdout3-identity-lang	0	1	0	0	0	0	0	0	0	0	仅 v1 正确答中文+英文；v2/v2c/v2e 夸大十几种语言，其余跑题
+holdout3-explain-democracy	0	1	1	1	1	1	1	1	1	1	base 乱码；其余含选举/公民参与（v2c 语义对但关键词漏，audit 已记 FN）
+holdout3-explain-evaporation	1	0	0	0	0	1	0	0	0	0	base 水→水蒸气、v2d 液体→气体；其余说固态→气态/凝结/含糊
+holdout3-explain-shadow	0	0	0	0	0	0	0	0	0	0	影子=光被挡；全员说反射/折射/空间限制/复读（K 高但语义错）
+holdout3-summary-metro	0	1	1	1	1	1	1	1	1	1	base 乱码；其余含地铁/机场/线路
+holdout3-summary-restaurant	0	1	1	1	1	1	1	1	1	1	base 乱码；其余含餐厅/最佳/奖
+holdout3-summary-rain-warning	0	1	1	1	1	1	1	1	1	1	base 回声输入句（audit 已记 FP）；其余正确
+holdout3-format-seasons	0	1	1	1	1	1	1	1	1	1	base “星期三”；其余四季
+holdout3-format-transport	0	0	0	0	0	0	1	1	1	1	base 只重复 ship；v1~v2d 卡在第一种交通工具复读；v2e/lora 三种
+holdout3-format-pets	0	1	1	1	1	1	1	1	1	1	base “饲养员”；其余猫/狗/鱼等三种
+holdout3-code-parity	1	1	1	0	1	1	1	1	1	1	base~lora 均正确 is_even；v2b 只给步骤无代码
+holdout3-code-swap	0	0	0	0	0	0	0	0	0	0	全员 zip/numpy/加法瞎编，无 a,b=b,a（audit 已记 10/10 假阳）
+holdout3-code-loop	0	1	1	1	1	1	1	1	1	1	base 打印 100 遍 Hello, world!；其余 for+range+print 正确
+holdout3-reason-phone	0	1	0	0	0	0	1	0	0	0	v1 提充电器、v2e 提充电宝/备用电池；其余检查电源线/客服/复读
+holdout3-reason-late	0	1	0	0	1	1	1	0	1	1	v1/v2c/v2d/v2e/lora12/2ep 提告知原因；v2/v2b/lora8 只讲提前准备
+holdout3-reason-slow	0	0	1	0	1	1	1	1	0	1	v2/v2c/v2d/v2e/lora8/2ep 提内存/清理/关软件；v1 讲优化代码
+holdout3-zhflu-duanwu	1	1	1	0	0	0	1	0	0	0	base/v1/v2/v2e 含重阳/登高/九月；v2b/v2d 复读，v2c 循环，lora 日期错
+holdout3-zhflu-summer	0	1	1	1	1	1	1	1	1	1	base 复读“夏天”；其余炎热/季节/游泳等
+holdout3-zhflu-xian	0	1	1	1	1	1	1	0	0	0	base 复读；v1~v2e 含陕西/兵马俑/历史；lora 说“中国首都/华北平原”错
+holdout3-enflu-birds	0	0	0	0	0	1	1	0	0	0	base 回声、v1/v2/v2b/v2c 问 clarification、lora 拒答；v2d/v2e 连贯介绍
+holdout3-enflu-morning	0	1	0	1	1	1	1	0	0	0	base 回声、v2 复读 hope、lora 说“太阳最高点”错；v1/v2b~v2e 连贯
+holdout3-enflu-horses	0	1	0	0	1	1	1	0	0	0	v1/v2c/v2d/v2e 连贯介绍；v2/v2b 问 clarification，lora 拒答

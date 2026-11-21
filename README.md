@@ -69,6 +69,10 @@ The dev set is for iteration; the 90-question holdout is for acceptance.
 | SFT v2e (deployed) | **17/18**\* | **53/90** | **0.138** | \*2 known residues; clean subset **15/16** |
 | LoRA r=12, 2 epochs | 15/18 | 48/90 | 0.283 | not deployed |
 
+> Manual scores in the table are the original audit. A 2026-11-21 per-item
+> re-judgment gives v2e **52** vs v2 **45** (+7); the paired McNemar test is
+> **p = 0.0923** (not significant at 0.05). See §6 of the evaluation doc.
+
 **Capability blocks (14 math / 14 translation / 6 calibration):**
 
 | Block | Best result | Verdict |
@@ -77,11 +81,15 @@ The dev set is for iteration; the 90-question holdout is for acceptance.
 | Translation | 0–5 / 14 | ✗ sentence-pattern level, **not general translation** (zh→en simple sentences work; en→zh mostly fails) |
 | Calibration | 5–6 / 6 | ✓ the only stable generalization (v2-family refuses to invent future facts) |
 
-v2e vs v2 on the 90-question manual score: **+6/90**, meeting the pre-registered
-threshold (≥5). The earlier 30-question "no difference" was underpowered.
-**Caveat**: the +6 is at the threshold and has not yet been given a McNemar
-p-value; see [`docs/evaluation.md`](docs/evaluation.md) for the exact wording
-and limitations. Do not read it as a large or production-grade improvement.
+v2e vs v2 on the 90-question manual score: the original audit is **+6/90**
+(53 vs 47); a 2026-11-21 per-item re-judgment is **+7/90** (52 vs 45). Both
+meet the pre-registered threshold (≥5). **However, the paired McNemar test is
+not significant at 0.05**: p = 0.0923, bootstrap 95% CI [0.000, 0.156]
+(lower bound ≈0). The advantage is concentrated in English fluency
+(v2e 5/5 vs v2 0/5), not math/translation/calibration (tied or slightly
+worse). Read it as "directionally better, threshold met, not statistically
+established". The earlier 30-question "no difference" was underpowered.
+See [`docs/evaluation.md`](docs/evaluation.md).
 
 ## What it can't do
 
