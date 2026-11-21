@@ -24,7 +24,7 @@ datasets:
 
 A Chinese–English decoder-only language model **trained from random
 initialization**: 137,847,552 parameters, 3B-token pre-training, 250M-token
-SFT, trained on a single RTX 5070 Ti 16 GB GPU in about 60 wall-clock hours.
+SFT, trained on a single RTX 5070 Ti 16 GB GPU.
 This is a learning/research artifact, **not** a production model and **not**
 a competitor to modern open models.
 

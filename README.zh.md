@@ -1,6 +1,6 @@
 # pretrain-lab
 
-**一张 16GB 显卡、约 60 小时，从零训一个 137.8M 参数中英小模型——以及它做不到的事。**
+**一张 16GB 显卡，从零训一个 137.8M 参数中英小模型——以及它做不到的事。**
 
 这不是一个要和开源大模型竞争的模型，而是一次**完整、可复现的案例研究**：
 tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 部署，
@@ -11,7 +11,7 @@ tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 
 - **模型**：137,847,552 参数 · d_model 768 · 16 层 · 12 头 · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · 上下文 1024
 - **预训练**：3.0B token（英文 60% FineWeb-Edu / 中文 40% minimind）· 16h07m41s · val **2.7709**
 - **SFT**：250M token，assistant-only mask，六版 · 部署 **v2e**（val 1.6065，rep-4 **0.055**）
-- **硬件/时间**：单卡 RTX 5070 Ti 16GB · 2026-11-18 08:08 → 11-20 20:10，**约 60 小时墙钟**（含过夜训练）· 约 30 GPU 小时
+- **硬件**：单卡 RTX 5070 Ti 16GB · 全本地
 - **部署**：Q8_0 GGUF（174 MB）→ Ollama → 零依赖本地聊天页
 
 ## 快速开始

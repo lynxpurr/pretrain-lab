@@ -105,7 +105,7 @@ with the training template:
 
 Full pipeline: data download → tokenizer → 3B-token shards → pre-training →
 SFT → evaluation → GGUF. See [`reproduction.md`](reproduction.md).
-Budget: ~38 GB download, ~145 GB disk, ~30 GPU-hours, one 16 GB GPU.
+Budget: ~38 GB download, ~145 GB disk, one 16 GB GPU.
 
 ## Troubleshooting
 

@@ -65,8 +65,7 @@ or paraphrase training data; outputs are your responsibility.
 
 Inference: yes, via GGUF + llama.cpp/Ollama. It is a 140M model, so CPU
 generation is viable though slower than GPU. Training: not practically;
-the full pipeline assumes a CUDA GPU with ~12 GB peak memory and ~30
-GPU-hours.
+the full pipeline assumes a CUDA GPU with ~12 GB peak memory.
 
 ### Why Chinese and English? Why these datasets?
 
@@ -76,15 +75,6 @@ permissively licensed for this use. The 60/40 token mix was chosen to keep
 Chinese coverage while giving English enough volume to learn fluency.
 A language-split validation showed the English upsample did not dilute
 Chinese (±0.15% supervised PPL vs v2).
-
-### The README says "10 days" but also "~60 hours". Which is it?
-
-The original plan was 10 working days (2026-11-18 → 11-27). The work was
-actually completed between **2026-11-18 08:08 and 2026-11-20 20:10**, about
-60 wall-clock hours, because several "days" were run back-to-back and the
-16-hour pre-training ran overnight. The "10 days" is the plan unit; the
-60 hours is the elapsed time. The earlier "8 days" phrasing was inconsistent
-and has been removed.
 
 ### How was the evaluation contamination found?
 

@@ -243,7 +243,7 @@ Full export/verification evidence:
 | 3B shards | ~6 GB |
 | Pre-training checkpoints | ~73 GB (46 × 1.65 GB; optional) |
 | SFT checkpoints | ~1.65 GB per run |
-| Full pipeline wall-clock | ~30 GPU-hours (pre-training 16 h + SFT/LoRA/eval) |
+| Full pipeline compute | pre-training 16 h + SFT/LoRA/eval |
 
 If you only want to run the released model, skip sections 1–7 and use
 [`quickstart.md`](quickstart.md).

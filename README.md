@@ -12,7 +12,7 @@ and report the failures (math, translation) instead of hiding them.
 - **Model**: 137,847,552 params · d_model 768 · 16 layers · 12 heads · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · context 1024
 - **Pre-training**: 3.0B tokens (English 60% FineWeb-Edu / Chinese 40% minimind) · 16h07m41s · validation loss **2.7709**
 - **SFT**: 250M tokens, assistant-only mask, six variants · deployed **v2e** (val 1.6065, repetition-4 **0.055**)
-- **Hardware / time**: one RTX 5070 Ti 16GB · 2026-11-18 08:08 → 11-20 20:10, **~60 wall-clock hours** (including overnight training) · ~30 GPU-hours
+- **Hardware**: one RTX 5070 Ti 16GB · single-GPU, local
 - **Deployment**: Q8_0 GGUF (174 MB) → Ollama → zero-dependency local chat page
 
 ## Quick start
