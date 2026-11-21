@@ -53,3 +53,11 @@ reports/**/*.tmp
 
 # 本地 agent 配置/规程（私有，不随仓库发布）
 .zcode/
+
+# 内部过程记录（保留本地，不随公开仓库发布）
+/HANDOFF.md
+/PLAN.md
+/LAB_NOTEBOOK.md
+/docs/internal/
+/specs/
+/notes/

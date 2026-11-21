@@ -77,7 +77,7 @@ OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfi
 
 ## 7. 引用/出处
 
-- 底稿：项目内部规划笔记（未公开）；任务定义与逐日方案见 [PLAN.md](PLAN.md)（内部过程记录）。
+- 底稿：项目内部规划笔记（未公开，不随仓库发布）。
 - 参考实现：minimind @ `233d00f`、nanoGPT @ `3adf61e`（只读借鉴）
 - 全部训练/评测证据：`reports/2026-11-18-day*` ~ `reports/2026-11-21-*`（含 2026-11-21 holdout v3 / LoRA 2ep / langval）
 

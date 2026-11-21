@@ -193,8 +193,9 @@ Rules used in this project:
   --out reports/2026-11-21-langval.md
 ```
 
-The released `.pt` checkpoint is on Hugging Face alongside the HF/safetensors
-format. The GGUF path is for inference, not for `eval.py`.
+The release includes `last.pt` in the Hugging Face model repository for
+`eval.py`, alongside the HF/safetensors weights. The GGUF path is for
+inference, not for `eval.py`.
 
 ## 8. Adding a new evaluation set
 

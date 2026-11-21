@@ -12,7 +12,8 @@ bash scripts/download_model.sh
 ```
 
 This downloads the released Q8_0/F16 GGUF files and the Modelfile into
-`models/pretrain-lab-140m-sft-v2e-GGUF/`. If you built the model locally,
+`models/pretrain-lab-140m-sft-v2e-GGUF/`. It requires the `hf` CLI
+(`pip install -U huggingface_hub`). If you built the model locally,
 the file is `out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf` and the
 Modelfile is `out/Modelfile-sft-v2e`.
 

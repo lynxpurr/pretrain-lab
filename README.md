@@ -157,7 +157,6 @@ evaluation rows are byte-identical (18/18), and F16 GGUF matches PyTorch
 | `HISTORY.md` | Historical commit-message notes (day labels, preliminary claims) |
 
 | `MODEL_CARD.en.md` / `MODEL_CARD.md` | model card (English / Chinese) |
-| `HANDOFF.md`, `PLAN.md`, `LAB_NOTEBOOK.md` | internal process record — useful for context, **not** reader entry points |
 
 ## Implementation note
 

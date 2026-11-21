@@ -21,7 +21,7 @@ day. The plan dates shifted during the project; the work was executed on
 | `day-8: ... 去污后 0 撞车 / 干净` | The first checker had a `len(prompt) >= 8` false negative; the corrected checker and 90-question holdout are authoritative. See `reports/2026-11-20-eval-leak-recheck.md`. |
 | `day-1/0: 手写 model.py / A 手写为主` | Final public wording: **self-contained implementation, AI-assisted, human-verified**. See the Implementation note in README.md. |
 | `day-8/10: 部署切 v2 / v2e` | Deployment mentions are chronological; the final deployment is **v2e-q8** (since 2026-11-20). |
-| `init: 10 天计划 / NoteFlow / nl2fem / finetune-lab` | `day-N` is the original plan unit; the internal planning references are kept for provenance, not public entry points. |
+| `init: original plan / internal project references` | `day-N` is the original plan unit; internal planning references are kept for provenance, not public entry points. |
 
 ## What is not affected
 

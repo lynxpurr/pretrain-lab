@@ -26,8 +26,8 @@ The project follows a "evidence first" convention: every run has a summary
   control, local link check, and `compileall`.
 
 ### Changed
-- Reader-facing docs are separated from the internal process record
-  (`HANDOFF.md`, `PLAN.md`, `LAB_NOTEBOOK.md`).
+- Reader-facing docs are separated from the internal process record; the
+  process record is kept local and is not part of the public repository.
 - The local agent skill (`.zcode/skills/pretrain-lab/`) is untracked and
   gitignored; it remains a local-only private file. Git history is not
   rewritten, so the file is still visible in earlier commits.

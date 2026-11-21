@@ -3,7 +3,7 @@
 > 状态：**FINAL / 定稿**（2026-11-19 起稿 → 2026-11-20 终检完成；八版终表 + §5.1 评测污染章 + §10 复现走查 + LoRA r=12 容量对照均已回填；2026-11-21 追加 §12 收官后深化——holdout 90 题 / LoRA 2ep / 分语言 val）
 > 本报告面向"完整经历一次小模型全生命周期"的复盘叙事：设定 → 数据 → 预训练 → SFT 数据五轮迭代 → 评测 → LoRA 对比 → 部署 → 成本 → 经验。
 > 历史 commit 说明：早期 commit message 使用 `day-N` 并可能含初步结论；以本报告 §13 与 [HISTORY.md](HISTORY.md) 为准。
-> 证据链：`reports/`（每次 run 三分 = 摘要 md + 曲线 csv + 原始 log，只增不改）· 决策记录 = [PLAN.md](PLAN.md)（D-01~D-10）· 过程记录 = [LAB_NOTEBOOK.md](LAB_NOTEBOOK.md)。
+> 证据链：`reports/`（每次 run 三分 = 摘要 md + 曲线 csv + 原始 log，只增不改）。
 
 ## 0. 成绩单（TL;DR）
 
@@ -42,7 +42,7 @@
 - **目标**（学习导向）：从零训练（自包含实现）~140M 中英小模型（预训练 → SFT → LoRA 对比 → 部署 demo）+ 训练报告。产出 = 经验 + 模型 + 报告 + demo，**非对标开源质量**（140M/3B ≈ GPT-2 124M 水平：通顺、知识贫乏）。
 - **硬件**：RTX 5070 Ti 16GB（Blackwell sm_120）/ 96GB RAM / 2TB SSD，全本地执行（D-09）；云端备选仅当本地栈硬性失败。
 - **关键决策**（D-01~D-10，详见 PLAN §3）：140M 主模型 · decoder-only 现代配置 · 32k 中英 BPE · 3B token（≈21.8× 参数，Chinchilla 20× 附近）· 序列 1024 · uv 托管 venv（50 系必须 cu128）· 自建 SFT 循环（"项目结束后能脱稿复述整个训练循环"）。
-- **执行方式**：coding agent 陪跑 + 三份元文档（PLAN 决策 / HANDOFF 交接 / LAB_NOTEBOOK 记账）+ 每晚三道概念检验题。
+- **执行方式**：coding agent 陪跑 + 三份内部元文档（决策 / 交接 / 记账）+ 每晚三道概念检验题。
 
 ## 2. 数据与 tokenizer（2026-11-18）
 
@@ -303,7 +303,7 @@ SFT 数据的每轮"修复"都是按评测暴露的缺陷造的补充样本（`d
 
 **预算视角**：全程无云端费用；最大单笔 GPU 支出 = 主训练一夜。若重来一次，数据预下载 + 吞吐门仍是不可省的前置。
 
-## 9. 经验清单（Top 14，全文见 `notes/lessons.md` 跨日回顾）
+## 9. 经验清单（Top 14）
 
 1. 值域/锚定断言前置数据侧——O(秒) 检查抵 O(小时) 排查。
 2. 首步 loss ≈ ln(V) 是免费复现锚，容差随规模放宽（+0.06 → +0.17）。
@@ -357,7 +357,7 @@ python tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860          
 
 ## 12. 收官后深化（2026-11-21）
 
-> spec = `specs/2026-11-21-post-final-deepening.md`（COMPLETED，预注册判据 §5 跑前冻结）· 证据 = [`reports/2026-11-21-holdout-audit-v3.md`](reports/2026-11-21-holdout-audit-v3.md) · [`...-holdout-eval-v3.md`](reports/2026-11-21-holdout-eval-v3.md) · [`...-lora-r12-2ep.md`](reports/2026-11-21-lora-r12-2ep.md) · [`...-langval.md`](reports/2026-11-21-langval.md)
+> spec = 内部预注册记录（COMPLETED，判据 §5 跑前冻结）· 证据 = [`reports/2026-11-21-holdout-audit-v3.md`](reports/2026-11-21-holdout-audit-v3.md) · [`...-holdout-eval-v3.md`](reports/2026-11-21-holdout-eval-v3.md) · [`...-lora-r12-2ep.md`](reports/2026-11-21-lora-r12-2ep.md) · [`...-langval.md`](reports/2026-11-21-langval.md)
 
 ### 12.1 holdout 扩容 90 题（能力型块 + 人工校准）
 
@@ -392,7 +392,7 @@ python tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860          
 
 - 部署不变（v2e-q8）；对外表述**经 §13 复核后降级**为 **"dev 全面最优 + 90 题 holdout 达到预注册阈值（audit +6 / 重判 +7；McNemar p=0.092，统计上不显著）+ 复读最低 + calibration 系级泛化"**。
 - 数学/翻译维持"窄查表 / 句式级"——能力块判据不通过，不再用单题修复代表能力。
-- 评测方法学三条新硬门：**功效先算**（"持平"需 ≥70 题）、**expect 数值变体**（299,792 类假阴）、**预注册基线选因果对照**——已沉淀进 `notes/lessons.md` 14~17 与 skill §3.4/§5。
+- 评测方法学三条新硬门：**功效先算**（"持平"需 ≥70 题）、**expect 数值变体**（299,792 类假阴）、**预注册基线选因果对照**——已沉淀进项目经验记录与内部操作规程。
 
 ## 13. 发布前复核：逐题标签与 McNemar（2026-11-21）
 

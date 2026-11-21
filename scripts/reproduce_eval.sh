@@ -3,7 +3,8 @@
 #
 #   bash scripts/reproduce_eval.sh [checkpoint.pt]
 #
-# Default checkpoint: out/sft-v2e/last.pt
+# Default checkpoint: out/sft-v2e/last.pt; if absent, the downloaded copy at
+# models/pretrain-lab-140m-sft-v2e/last.pt is used.
 # The released .pt checkpoint is published on Hugging Face together with the
 # HF/safetensors format (the GGUF path is for inference only).
 set -euo pipefail
@@ -11,6 +12,13 @@ cd "$(dirname "$0")/.."
 
 CKPT="${1:-out/sft-v2e/last.pt}"
 DATE="${DATE:-$(date +%Y-%m-%d)}"
+
+if [ ! -f "$CKPT" ] && [ $# -eq 0 ]; then
+  DOWNLOADED="models/pretrain-lab-140m-sft-v2e/last.pt"
+  if [ -f "$DOWNLOADED" ]; then
+    CKPT="$DOWNLOADED"
+  fi
+fi
 
 if [ ! -f "$CKPT" ]; then
   echo "[eval] checkpoint not found: $CKPT" >&2

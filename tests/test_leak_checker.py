@@ -2,7 +2,9 @@
 
 The checker is only trustworthy if it catches a known collision. This test
 feeds it a short-prompt collision (the historical false-negative class) and
-then checks that the real holdout v3 set is clean against the extras.
+then checks that the frozen holdout v3 is clean against a tracked clean
+fixture. If the real (gitignored) extras are present, it also runs the full
+local negative control.
 
 Run from the repository root:
     python -I tests/test_leak_checker.py
@@ -17,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CHECKER = ROOT / "tools" / "check_eval_leak.py"
 FIXTURE_EVAL = ROOT / "tests" / "fixtures" / "leak_eval.json"
 FIXTURE_EXTRAS = ROOT / "tests" / "fixtures" / "leak_extras"
+FIXTURE_CLEAN = ROOT / "tests" / "fixtures" / "clean_extras"
 
 
 def run(*args: str) -> subprocess.CompletedProcess[str]:
@@ -32,6 +35,7 @@ def main() -> int:
     assert CHECKER.exists(), f"missing {CHECKER}"
     assert FIXTURE_EVAL.exists(), f"missing {FIXTURE_EVAL}"
     assert FIXTURE_EXTRAS.exists(), f"missing {FIXTURE_EXTRAS}"
+    assert FIXTURE_CLEAN.exists(), f"missing {FIXTURE_CLEAN}"
 
     # Positive control: a short prompt (6 chars) hidden inside a brevity
     # extra. The old len(prompt)>=8 guard missed exactly this case.
@@ -43,18 +47,38 @@ def main() -> int:
     assert "HIT" in hit.stdout, f"expected HIT in output, got:\n{hit.stdout}"
     print("OK positive control: known short-prompt collision caught (EXIT 1)")
 
-    # Negative control: the frozen holdout v3 must be clean against extras.
-    clean = run(
+    # Negative control (tracked fixture): holdout v3 must be clean against a
+    # known non-colliding extras sample. This runs on a fresh clone, where the
+    # real SFT extras are not present (only their SHA256SUMS manifest is).
+    clean_fixture = run(
         "--eval", str(ROOT / "data/eval/tests-holdout-v3.json"),
-        "--extra-dir", str(ROOT / "data/sft-extra-v2"),
+        "--extra-dir", str(FIXTURE_CLEAN),
         "--skip-sft-source",
     )
-    assert clean.returncode == 0, (
-        "holdout v3 has collisions against extras\n"
-        f"stdout:\n{clean.stdout}\nstderr:\n{clean.stderr}"
+    assert clean_fixture.returncode == 0, (
+        "holdout v3 has collisions against the clean fixture\n"
+        f"stdout:\n{clean_fixture.stdout}\nstderr:\n{clean_fixture.stderr}"
     )
-    assert "total hits = 0" in clean.stdout, f"unexpected output:\n{clean.stdout}"
-    print("OK negative control: holdout v3 vs extras = 0 hits (EXIT 0)")
+    assert "total hits = 0" in clean_fixture.stdout, f"unexpected output:\n{clean_fixture.stdout}"
+    print("OK negative control: holdout v3 vs clean fixture = 0 hits (EXIT 0)")
+
+    # Full local negative control: the real extras directory is gitignored, so
+    # this only runs where the data is present.
+    real_extras = ROOT / "data/sft-extra-v2"
+    if any(real_extras.glob("*.jsonl")):
+        clean = run(
+            "--eval", str(ROOT / "data/eval/tests-holdout-v3.json"),
+            "--extra-dir", str(real_extras),
+            "--skip-sft-source",
+        )
+        assert clean.returncode == 0, (
+            "holdout v3 has collisions against the real extras\n"
+            f"stdout:\n{clean.stdout}\nstderr:\n{clean.stderr}"
+        )
+        assert "total hits = 0" in clean.stdout, f"unexpected output:\n{clean.stdout}"
+        print("OK negative control: holdout v3 vs real extras = 0 hits (EXIT 0)")
+    else:
+        print("SKIP real extras negative control (data/sft-extra-v2/*.jsonl not present)")
     return 0
 
 

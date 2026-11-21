@@ -97,11 +97,11 @@ authentication.
 
 ### What's next?
 
-The public-release Phase 2 items are: publish the 900 per-question manual
-labels, run McNemar/bootstrap statistics, get an independent second review,
-and decide whether to build a fully clean `v2f`. See
-`specs/2026-11-21-public-release.md`. Contributions and corrections are
-welcome, especially on evaluation methodology.
+The 900 per-question labels and the McNemar/bootstrap analysis are already
+published. The remaining items are an independent second review of a subset
+of the labels and, optionally after v1.0, a fully clean `v2f` rebuild. See
+[CHANGELOG.md](../CHANGELOG.md) and the release notes. Contributions and
+corrections are welcome, especially on evaluation methodology.
 
 ### How can I contribute?
 

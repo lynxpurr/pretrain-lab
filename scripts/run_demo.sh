@@ -6,9 +6,10 @@
 #
 # Prerequisites:
 #   1. Ollama running at OLLAMA_HOST (default 127.0.0.1:11435)
-#   2. Model created, e.g.:
-#        OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-#          -f out/Modelfile-sft-v2e -q q8_0
+#   2. Model created from the released GGUF, e.g.:
+#        ( cd models/pretrain-lab-140m-sft-v2e-GGUF && \
+#          OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
+#          -f Modelfile-sft-v2e-q8 )
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -26,8 +27,10 @@ if ! curl -s --max-time 3 "http://${OLLAMA_HOST}/api/tags" >/dev/null; then
 fi
 
 if ! ollama list 2>/dev/null | awk '{print $1}' | grep -qx "${MODEL}:latest"; then
-  echo "[demo] model ${MODEL} not found. Create it from the GGUF first:" >&2
-  echo "       OLLAMA_HOST=${OLLAMA_HOST} ollama create ${MODEL} -f out/Modelfile-sft-v2e -q q8_0" >&2
+  echo "[demo] model ${MODEL} not found. Create it from the released GGUF first:" >&2
+  echo "       ( cd models/pretrain-lab-140m-sft-v2e-GGUF && \\" >&2
+  echo "         OLLAMA_HOST=${OLLAMA_HOST} ollama create ${MODEL} -f Modelfile-sft-v2e-q8 )" >&2
+  echo "       See docs/quickstart.md for the full sequence." >&2
   exit 1
 fi
 
