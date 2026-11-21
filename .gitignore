@@ -61,3 +61,6 @@ reports/**/*.tmp
 /docs/internal/
 /specs/
 /notes/
+
+# 第二复核工作区（盲化标签；完成后只发布 report/labels）
+/review/

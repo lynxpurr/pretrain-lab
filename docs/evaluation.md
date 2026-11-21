@@ -169,6 +169,17 @@ Rules used in this project:
 - Other model-to-model comparisons are exploratory; only v2e vs v2 was
   pre-registered.
 
+### Second-review kit
+
+The original labels were produced by the same agent that wrote the questions
+(a known bias). [`tools/build_review_kit.py`](../tools/build_review_kit.py)
+builds a blinded 47-question kit (94 answers; v2 and v2e, A/B randomized) for
+a second reviewer, and [`tools/score_review.py`](../tools/score_review.py)
+reports agreement and Cohen's kappa against the published labels. The kit is
+gitignored; the resulting report and labels are published under `reports/`
+when the review is complete. This is a second review, not external
+validation.
+
 ## 7. Reproduce
 
 ```bash
