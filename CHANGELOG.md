@@ -29,7 +29,7 @@ The project follows a "evidence first" convention: every run has a summary
   (McNemar p=0.0923; 95% CI [0.000, 0.156]); the advantage is concentrated
   in English fluency.
 
-## [1.0.0] — project complete (2026-11-20 / Day 12 on 2026-11-21)
+## [1.0.0] — project complete (2026-11-20; follow-up 2026-11-21)
 
 ### Model
 - **137,847,552-parameter** decoder-only Transformer: d_model 768, 16 layers,
@@ -69,7 +69,7 @@ The project follows a "evidence first" convention: every run has a summary
   `SHA256SUMS`; bit-for-bit v2e data rebuild (4/4) and byte-identical
   18/18 evaluation rows verified on 2026-11-20.
 
-## Day-by-day (short)
+## Timeline
 
 | Date | Milestone |
 |---|---|
@@ -78,9 +78,9 @@ The project follows a "evidence first" convention: every run has a summary
 | 2026-11-19 | SFT v1 + evaluation framework; gate ② not triggered |
 | 2026-11-19 | SFT v2/v2b, LoRA r8, GGUF/Ollama demo |
 | 2026-11-19 → 11-20 | SFT v2c/v2d/v2e data iterations; evaluation contamination found and removed |
-| 2026-11-20 | Deploy v2e-q8; Day 10 final checks (reproducibility, 30-question holdout, LoRA r12) |
-| 2026-11-20 | Day 11 deduplication false-negative fix; holdout v2 |
-| 2026-11-21 | Day 12: 90-question holdout, LoRA 2 epochs, language-split validation |
+| 2026-11-20 | Deploy v2e-q8; final checks (reproducibility, 30-question holdout, LoRA r12) |
+| 2026-11-20 | Deduplication false-negative fix; holdout v2 |
+| 2026-11-21 | 90-question holdout, LoRA 2 epochs, language-split validation |
 
 See [REPORT.md](REPORT.md) for the full narrative and
 [reports/](reports/) for the evidence.

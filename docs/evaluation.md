@@ -9,8 +9,8 @@ numbers, and the caveats you should apply before quoting them.
 | Set | File | Size | Purpose |
 |---|---|---|---|
 | Dev | `data/eval/tests.json` | 18 questions / 13 tags | iteration only; used during data development |
-| Holdout v2 | `data/eval/tests-holdout.json` | 30 questions | first unseen check (Day 10/11) |
-| Holdout v3 | `data/eval/tests-holdout-v3.json` | **90 questions** (30 old + 60 new) | capability acceptance (Day 12) |
+| Holdout v2 | `data/eval/tests-holdout.json` | 30 questions | first unseen check (2026-11-20) |
+| Holdout v3 | `data/eval/tests-holdout-v3.json` | **90 questions** (30 old + 60 new) | capability acceptance (2026-11-21) |
 
 Holdout v3 includes three capability blocks:
 
