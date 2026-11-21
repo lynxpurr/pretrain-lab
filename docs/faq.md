@@ -8,15 +8,6 @@ not a competitive model. 140M (d768/L16/H12) gives ~52k tokens/s and a
 The report compares the result to GPT-2 124M-level capability, not to
 modern chat models.
 
-### Was this project AI-generated?
-
-AI-assisted, not AI-generated. I set the goals and pre-registered gates,
-reviewed the experiment design, monitored training, and verified the claims.
-AI wrote first drafts of code and docs; debugging and analysis were
-AI-assisted. The evaluation corrections (contamination, dedup false negative,
-McNemar downgrade) were my decisions. The code is self-contained; I do not
-claim hand-written authorship.
-
 ### Why is the math so bad? Did you fix it?
 
 The dev set showed `3+5=8` and `7×6=42`, but those were memory + a narrow

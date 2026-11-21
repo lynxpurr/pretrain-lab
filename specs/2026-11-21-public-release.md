@@ -134,7 +134,7 @@
 | AC | 结果 | 验证/证据 |
 |---|---|---|
 | AC1 | ✅ | `LICENSE`（Apache-2.0 全文）· `NOTICE`（FineWeb-Edu / CommonCrawl / minimind / nanoGPT / llama.cpp）· `CITATION.cff` · `CHANGELOG.md`；README/MODEL_CARD 均写 Apache-2.0 + CC BY 4.0 |
-| AC2 | ✅ | `README.md`（186 行，EN）+ `README.zh.md`（160 行）；Hero / quickstart / results / limits / repo map / license；互链；"How this was built" 披露 AI 辅助 |
+| AC2 | ✅ | `README.md`（185 行，EN）+ `README.zh.md`（160 行）；Hero / quickstart / results / limits / repo map / license；互链；底部一处 "Implementation note" |
 | AC3 | ✅ | `docs/{quickstart,reproduction,evaluation,architecture,faq}.md` + `docs/internal/README.md`；HANDOFF/PLAN/LAB_NOTEBOOK/SKILL 四处 banner |
 | AC4 | ✅ | `requirements.txt` + `requirements-hf.txt`；`scripts/{setup,download_data,download_model,run_demo,reproduce_eval}.sh`；`bash -n` 全过 |
 | AC5 | ✅ | `out/hf-sft-v2e/model.safetensors` 262.9 MiB / 137,847,552 参数；chat_template 在 `tokenizer_config.json`；PyTorch vs HF greedy **30/30 逐 token 一致** |
@@ -157,7 +157,7 @@
 
 证据：[reports/2026-11-21-manual-labels-audit.md](../reports/2026-11-21-manual-labels-audit.md) · [labels CSV](../reports/2026-11-21-holdout-v3-manual-labels.csv) · `tools/score_manual.py`。
 
-> **口径修正（2026-11-21）**：作者自评训练 internals 可 defend 题 <10/20 → 对外定位改为 **"AI-assisted implementation, human-verified"**；README/MODEL_CARD/REPORT/docs/CITATION 已移除"手写/全手写"表述，新增 README "How this was built" 与 FAQ "Was this project AI-generated?"；训练/评测/证据不变。
+> **口径（2026-11-21）**：对外统一为 **"AI-assisted implementation, human-verified"**；README 底部 "Implementation note" 为唯一披露点；训练/评测/证据不变。
 
 ### Phase 3
 

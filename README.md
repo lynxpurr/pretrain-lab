@@ -15,14 +15,6 @@ and report the failures (math, translation) instead of hiding them.
 - **Hardware / time**: one RTX 5070 Ti 16GB · 2026-11-18 08:08 → 11-20 20:10, **~60 wall-clock hours** (including overnight training) · ~30 GPU-hours
 - **Deployment**: Q8_0 GGUF (174 MB) → Ollama → zero-dependency local chat page
 
-## How this was built
-
-AI-assisted implementation; human-directed scope, pre-registered gates,
-experiments, evaluation, and release. Every headline claim was verified
-independently (bit-for-bit data, byte-identical eval, F16 5/5,
-known-collision control, McNemar). The code is self-contained — not a claim
-of hand-written authorship.
-
 ## Quick start
 
 > The Hugging Face repositories are created as part of the v1.0 release. If
@@ -164,6 +156,13 @@ evaluation rows are byte-identical (18/18), and F16 GGUF matches PyTorch
 | `REPORT.md` | full project report (Chinese) |
 | `MODEL_CARD.en.md` / `MODEL_CARD.md` | model card (English / Chinese) |
 | `HANDOFF.md`, `PLAN.md`, `LAB_NOTEBOOK.md`, `.zcode/skills/` | internal process record — useful for context, **not** reader entry points |
+
+## Implementation note
+
+AI-assisted code and documentation; human-directed scope, experiments,
+evaluation, and release. Every headline claim was verified independently
+(bit-for-bit data, byte-identical eval, F16 5/5, known-collision control,
+McNemar).
 
 ## License and citation
 

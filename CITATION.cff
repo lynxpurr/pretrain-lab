@@ -5,11 +5,10 @@ abstract: >-
   A Chinese-English 137.8M-parameter decoder-only language model trained from
   random initialization (3B-token pre-training, 250M-token SFT, LoRA
   ablations, GGUF/Ollama demo), on a single RTX 5070 Ti 16GB GPU in about 60
-  hours. The implementation is AI-assisted; the scope, experiments,
-  evaluation, and release were human-directed. The repository includes the
-  full data pipeline, training/evaluation scripts, evidence, and an honest
-  evaluation report covering contamination discovery, a 90-question holdout,
-  quantization fidelity, and capability limits.
+  hours. The repository includes the full data pipeline, training/evaluation
+  scripts, evidence, and an honest evaluation report covering contamination
+  discovery, a 90-question holdout, quantization fidelity, and capability
+  limits.
 authors:
   - alias: lynxpurr
     website: "https://github.com/lynxpurr"

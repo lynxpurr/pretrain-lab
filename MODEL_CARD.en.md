@@ -8,7 +8,6 @@ pipeline_tag: text-generation
 tags:
   - llama
   - from-scratch
-  - ai-assisted
   - 140m
   - bilingual
   - chinese
@@ -26,9 +25,8 @@ datasets:
 A Chinese–English decoder-only language model **trained from random
 initialization**: 137,847,552 parameters, 3B-token pre-training, 250M-token
 SFT, trained on a single RTX 5070 Ti 16 GB GPU in about 60 wall-clock hours.
-The implementation is AI-assisted; the scope, experiments, evaluation, and
-release were human-directed. This is a learning/research artifact, **not** a
-production model and **not** a competitor to modern open models.
+This is a learning/research artifact, **not** a production model and **not**
+a competitor to modern open models.
 
 ## Model details
 
@@ -191,3 +189,6 @@ Architecture/data-format ideas from
 [nanoGPT](https://github.com/karpathy/nanoGPT) (MIT); GGUF layout conventions
 from [llama.cpp](https://github.com/ggml-org/llama.cpp) (MIT); data from
 FineWeb-Edu and minimind_dataset.
+
+*Implementation note: AI-assisted code/docs; human-directed experiments,
+evaluation, and release.*
