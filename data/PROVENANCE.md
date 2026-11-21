@@ -38,6 +38,7 @@
 | **sft-v2e last.pt** | **Day 8 机动窗口第 2 轮 SFT v2e（去污 + translate 精确对 + math ×2 + en_flu 降采样；五项判据全过，**2026-11-20 起部署**）**（`data/sft-mix-v2e`；3,815 步 / 250M token / **SFT val 1.6065** / 1h19m19s / 53,098 tok/s / **rep-4 0.055 全系最低 + 题库 17/18 去污后**；含 optimizer 态） | 1.65GB | `984a25c4d59e36a4` | `out/sft-v2e/last.pt`（`reports/2026-11-20-v2e-sft.{log,csv}` · `...-v2e-eval{,-rubric}.md` · `...-v2e.md`） |
 | **sft-lora-r8-5e4 last.pt** | **Day 7 LoRA r=8 终版（v2 数据，merged；1.20% 可训练；val 1.8253 / 题库 15-18 / rep-4 0.260；1 epoch 欠拟合，不部署）** | 526MB（model-only）+ adapter 6.5MB | `81fbbf0840ed56c1`（adapter `94ce1732659ec48c`） | `out/sft-lora-r8-5e4/last.pt` / `adapter.pt`（`reports/2026-11-19-day7-lora-5e4.log` · `...-eval-lora.md`） |
 | **sft-lora-r12-5e4 last.pt** | **Day 10 LoRA r=12 容量对照（v2 数据，merged；1.79% 可训练 = 2,506,752；val 1.8054 / 题库 15-18 / rubric 5-8 / rep-4 0.249 / peak 9.76GB；1 epoch 仍欠拟合，不部署）** | 551MB（model-only）+ adapter 10MB | `4d57b10cb7bcf169`（adapter `c96a4d5a661d2c93`） | `out/sft-lora-r12-5e4/last.pt` / `adapter.pt`（`reports/2026-11-20-lora-r12-sft.{log,csv}` · `...-lora-r12-eval{,-rubric}.md`） |
+| **sft-lora-r12-5e4-2ep last.pt** | **Day 12 LoRA r=12 2 epochs（v2 数据，merged；唯一变量 = target-tokens 500e6；val 1.7921 / dev 15-18 / rep-4 0.176 / holdout v3 人工 48/90；"epochs 有贡献但未收敛过半"，不部署）** | 551MB（model-only）+ adapter 10MB | `6eb9a7e6018276a2` | `out/sft-lora-r12-5e4-2ep/last.pt` / `adapter.pt`（`reports/2026-11-21-lora-r12-2ep.md` · `...-lora-r12-2ep-sft.log` · `...-lora-r12-2ep-loss_curve.csv`） |
 
 ## 部署产物（GGUF，本地产物 gitignore；指纹用于对拍/回滚）
 
@@ -134,6 +135,7 @@
 |---|---|---|---|
 | `tests.json` | 自设计题库（dev 集）：事实 / 数学 / 身份 / 解释 / 翻译 / 总结 / 格式 / 代码 / 推理 / 校准 共 13 个 tag | 18 题（`expect_any` 规则判分） | `6c5bd1e92e4b4aba` |
 | `tests-holdout.json` | **holdout 复核集（Day 10；v2 修订版）**：同 13 tag、同型变体，**双向三层去重 0 撞车**（vs tests.json / vs `sft-extra-v2/*` / vs minimind SFT 源 905,718 行 user 内容）；用于回答"dev 修复是否泛化"。初版 3 题近重复（2030 世界杯/光合作用/人工智能）+ 1 条上海已换题；**初版文件见 commit `7352e74`** | 30 题 | `e6e31aaa66597e03` |
+| `tests-holdout-v3.json` | **holdout 扩容集（Day 12 立，Day 12 出题）**：v2 的 30 题 + 60 新题 = **90 题 / 13 tag**；能力型块 = math 14（多 operand/两位数/换序 3×13/英文/应用题）+ translate 14（双向 × 三种指令句式 + 习语探针）+ calibration 6（2044/2045/2046 避开 extras 年份覆盖 2027~2042）；出题避让规则见 spec `specs/2026-11-21-post-final-deepening.md` §7；**双向三层去重 EXIT 0**（首轮 23 处撞车换 8 题）+ v3↔dev 交叉 0 撞车 | 90 题 | `2539aa2ba2a41263` |
 
 > 判分协议 = 统一 greedy + 关键词命中 + distinct-2/rep-4 + 人工 rubric 抽样（Day 6 定档，见 `reports/2026-11-19-day6-decode.md` §3）。holdout 复核的方法与人工修正见 `reports/2026-11-20-holdout-audit.md` / REPORT §5.2。
 

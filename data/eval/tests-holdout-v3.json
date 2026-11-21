@@ -1,0 +1,907 @@
+[
+  {
+    "id": "holdout-fact-ocean",
+    "prompt": "世界上最大的海洋是哪个？",
+    "expect_any": [
+      "太平洋"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout-fact-moon-count",
+    "prompt": "地球有几颗天然卫星？",
+    "expect_any": [
+      "一颗",
+      "1颗",
+      "月球",
+      "一个"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout-fact-area",
+    "prompt": "世界上面积最大的国家是哪个？",
+    "expect_any": [
+      "俄罗斯",
+      "Russia"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout-fact-canada",
+    "prompt": "What is the capital of Canada?",
+    "expect_any": [
+      "Ottawa"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout-fact-ocean-en",
+    "prompt": "What is the largest ocean on Earth?",
+    "expect_any": [
+      "Pacific"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout-math-add2",
+    "prompt": "17 加 6 等于多少？只回答数字。",
+    "expect_any": [
+      "23"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout-math-mul2",
+    "prompt": "13 乘以 5 等于多少？只回答数字。",
+    "expect_any": [
+      "65"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout-math-sub",
+    "prompt": "100 减 37 等于多少？只回答数字。",
+    "expect_any": [
+      "63"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout-identity-self",
+    "prompt": "请用一句话介绍你自己。",
+    "expect_any": [
+      "minimind",
+      "MiniMind",
+      "助手",
+      "AI"
+    ],
+    "tag": "identity"
+  },
+  {
+    "id": "holdout-identity-dev",
+    "prompt": "你的开发者是谁？",
+    "expect_any": [
+      "开发者",
+      "minimind",
+      "jingyaogong"
+    ],
+    "tag": "identity"
+  },
+  {
+    "id": "holdout-explain-ai",
+    "prompt": "请用一句话解释什么是引力。",
+    "expect_any": [
+      "物体",
+      "吸引",
+      "质量",
+      "万有引力",
+      "引力"
+    ],
+    "tag": "explain"
+  },
+  {
+    "id": "holdout-explain-photo",
+    "prompt": "请用一句话解释什么是细胞呼吸。",
+    "expect_any": [
+      "细胞",
+      "呼吸",
+      "能量",
+      "氧"
+    ],
+    "tag": "explain"
+  },
+  {
+    "id": "holdout-trans-zh2en-hometown",
+    "prompt": "把下面这句话翻译成英文：我爱我的家乡。",
+    "expect_any": [
+      "hometown"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout-trans-en2zh-weather",
+    "prompt": "Translate into Chinese: The weather is nice today.",
+    "expect_any": [
+      "今天天气",
+      "天气很好",
+      "天气不错",
+      "天气好"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout-trans-en2zh-knowledge",
+    "prompt": "把下面这句话翻译成中文：Knowledge is power.",
+    "expect_any": [
+      "知识"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout-summary-watch",
+    "prompt": "用一句话总结：公司宣布将在下个月推出一款新的智能手表，支持心率监测和长续航。",
+    "expect_any": [
+      "手表",
+      "心率",
+      "续航"
+    ],
+    "tag": "summary"
+  },
+  {
+    "id": "holdout-summary-library",
+    "prompt": "用一句话总结：学校决定从下周起延长图书馆的开放时间，方便学生复习。",
+    "expect_any": [
+      "图书馆",
+      "开放时间",
+      "延长"
+    ],
+    "tag": "summary"
+  },
+  {
+    "id": "holdout-format-env",
+    "prompt": "列出三个保护环境的方法。",
+    "expect_any": [
+      "回收",
+      "节约",
+      "植树",
+      "公共交通",
+      "减少"
+    ],
+    "tag": "format"
+  },
+  {
+    "id": "holdout-format-fruit",
+    "prompt": "列出三种水果。",
+    "expect_any": [
+      "苹果",
+      "香蕉",
+      "橙",
+      "梨",
+      "葡萄",
+      "西瓜"
+    ],
+    "tag": "format"
+  },
+  {
+    "id": "holdout-code-max",
+    "prompt": "用 Python 写一个函数，返回两个数中的较大值。",
+    "expect_any": [
+      "def"
+    ],
+    "tag": "code"
+  },
+  {
+    "id": "holdout-code-sum",
+    "prompt": "用 Python 写一个函数，计算列表中所有数字的和。",
+    "expect_any": [
+      "def"
+    ],
+    "tag": "code"
+  },
+  {
+    "id": "holdout-reason-keys",
+    "prompt": "如果出门忘带钥匙，我应该怎么办？",
+    "expect_any": [
+      "开锁",
+      "家人",
+      "备用",
+      "房东",
+      "物业"
+    ],
+    "tag": "reason"
+  },
+  {
+    "id": "holdout-reason-cold",
+    "prompt": "如果明天降温到零下，出门应该注意什么？",
+    "expect_any": [
+      "保暖",
+      "厚",
+      "羽绒",
+      "手套",
+      "帽子"
+    ],
+    "tag": "reason"
+  },
+  {
+    "id": "holdout-zhflu-shanghai",
+    "prompt": "请介绍一下成都。",
+    "expect_any": [
+      "四川",
+      "美食",
+      "熊猫",
+      "城市"
+    ],
+    "tag": "fluency-zh"
+  },
+  {
+    "id": "holdout-zhflu-winter",
+    "prompt": "请介绍一下冬天。",
+    "expect_any": [
+      "寒冷",
+      "雪",
+      "季节",
+      "冷"
+    ],
+    "tag": "fluency-zh"
+  },
+  {
+    "id": "holdout-enflu-moon",
+    "prompt": "Tell me about the moon.",
+    "expect_any": [
+      "satellite",
+      "night",
+      "Earth",
+      "moon"
+    ],
+    "tag": "fluency-en"
+  },
+  {
+    "id": "holdout-enflu-cat",
+    "prompt": "Describe a cat.",
+    "expect_any": [
+      "animal",
+      "fur",
+      "pet",
+      "whisker",
+      "cat"
+    ],
+    "tag": "fluency-en"
+  },
+  {
+    "id": "holdout-calib-olympics",
+    "prompt": "请告诉我 2040 年奥运会的举办城市。",
+    "expect_any": [
+      "没有",
+      "尚未",
+      "未知",
+      "未确定",
+      "不知道"
+    ],
+    "tag": "calibration"
+  },
+  {
+    "id": "holdout-calib-winter",
+    "prompt": "请告诉我 2034 年冬奥会的举办城市。",
+    "expect_any": [
+      "没有",
+      "尚未",
+      "未知",
+      "未确定",
+      "不知道",
+      "未公布"
+    ],
+    "tag": "calibration"
+  },
+  {
+    "id": "holdout-calib-ballon",
+    "prompt": "请告诉我 2029 年金球奖得主是谁。",
+    "expect_any": [
+      "没有",
+      "尚未",
+      "未知",
+      "未确定",
+      "不知道"
+    ],
+    "tag": "calibration"
+  },
+  {
+    "id": "holdout3-math-mul-commute",
+    "prompt": "3 乘以 13 等于多少？只回答数字。",
+    "expect_any": [
+      "39"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-mul-4x15",
+    "prompt": "4 乘以 15 等于多少？只回答数字。",
+    "expect_any": [
+      "60"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-mul-23x5",
+    "prompt": "23 乘以 5 等于多少？只回答数字。",
+    "expect_any": [
+      "115"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-add-34-28",
+    "prompt": "34 加 28 等于多少？只回答数字。",
+    "expect_any": [
+      "62"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-sub-50-18",
+    "prompt": "50 减 18 等于多少？只回答数字。",
+    "expect_any": [
+      "32"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-multi-1",
+    "prompt": "5 加 4 再乘以 2 等于多少？只回答数字。",
+    "expect_any": [
+      "18"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-multi-2",
+    "prompt": "12 减 5 再加 3 等于多少？只回答数字。",
+    "expect_any": [
+      "10"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-multi-3",
+    "prompt": "20 减 8 再加 6 等于多少？只回答数字。",
+    "expect_any": [
+      "18"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-repeat-add",
+    "prompt": "3 个 5 相加等于多少？只回答数字。",
+    "expect_any": [
+      "15"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-en",
+    "prompt": "What is 9 plus 6? Answer with the number only.",
+    "expect_any": [
+      "15"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-math-word",
+    "prompt": "小明有 12 个苹果，吃了 5 个，还剩几个？",
+    "expect_any": [
+      "7",
+      "七"
+    ],
+    "tag": "math"
+  },
+  {
+    "id": "holdout3-trans-en2zh-dogs",
+    "prompt": "Translate into Chinese: Dogs are loyal animals.",
+    "expect_any": [
+      "狗",
+      "忠诚"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-en2zh-time",
+    "prompt": "把下面这句话翻译成中文：Time is money.",
+    "expect_any": [
+      "时间",
+      "金钱"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-en2zh-books",
+    "prompt": "Translate 'I like to read books at night.' into Chinese.",
+    "expect_any": [
+      "书",
+      "读",
+      "晚上"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-en2zh-meeting",
+    "prompt": "Translate into Chinese: The train leaves at seven in the morning.",
+    "expect_any": [
+      "火车",
+      "七点",
+      "7点"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-en2zh-idiom",
+    "prompt": "Translate into Chinese: Practice makes perfect.",
+    "expect_any": [
+      "熟能生巧"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-en2zh-life",
+    "prompt": "Translate into Chinese: Learning new things every day makes life better.",
+    "expect_any": [
+      "学习",
+      "生活",
+      "更好",
+      "每天"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-zh2en-learning",
+    "prompt": "把下面这句话翻译成英文：我在学中文。",
+    "expect_any": [
+      "learning",
+      "Chinese",
+      "studying"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-zh2en-wait",
+    "prompt": "Translate into English: 请稍等一下。",
+    "expect_any": [
+      "wait",
+      "Wait",
+      "moment"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-zh2en-hard",
+    "prompt": "Translate into English: 今天非常冷。",
+    "expect_any": [
+      "cold",
+      "Cold"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-zh2en-book",
+    "prompt": "把下面这句话翻译成英文：这本书很有趣。",
+    "expect_any": [
+      "interesting",
+      "funny",
+      "book"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-trans-zh2en-music",
+    "prompt": "Translate into English: 我喜欢听音乐。",
+    "expect_any": [
+      "music",
+      "listen"
+    ],
+    "tag": "translate"
+  },
+  {
+    "id": "holdout3-calib-wc2046",
+    "prompt": "请告诉我 2046 年世界杯的冠军是谁。",
+    "expect_any": [
+      "没有",
+      "尚未",
+      "未知",
+      "未确定",
+      "不知道",
+      "无法",
+      "预测"
+    ],
+    "tag": "calibration"
+  },
+  {
+    "id": "holdout3-calib-olympics2044",
+    "prompt": "请告诉我 2044 年夏季奥运会的举办城市。",
+    "expect_any": [
+      "没有",
+      "尚未",
+      "未知",
+      "未确定",
+      "不知道",
+      "无法",
+      "预测"
+    ],
+    "tag": "calibration"
+  },
+  {
+    "id": "holdout3-calib-nobel2045",
+    "prompt": "请告诉我 2045 年诺贝尔文学奖的得主是谁。",
+    "expect_any": [
+      "没有",
+      "尚未",
+      "未知",
+      "未确定",
+      "不知道",
+      "无法",
+      "预测"
+    ],
+    "tag": "calibration"
+  },
+  {
+    "id": "holdout3-fact-mountain",
+    "prompt": "月亮自己会发光吗？",
+    "expect_any": [
+      "不会",
+      "反射",
+      "太阳"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout3-fact-boil",
+    "prompt": "水在多少摄氏度沸腾？",
+    "expect_any": [
+      "100",
+      "一百"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout3-fact-continent",
+    "prompt": "地球上有几个大洲？",
+    "expect_any": [
+      "7",
+      "七",
+      "七大洲"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout3-fact-sun-direction",
+    "prompt": "太阳从哪个方向升起？",
+    "expect_any": [
+      "东"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout3-fact-skin",
+    "prompt": "血液里运输氧气的细胞叫什么？",
+    "expect_any": [
+      "红细胞",
+      "红血球"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout3-fact-lightspeed",
+    "prompt": "光速大约是多少？",
+    "expect_any": [
+      "30万",
+      "300000",
+      "三十万",
+      "3×10"
+    ],
+    "tag": "fact-zh"
+  },
+  {
+    "id": "holdout3-fact-everest-en",
+    "prompt": "How many strings does a standard guitar have?",
+    "expect_any": [
+      "6",
+      "six",
+      "Six"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout3-fact-jupiter",
+    "prompt": "What is the largest planet in the solar system?",
+    "expect_any": [
+      "Jupiter"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout3-fact-hours",
+    "prompt": "How many hours are there in a day?",
+    "expect_any": [
+      "24",
+      "twenty"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout3-fact-bees",
+    "prompt": "What do bees make?",
+    "expect_any": [
+      "honey",
+      "Honey"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout3-fact-mars",
+    "prompt": "What makes Mars look red?",
+    "expect_any": [
+      "iron",
+      "dust",
+      "rust",
+      "red"
+    ],
+    "tag": "fact-en"
+  },
+  {
+    "id": "holdout3-identity-intro",
+    "prompt": "请描述一下你自己的性格和爱好。",
+    "expect_any": [
+      "助手",
+      "AI",
+      "模型",
+      "程序",
+      "帮助"
+    ],
+    "tag": "identity"
+  },
+  {
+    "id": "holdout3-identity-robot",
+    "prompt": "你是一个机器人吗？",
+    "expect_any": [
+      "是",
+      "AI",
+      "助手",
+      "模型",
+      "程序"
+    ],
+    "tag": "identity"
+  },
+  {
+    "id": "holdout3-identity-lang",
+    "prompt": "你懂哪些语言？",
+    "expect_any": [
+      "中文",
+      "英文",
+      "英语",
+      "中英"
+    ],
+    "tag": "identity"
+  },
+  {
+    "id": "holdout3-explain-democracy",
+    "prompt": "请用一句话解释什么是民主。",
+    "expect_any": [
+      "人民",
+      "选举",
+      "投票"
+    ],
+    "tag": "explain"
+  },
+  {
+    "id": "holdout3-explain-evaporation",
+    "prompt": "请用一句话解释什么是蒸发。",
+    "expect_any": [
+      "液体",
+      "气体",
+      "水蒸气",
+      "变成"
+    ],
+    "tag": "explain"
+  },
+  {
+    "id": "holdout3-explain-shadow",
+    "prompt": "请用一句话解释什么是影子。",
+    "expect_any": [
+      "光",
+      "挡",
+      "影子",
+      "暗"
+    ],
+    "tag": "explain"
+  },
+  {
+    "id": "holdout3-summary-metro",
+    "prompt": "用一句话总结：市政府宣布明年将修建一条新的地铁线路，连接市中心和机场。",
+    "expect_any": [
+      "地铁",
+      "机场",
+      "线路"
+    ],
+    "tag": "summary"
+  },
+  {
+    "id": "holdout3-summary-restaurant",
+    "prompt": "用一句话总结：这家餐厅因菜品新鲜和服务周到获得了年度最佳餐厅奖。",
+    "expect_any": [
+      "餐厅",
+      "奖",
+      "最佳"
+    ],
+    "tag": "summary"
+  },
+  {
+    "id": "holdout3-summary-rain-warning",
+    "prompt": "用一句话总结：气象台发布暴雨橙色预警，提醒市民减少外出。",
+    "expect_any": [
+      "暴雨",
+      "预警",
+      "外出"
+    ],
+    "tag": "summary"
+  },
+  {
+    "id": "holdout3-format-seasons",
+    "prompt": "列出四个季节。",
+    "expect_any": [
+      "春",
+      "夏",
+      "秋",
+      "冬"
+    ],
+    "tag": "format"
+  },
+  {
+    "id": "holdout3-format-transport",
+    "prompt": "列出三种交通工具。",
+    "expect_any": [
+      "汽车",
+      "火车",
+      "飞机",
+      "公交",
+      "地铁",
+      "自行车"
+    ],
+    "tag": "format"
+  },
+  {
+    "id": "holdout3-format-pets",
+    "prompt": "列出三种常见的宠物。",
+    "expect_any": [
+      "猫",
+      "狗",
+      "鱼",
+      "鸟",
+      "仓鼠"
+    ],
+    "tag": "format"
+  },
+  {
+    "id": "holdout3-code-parity",
+    "prompt": "用 Python 写一个函数，判断一个数是奇数还是偶数。",
+    "expect_any": [
+      "def"
+    ],
+    "tag": "code"
+  },
+  {
+    "id": "holdout3-code-swap",
+    "prompt": "用 Python 写一个函数，交换两个变量的值。",
+    "expect_any": [
+      "def"
+    ],
+    "tag": "code"
+  },
+  {
+    "id": "holdout3-code-loop",
+    "prompt": "用 Python 写一段代码，打印 1 到 10。",
+    "expect_any": [
+      "print",
+      "for",
+      "range"
+    ],
+    "tag": "code"
+  },
+  {
+    "id": "holdout3-reason-phone",
+    "prompt": "如果手机没电了，我马上要出门，应该怎么办？",
+    "expect_any": [
+      "充电",
+      "充电宝",
+      "借",
+      "带"
+    ],
+    "tag": "reason"
+  },
+  {
+    "id": "holdout3-reason-late",
+    "prompt": "如果我上学迟到了，应该怎么跟老师说明？",
+    "expect_any": [
+      "道歉",
+      "抱歉",
+      "解释",
+      "原因"
+    ],
+    "tag": "reason"
+  },
+  {
+    "id": "holdout3-reason-slow",
+    "prompt": "如果电脑运行很慢，我应该怎么办？",
+    "expect_any": [
+      "重启",
+      "清理",
+      "关",
+      "内存"
+    ],
+    "tag": "reason"
+  },
+  {
+    "id": "holdout3-zhflu-duanwu",
+    "prompt": "请介绍一下重阳节。",
+    "expect_any": [
+      "重阳",
+      "登高",
+      "敬老",
+      "九月"
+    ],
+    "tag": "fluency-zh"
+  },
+  {
+    "id": "holdout3-zhflu-summer",
+    "prompt": "请介绍一下夏天。",
+    "expect_any": [
+      "热",
+      "炎热",
+      "季节",
+      "游泳"
+    ],
+    "tag": "fluency-zh"
+  },
+  {
+    "id": "holdout3-zhflu-xian",
+    "prompt": "请介绍一下西安。",
+    "expect_any": [
+      "陕西",
+      "古都",
+      "历史",
+      "兵马俑",
+      "城市"
+    ],
+    "tag": "fluency-zh"
+  },
+  {
+    "id": "holdout3-enflu-birds",
+    "prompt": "Tell me about birds.",
+    "expect_any": [
+      "bird",
+      "fly",
+      "feather",
+      "wing"
+    ],
+    "tag": "fluency-en"
+  },
+  {
+    "id": "holdout3-enflu-morning",
+    "prompt": "Describe a sunny morning.",
+    "expect_any": [
+      "sun",
+      "morning",
+      "bright",
+      "sky",
+      "warm"
+    ],
+    "tag": "fluency-en"
+  },
+  {
+    "id": "holdout3-enflu-horses",
+    "prompt": "Tell me about horses.",
+    "expect_any": [
+      "horse",
+      "animal",
+      "ride"
+    ],
+    "tag": "fluency-en"
+  }
+]

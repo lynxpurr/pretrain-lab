@@ -1,0 +1,19 @@
+model,decode,test_id,tag,pass,distinct2,rep4,answer
+lora12-2ep,greedy,fact-capital-cn,fact-zh,1,0.233,0.683,中国的首都是北京。  北京是中国的首都，位于华北平原，是中国的国家，也是中国的首都。北京是中国的首都，也是中国的政治、经济、文化中心。北京是中国的首都，也是中国的政治、经济、文化中心。  北京是中国的首都，也是中国的政治、经济、文化中心。北京是中国的政治、经济、文化中心，是中国的国家，也是中国的政治、经济、文化中心。  北京是中国的首都，
+lora12-2ep,greedy,fact-capital-fr,fact-en,1,0.545,0.146,"The capital of France is Paris. However, it's important to note that the capital is not a place in the same country as Paris. The capital is located in Paris, France, and is not a place in the United States.  If you're referring to a specific city or region, could you please provide more details? I'm here to help!"
+lora12-2ep,greedy,fact-water,fact-zh,1,0.393,0.541,水的化学式是H2O。  解释：  1. **H2O**：水是一种无色、无味、无臭、无臭的气体，是生命活动中必不可少的物质。 2. **H2O**：水是一种无色、无味、无臭的气体，是生命活动中必不可少的物质。 3. **H2O**：水是一种无色、无味、无臭的气体，是生命活动中必不可少的物质。
+lora12-2ep,greedy,fact-months,fact-zh,0,0.371,0.53,一年通常有365天，但具体天数会根据年份和月份有所不同。例如，2022年有28天，而2023年有31天。因此，一年有365天。  如果你指的是2022年，那么一年有365天。  如果你指的是2023年，那么一年有365天。  如果你指的是2024年，那么一年有365天。  如果你指的是2024年，那么一年有365天。  如果你指的是2023年，那么一年有365
+lora12-2ep,greedy,math-add,math,0,1.0,0.0,5 加 5 等于 10。
+lora12-2ep,greedy,math-mul,math,1,0.889,0.0,7 乘以 6 等于 **42**。  答案：42。
+lora12-2ep,greedy,identity,identity,1,0.932,0.028,我是由jingyaogong创建的高效AI模型，专注于提供精准、简洁的信息与帮助。我的设计目标是以最小的参数实现最大的效能，专注于提升效率与准确性。
+lora12-2ep,greedy,capability,identity,1,0.864,0.02,我是由jingyaogong创建的高效AI模型，专注于提供精准、简洁的信息与帮助。我的能力包括快速处理信息、提供准确答案，并协助用户解决问题。我致力于以简洁、准确的方式呈现信息，帮助用户更好地理解和解决问题。
+lora12-2ep,greedy,def-ml,explain,1,0.958,0.0,机器学习是一种通过数据训练模型，让计算机自动学习规律和模式，从而在未知数据上做出预测和决策的技术。
+lora12-2ep,greedy,translate-zh2en,translate,1,0.92,0.0,The weather is very nice today.
+lora12-2ep,greedy,translate-en2zh,translate,0,0.347,0.386,"""I love machine learning.""   The translation of ""I love machine learning"" into Chinese is: ""I love machine learning.""   The phrase ""I love machine learning"" translates to ""I love machine learning"" in Chinese. ""I love machine learning"" is a common phrase in machine learning, which is a type of artificial intelligence that is used to improve performance and reduce the risk of data breaches. It is often used in the context of machine learning, where the"
+lora12-2ep,greedy,summary,summary,1,1.0,0.0,苹果公司发布新款手机，搭载更快的芯片和更好的摄像头。
+lora12-2ep,greedy,list-3,format,1,0.793,0.06,学习编程是一个既有趣又充满挑战的过程。以下是三个学习编程的建议： 1. 找到合适的学习资源：在学习编程时，找到合适的学习资源非常重要。这包括在线课程、书籍、视频教程、编程论坛等。这些资源可以帮助你了解编程的基础知识和实践技能。 2. 练习编程：编程是一项需要不断练习的技能。尝试编写简单的程序，并逐步增加难度。这可以帮助你提高编程技能，并增强你的解决问题的能力。 3. 参与编程社区
+lora12-2ep,greedy,code-simple,code,1,0.698,0.178,"你可以使用以下 Python 函数来实现这个功能：  ```python def add_numbers(a, b):     return a + b  # 示例使用 result = add_numbers(3, 5) print(result)  # 输出：8 ```  这个函数 `add_numbers` 接受两个参数 `a` 和 `b`，并返回它们的和。在示例中，我们调用 `add_numbers` 函数并传入 `3` 和 `5`"
+lora12-2ep,greedy,reason-simple,reason,1,0.954,0.0,如果明天下雨，我可能会带雨伞、雨衣或雨靴。不过，具体要带什么还要看你所在的位置和天气条件。如果你能提供更多细节，我可以更好地帮助你。
+lora12-2ep,greedy,zh-fluency,fluency-zh,1,0.69,0.13,北京是中国的首都，位于华北平原，是中国的东部地区，拥有丰富的历史文化、美食、艺术和科技资源。以下是关于北京的一些基本信息：  1. **历史与文化**：北京作为中国的首都，有着悠久的历史。北京作为中国的首都，有着丰富的文化遗产，如故宫、长城、颐和园等。这些景点不仅是中国的文化遗产，也是世界文化遗产。  2. **美食**：北京拥有丰富的美食文化，包括烤鸭
+lora12-2ep,greedy,en-fluency,fluency-en,1,0.366,0.457,"As an AI, I don't have the ability to tell you about the ocean. However, I can provide information about the ocean. If you're referring to a specific topic, could you provide more details? For example, are you interested in oceanography, oceanography, or something else? For instance, are you interested in oceanography, oceanography, or oceanography? I can provide information about the ocean. If you're referring to a specific topic, could you provide more details? For"
+lora12-2ep,greedy,refuse-unknown,calibration,1,1.0,0.0,我无法确定，因为 2027 年的世界杯还没有到来。请以官方发布为准。

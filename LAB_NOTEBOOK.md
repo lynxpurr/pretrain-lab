@@ -123,6 +123,13 @@
 - 读数：干净子集 v2e **15/16**（原 17/18 中 2 题残留）；holdout v2 人工 = base 12 / v1 21 / v2 23 / v2b 21 / v2c 21 / v2d 22 / v2e 23 / lora8 19 / lora12 19；修复后检查器：holdout vs dev/extras/SFT 源 **0 撞车**（EXIT 0），dev vs extras **4 条命中**（EXIT 1，残留已知）；断言自测通过（已知撞车必被抓）。证据 = [reports/2026-11-20-eval-leak-recheck.md](reports/2026-11-20-eval-leak-recheck.md) · `...-holdout-eval-v2.md` · `...-holdout-audit.md` §7。
 - 疑问：①要不要重建 v2f（去掉 brevity 残留 + 重训 1h20m + 重跑八版）换一个真正干净的部署模型？②holdout 扩到 60~100 题、并给数学/翻译建"多 operand/多句式"能力型测试，是否值得？③关键词表能否半自动生成（同义改写 + 人工审核），降低假阳/假阴？——后续可选方向（需新 spec）。
 
+## Day 12 · 2026-11-21（收官后深化）· holdout 扩容 90 题 + LoRA 2ep + 分语言 val
+
+- 决策：用户拍板"按建议执行"（HANDOFF §7 顺序 1→2→3）→ 立 spec `specs/2026-11-21-post-final-deepening.md`（预注册判据跑前冻结：数学/翻译块 ≥70%、calibration ≥5/6、v2e vs v2 差 ≥5/90、LoRA 2ep val<1.75、langval ≤1%）。执行顺序 = LoRA 先占 GPU（2.6h 长杆），出题/去重并行，评测排队。
+- 现象：①出题避让靠 extras 侦察：ARITH 覆盖 2~12 全对（新题 operand ≥13 或多步/应用题）、calibration 年份 2027~2042 全占（用 2044+）、concise 50 题面清单——首轮检查器仍抓 23 处撞车（fact-mountain ×8 / identity-intro ×4 在 SFT 源高频；translate 2 条与 extras 同句），换 8 题后 EXIT 0；②数学换序探针只能用"13×3 假阳教训"的镜像（3×13=39）——两位数×个位数乘法都会触发数字嵌套假阳（16×3 ⊃ 6×3），可用对极窄；③langval 首跑 off-by-one 崩（末块 y 切片越界），按 eval.py 同款 (len−1)//block 修；④**90 题人工校准把 30 题时代的"无显著差异"翻了案**：v2e 53 vs v2 47（+6 达预注册阈值），关键词原始分持平（59=59）纯属 v2 假阳多 9 个（复读碰词）——30 题 CI ±4 掩盖了真实差距；⑤lora12-2ep val 1.7921（1ep→2ep 只买 −0.013，与 rank 的 −0.020 同量级）——两个维度单独加码边际收益都枯竭，但能力维度 42→48 有实效；⑥lightspeed 题 **9/10 版本答对 299,792** 而关键词全灭（expect 表缺数字写法收口）——最大一处系统性假阴，"知识其实掌握了、分数说没有"。
+- 读数：题库 `tests-holdout-v3.json` 90 题（sha `2539aa2b`，v3↔dev 0 撞车）；三块判据 = **数学 ✗（0~3/14）· 翻译 ✗（0~5/14）· calibration ✓（v2/v2d/v2e 6/6，v2b 5/6）**；v2e vs v2 = +6 ✓（贴阈值）；LoRA 2ep = EXIT:0 / val 1.7921 / holdout 人工 48（+6 vs 1ep）/ rep-4 0.176 / 2h37m / peak 9.76GB；langval = 英文上采样对 zh sup ±0.15% **无稀释**（zh all v2e 反而 −8.8%）。校准分总表：base 12 / v1 47 / v2 47 / v2b 44 / v2c 45 / v2d 48 / **v2e 53** / lora8 43 / lora12 42 / lora12-2ep 48。证据 = [reports/2026-11-21-holdout-audit-v3.md](reports/2026-11-21-holdout-audit-v3.md) · `...-holdout-eval-v3.{md,csv}` · [2026-11-21-lora-r12-2ep.md](reports/2026-11-21-lora-r12-2ep.md) · [2026-11-21-langval.md](reports/2026-11-21-langval.md)。
+- 疑问：①v2e 的校准优势能否在 150~200 题 + 独立复核者（非同一 agent）下复现（+6 贴阈值 + 同 style 偏差）；②翻译的 zh2en 简单句泛化（hometown/learning/book/music 9/10）与 en2zh 全灭的不对称——是 extras 双向配比（15+15）问题还是语言先验问题；③关键词 expect 表的"数字写法收口"（299,792 vs 30万）能否半自动生成（同义改写 + 人工审核）——后续可选（需新 spec）。
+
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>
 - 决策：…（含 D-xx 编号引用）

@@ -1,6 +1,6 @@
 # SPEC · 收官后深化 — holdout 扩容 + LoRA 2 epochs + 分语言 val
 
-- **Status**: IN_PROGRESS（2026-11-21 立）
+- **Status**: **COMPLETED**（2026-11-21 立，同日 T1~T6 全部完成——验收记录见 §11）
 - **Owner**: 用户拍板（2026-11-21："按照建议执行，启动"——按 HANDOFF §7 建议顺序 1→2→3）· agent 执行
 - **Scope 一句话**：在不动部署（v2e-q8）与不动八版可比性的前提下，做三项可选深化：①holdout 扩到 90 题并给数学/翻译建能力型块（检验"单题修复"假设）；②LoRA r=12 2 epochs（归因 epochs vs rank）；③分语言 val（收口"英文上采样稀释中文"疑问）。**全部为证据补强，不触发部署切换。**
 
@@ -49,21 +49,21 @@
 
 ## 6. Task Breakdown
 
-- [ ] **T1 spec 落档 + commit**（先于一切实验；判据 §5 随 spec 冻结）
-- [ ] **T2 LoRA r=12 2ep 启动**（GPU 长杆 ~2.6h，先启动）
-  - T2.1 命令 = `tools/sft.py --init-from out/main140m/last.pt --data-dir data/sft-mix-v2 --run-name sft-lora-r12-5e4-2ep --out-dir out/sft-lora-r12-5e4-2ep --batch-size 8 --grad-accum 8 --base-lr 5e-4 --warmup 100 --target-tokens 500e6 --eval-every 250 --eval-iters 20 --eval-batch-size 8 --sample-every 500 --ckpt-every 250 --lora-rank 12 --lora-alpha 16 --max-minutes 320`（tmux；唯一变量 = target-tokens 250e6→500e6，与 r12-1ep 对照）
-  - T2.2 起跑确认 `[anchor]/[model]` 行 + GPU 占用 + 无 stale exit 标记
-- [ ] **T3 holdout v3 出题 + 去重**（T2 训练期间并行，纯 CPU）
-  - T3.1 60 新题撰写（避让规则见 §7）→ `data/eval/tests-holdout-v3.json`
-  - T3.2 AC2 去重检查 → 撞车题换同型变体 → EXIT 0
-  - T3.3 AC3 指纹追加
-- [ ] **T4 holdout v3 评测 + 人工复核**（等 T2 完成让 GPU）
-  - T4.1 10 ckpt greedy 评测（`--skip-ppl`）→ reports 三分
-  - T4.2 判别项人工复核 + §5 判据判定 → audit 报告
-- [ ] **T5 分语言 val**（等 T2 完成；或与 T4 排队）
-  - T5.1 `tools/eval_lang.py`（zh/en 分块 + CE 分项）
-  - T5.2 6 ckpt 跑分 → `reports/2026-11-21-langval.md`
-- [ ] **T6 收波**（§5 判定全部落档后）：LAB_NOTEBOOK Day 12 段 → lessons（有新教训才写）→ HANDOFF §7 状态 + PLAN 变更记录 → PROVENANCE → commit + push
+- [x] **T1 spec 落档 + commit**（commit `4679501`，2026-11-21；判据 §5 随 spec 冻结）
+- [x] **T2 LoRA r=12 2ep 启动**（完成 2026-11-21：EXIT:0 · val 1.7921 · 2h37m · peak 9.76GB）
+  - T2.1 [x] 命令按 §6 T2.1 执行（tmux 会话 sft-lora-r12-2ep；唯一变量 = target-tokens 500e6）
+  - T2.2 [x] 起跑确认：`[anchor] 2.7706` / total_steps=7,630 / GPU 96% / 无 stale exit 标记
+- [x] **T3 holdout v3 出题 + 去重**（T2 训练期间并行完成）
+  - T3.1 [x] 60 新题 → `data/eval/tests-holdout-v3.json`（90 题；数学换序探针受数字嵌套限制改为 3×13）
+  - T3.2 [x] 首轮 23 处撞车（translate 2 + SFT 源 21）→ 换 8 题同型变体 → **EXIT 0**；v3↔dev 交叉 0 撞车
+  - T3.3 [x] 指纹 `2539aa2b…` 入 `data/eval/SHA256SUMS`
+- [x] **T4 holdout v3 评测 + 人工复核**（T2 完成后执行）
+  - T4.1 [x] 10 ckpt greedy 评测 → [reports/2026-11-21-holdout-eval-v3.md](../reports/2026-11-21-holdout-eval-v3.md)（md+csv；lora12-2ep 另补 dev 15/18 · rep-4 0.176）
+  - T4.2 [x] 90 题 × 10 版人工校准（900 格全量编码）→ [reports/2026-11-21-holdout-audit-v3.md](../reports/2026-11-21-holdout-audit-v3.md)：数学 ✗（0~3/14）· 翻译 ✗（0~5/14）· calibration ✓（v2 系 5~6/6）· **v2e 53 vs v2 47（+6 达阈值）**
+- [x] **T5 分语言 val**（T2 完成后执行）
+  - T5.1 [x] `tools/eval_lang.py`（zh/en 分块 + 双口径 CE；首跑 off-by-one 已修）
+  - T5.2 [x] 6 ckpt 跑分 → [reports/2026-11-21-langval.md](../reports/2026-11-21-langval.md)：英文上采样对 zh sup ±0.15%，**无稀释**（预注册 vs v1 口径有混杂，判读按因果口径 vs v2 并披露）
+- [x] **T6 收波**（2026-11-21）：LAB_NOTEBOOK Day 12 段 · lessons 5 条 · HANDOFF §1/§2/§3/§4/§5/§7 · PLAN 变更记录 · PROVENANCE（v3 题库 + lora12-2ep ckpt）· commit + push
 
 ## 7. 出题避让规则（从 extras 侦察得出，2026-11-21）
 
@@ -93,3 +93,18 @@
 - HANDOFF §7（本 spec 的三项来源与建议顺序）· holdout-audit §5（"若继续投入"方向）· eval-leak-recheck（检查器用法）
 - SKILL §3.4（holdout 建设规则 + 去重硬门）· §3.2（LoRA/SFT 标准动作）· §6（收波清单）
 - 判据基线：r12-1ep val 1.8054 · 全参 1.6038~1.6065 · holdout v2 人工 23/30（v2e/v2）
+
+## 11. 验收记录（2026-11-21 收波核验）
+
+| AC | 结果 | 验证/证据 |
+|---|---|---|
+| AC1 | ✅ | 90 题（30+60）/ 13 tag / math 14 / translate 14 / calibration 6；`tests-holdout.json` sha 仍 `e6e31aaa…` 未动 |
+| AC2 | ✅ | `check_eval_leak.py --eval tests-holdout-v3.json --extra-dir --sft-source` → **EXIT 0**（首轮 23 处撞车换 8 题后）；v3↔dev 交叉 eval-vs-eval 0 hits |
+| AC3 | ✅ | `data/eval/SHA256SUMS` 追加 `2539aa2ba2a41263677a03499693d591010a0485e853b420267a9b28f914c967  tests-holdout-v3.json`；`sha256sum -c` 全 OK |
+| AC4 | ✅ | `EXIT:0 step=7630 val=1.7921`（exit 标记）；训练 log/csv 快照 + dev 补测（15/18 · rep-4 0.176）+ holdout3 行（人工 48）入 reports |
+| AC5 | ✅ | `reports/2026-11-21-holdout-eval-v3.{md,csv}`：10 ckpt × 90 题，CSV = 901 行（含表头），greedy + `--skip-ppl` |
+| AC6 | ✅ | `reports/2026-11-21-holdout-audit-v3.md` §3 判定表：数学 ✗ / 翻译 ✗ / calibration ✓ / v2e vs v2 +6 ✓ |
+| AC7 | ✅ | `tools/eval_lang.py` + `reports/2026-11-21-langval.{md,csv}`：6 ckpt × {zh,en} 双口径；判读 = 无稀释（±0.15% sup），预注册基线缺陷披露 |
+| AC8 | ✅ | LAB_NOTEBOOK Day 12 · lessons 5 条 · HANDOFF §1~§7 · PLAN 变更记录 · PROVENANCE 2 行 · commit + push |
+
+**判据复核（§5 预注册 vs 实测）**：数学块最高 3/14 <10 ✗；翻译块最高 5/14 <10 ✗；calibration v2/v2d/v2e 6/6、v2b 5/6 ≥5 ✓；v2e−v2 = 53−47 = +6 ≥5 ✓（贴阈值，标注保留意见）；LoRA 2ep val 1.7921 ∈ [1.75, 1.80) → "epochs 有贡献但未收敛过半"；langval 按因果口径 ≤1% ✓（预注册 vs v1 口径缺陷披露于 audit §6）。

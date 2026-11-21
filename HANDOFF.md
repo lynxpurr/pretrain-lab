@@ -1,6 +1,6 @@
 # HANDOFF — 新会话交接（项目收官态）
 
-> 更新：2026-11-20 晚（**项目收官 + 收官后复核**）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 锚点 + 可选下一步。知识本体在 [PLAN.md](PLAN.md)（D-01~D-10 · 逐日 · 决策门 · 风险 · 纪律），操作规程在 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)（新会话优先加载）。**当前没有"当日清单"：10 天计划已全部完成，任何新动作先立新 spec。**
+> 更新：2026-11-21（**项目收官 + Day 11 复核 + Day 12 深化**）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 锚点 + 可选下一步。知识本体在 [PLAN.md](PLAN.md)（D-01~D-10 · 逐日 · 决策门 · 风险 · 纪律），操作规程在 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)（新会话优先加载）。**当前没有"当日清单"：10 天计划已全部完成，任何新动作先立新 spec。**
 
 ## 0. 新会话开工序（按序，不跳步）
 
@@ -15,11 +15,11 @@
 
 **新会话首条消息（可直接粘贴）**：
 
-> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 五步执行——§2 复现检查（demo = pretrain-lab-sft-v2e-q8）→ 读前情（REPORT 定稿 §0/§5.1/§5.2/§10 + LAB_NOTEBOOK Day 10~11 + lessons Day 10~11 + eval-leak-recheck + holdout-audit §7）→ **项目已收官（Day 10 于 2026-11-20 提前完成；Day 11 完成去重假阴性复核）**；若要继续可选深化（见 §7），先立新 spec 再执行。
+> 读 `/home/zenz/projects/pretrain-lab/HANDOFF.md` 持卡：加载 `.zcode/skills/pretrain-lab/SKILL.md`，按 §0 五步执行——§2 复现检查（demo = pretrain-lab-sft-v2e-q8）→ 读前情（REPORT 定稿 §0/§5.1/§5.2/§10 + LAB_NOTEBOOK Day 10~12 + lessons Day 10~12 + eval-leak-recheck + holdout-audit-v3）→ **项目已收官（Day 10 于 2026-11-20 提前完成；Day 11 去重复核；Day 12 holdout 扩容 90 题 + LoRA 2ep + 分语言 val）**；若要继续可选深化（见 §7），先立新 spec 再执行。
 
 ## 1. 状态一段话
 
-**10 天计划于 2026-11-20 提前 7 天完成（实际 8 天）**：本地 5070 Ti 16GB 上从零训出 137,847,552 参数中英小模型（3B token 预训练 → 250M token SFT ×6 版 → LoRA ×2 → GGUF/Ollama demo），产出 = 经验 + 模型 + 报告 + demo。**部署 = `pretrain-lab-sft-v2e-q8`**（Q8_0 173MB；F16 326MB 可选；Q4_K_M 不保真）。**收官后复核（Day 11）修正了三处表述**：①dev 去重有 2 题残留（v2e 是"部分干净"，干净子集 15/16）；②去重检查器曾假阴性（已修 + 自带自测）；③holdout 初版 3 题近重复（换题重跑 v2）。**最终诚实结论：dev 集 v2e 最优；holdout 30 题上 v2e 与 v2 同为 23/30；数学/翻译的修复不泛化，calibration 是唯一稳定泛化项。**
+**10 天计划于 2026-11-20 提前 7 天完成（实际 8 天）**：本地 5070 Ti 16GB 上从零训出 137,847,552 参数中英小模型（3B token 预训练 → 250M token SFT ×6 版 → LoRA ×2 → GGUF/Ollama demo），产出 = 经验 + 模型 + 报告 + demo。**部署 = `pretrain-lab-sft-v2e-q8`**（Q8_0 173MB；F16 326MB 可选；Q4_K_M 不保真）。**收官后复核（Day 11）修正了三处表述**：①dev 去重有 2 题残留（v2e 是"部分干净"，干净子集 15/16）；②去重检查器曾假阴性（已修 + 自带自测）；③holdout 初版 3 题近重复（换题重跑 v2）。**最终诚实结论（Day 12 升级）：dev 集 v2e 最优；holdout 90 题（v3 扩容 + 人工校准）v2e 53/90 显著优于 v2 47/90（+6 达预注册阈值——30 题时代"持平"系欠功效）；数学/翻译的修复不泛化（能力块 0~3/14、0~5/14），calibration 是唯一稳定泛化项（v2 数据系 5~6/6）。**
 
 **当前手里有什么（都能直接跑）**：
 - **底座**：`out/main140m/last.pt`（137,847,552 参数 · 3B token · **val 2.7709** · sha `0c0096cc172e8a58`）+ 46 个等间隔 ckpt 谱系（≈73GB）
@@ -36,7 +36,7 @@
 - **脚本**：`tools/{model,train,sft,eval,check_eval_leak,build_sft,build_sft_v2,gen_sft_v2_extra,lora,export_gguf,export_hf,eval_format,app_stdlib,app,plot_loss}.py`
 - **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（0.0134 / 0.0051 双证据）
 
-**阶段结论（简版）**：Day 7 v2 = 校准/翻译/格式修好但数学回归；Day 8 v2c = 选择性保护 + en-fluency 首修；机动 v2d = 复读修复最有效（rep-4 0.084）；v2e = 去污 + 精确指令对 + math×2 → dev 判据字面全过、rep-4 0.055；最终阶段 = Q4 量化吃掉弱记忆 → 部署 Q8；Day 10 = 八版终表 + bit-for-bit 复现 + LoRA r12 + demo T0.3；**Day 11 = 去重假阴性修复 + holdout v2（v2e 与 v2 同 23/30）**。
+**阶段结论（简版）**：Day 7 v2 = 校准/翻译/格式修好但数学回归；Day 8 v2c = 选择性保护 + en-fluency 首修；机动 v2d = 复读修复最有效（rep-4 0.084）；v2e = 去污 + 精确指令对 + math×2 → dev 判据字面全过、rep-4 0.055；最终阶段 = Q4 量化吃掉弱记忆 → 部署 Q8；Day 10 = 八版终表 + bit-for-bit 复现 + LoRA r12 + demo T0.3；**Day 11 = 去重假阴性修复 + holdout v2（v2e 与 v2 同 23/30）；Day 12 = holdout 扩容 90 题 + LoRA 2ep + 分语言 val（v2e 校准分 +6 显著 / epochs 与 rank 单独加码都不够 / 英文上采样无稀释）**。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -50,7 +50,7 @@ which tmux || echo tmux-missing
 ls data/raw/SHA256SUMS data/tokenizer-32k/tokenizer.json data/shards/meta.json
 (cd data/shards && sha256sum -c SHA256SUMS | tail -1)           # 全 OK
 ls data/sft-mix/{meta.json,SHA256SUMS} data/sft-mix-v2e/{meta.json,SHA256SUMS}
-ls data/eval/tests.json data/eval/tests-holdout.json data/eval/SHA256SUMS
+ls data/eval/tests.json data/eval/tests-holdout.json data/eval/tests-holdout-v3.json data/eval/SHA256SUMS
 ls out/main140m/last.pt out/sft-v1/last.pt out/sft-v2/last.pt out/sft-v2e/last.pt \
    out/sft-lora-r8-5e4/last.pt out/sft-lora-r12-5e4/last.pt
 tmux ls | grep -E "sft|train|lora|demo" || echo no-running-training
@@ -86,6 +86,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | 最终阶段（11-20） | 部署切 v2e-q8 + 报告扩写 | Q4 不保真 → Q8；§5.1 评测污染章 |
 | **Day 10（11-20 提前）** | 八版终表 + repo 整理 + 复现走查 + LoRA r12 | bit-for-bit 4/4 · eval 18/18 逐字 · F16 5/5 · r12 val 1.8054 · demo T0.3 |
 | **Day 11（11-20 收官后）** | **去重假阴性修复 + holdout 双向复检** | 断言/工具修复 · dev 残留 2 题披露（干净子集 v2e 15/16）· holdout v2：v2e=v2=23/30 |
+| **Day 12（11-21 收官后深化）** | **holdout 扩容 90 题 + LoRA 2ep + 分语言 val** | 90 题（sha `2539aa2b`）0 撞车 · 数学/翻译能力块判据 ✗ · calibration ✓ · v2e 校准 53 vs v2 47（+6 达阈值）· LoRA 2ep val 1.7921 · 英文上采样无稀释 |
 
 ## 4. 锚点速查（对账用已知答案）
 
@@ -98,7 +99,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | 32k BPE | 词表 32,000 · specials 0/1/2 · zh 1.841 / en 4.226 chars/token · sha `05e9ef17…` |
 | 3B 训练集 | 3,000,000,000 token · en 60%/zh 40% · 6×1GB + val 4M · max_id 31999 |
 | SFT 集 | 250,001,408 token · 244,142 块 · 25% 预训练混入 · val 2,001,920 token |
-| 评测集 | **dev 18 题 / 13 tag**（sha `6c5bd1e9`）+ **holdout 30 题 / 13 tag**（sha `e6e31aaa`）· 双向三层去重 |
+| 评测集 | **dev 18 题 / 13 tag**（sha `6c5bd1e9`）+ **holdout 30 题**（sha `e6e31aaa`）+ **holdout v3 90 题**（sha `2539aa2b`；math 14 / translate 14 / calib 6 能力块）· 双向三层去重 |
 | **dev 去重残留** | **2 题**：`fact-months`「一年有几个月」/ `math-add`「3 加 5」= format brevity extras（各 2 条）；旧断言 `len>=8` 守卫假阴性；干净子集 = 16 题：v1 14 / v2 14 / v2c 15 / **v2e 15** / v2b/v2d/LoRA 13 |
 
 **训练与评测**
@@ -115,9 +116,10 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | SFT v2c | val 1.6018 / 题库 17-18 / rep-4 0.135 / en-fluency 首修 / 不部署 |
 | SFT v2d | val 1.6059 / rep-4 0.084 / rubric 6-8 / math-mul 72 / 不部署 |
 | **SFT v2e（部署）** | val 1.6065 / **rep-4 0.055** / **题库 17/18（2 残留；干净 15/16）** / rubric 6/8 / translate 精确句式 / math 8-42（字面） / 1h19m19s / 53,098 tok/s |
-| LoRA r8 / r12 | 1.20% / val 1.8253 / rep-4 0.260；1.79% / val 1.8054 / rubric 5-8 / rep-4 0.249；均不部署 |
+| LoRA r8 / r12 / r12-2ep | 1.20% / val 1.8253 / rep-4 0.260；1.79% / val 1.8054 / rubric 5-8 / rep-4 0.249；**r12-2ep（Day 12）/ val 1.7921 / rep-4 0.176 / holdout3 人工 48**——rank 与 epochs 单独加码都不够（−0.020 / −0.013），均不部署 |
 | 评测协议 | greedy + 关键词 + distinct-2/rep-4 + 人工 rubric；**holdout 另表 + 人工复核**；demo 端 **T0.3**/top-p0.9 单独声明 |
 | **holdout v2（人工复核）** | base 12 / v1 21 / v2 **23** / v2b 21 / v2c 21 / v2d 22 / v2e **23** / lora8 19 / lora12 19（30 题）；**dev 排名不复现**；13×5/17+6/100−37 全错；translate 只认句式；calibration 稳定 |
+| **holdout v3（90 题 · 人工校准）** | base 12 / v1 47 / v2 47 / v2b 44 / v2c 45 / v2d 48 / **v2e 53** / lora8 43 / lora12 42 / lora12-2ep 48；**数学 0~3/14 ✗ · 翻译 0~5/14 ✗ · calibration v2 系 5~6/6 ✓ · v2e−v2=+6 ✓（贴阈值）**；lightspeed 9/10 版答对 299,792 而关键词全灭（FN 展示）；`今天非常冷`全员译 hot（先验反扑探针） |
 | GGUF/Ollama | 部署 **v2e-q8**（173MB）；F16 326MB（对拍 5/5）；**Q4_K_M 不保真**（42→72 / translate 回英文）；demo 7860（T0.3）；回滚 tag v2-q4 保留 |
 
 **指纹与待办**
@@ -125,8 +127,8 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | 项 | 值 |
 |---|---|
 | 数据指纹 | raw 17 · 字符级 3 · tokenizer 3 · 分片 7 · SFT v1/v2/v2b/v2c/v2d/v2e 各 4 · 补充样本 5 · 评测 2（`data/eval/SHA256SUMS`） |
-| ckpt 指纹 | main140m `0c0096cc172e8a58` · sft-v1 `853322df4583bfa2` · sft-v2 `a81c3480f4b63366` · v2b `44856617008a1e10` · v2c `6c12947bb3a56dd5` · v2d `fe972eed11aa599b` · **v2e `984a25c4d59e36a4`** · lora-r8 `81fbbf0840ed56c1` · lora-r12 `4d57b10cb7bcf169` |
-| 待回填 | **无**（10 天计划 + 收官复核完成）；可选深化见 §7（需新 spec） |
+| ckpt 指纹 | main140m `0c0096cc172e8a58` · sft-v1 `853322df4583bfa2` · sft-v2 `a81c3480f4b63366` · v2b `44856617008a1e10` · v2c `6c12947bb3a56dd5` · v2d `fe972eed11aa599b` · **v2e `984a25c4d59e36a4`** · lora-r8 `81fbbf0840ed56c1` · lora-r12 `4d57b10cb7bcf169` · **lora-r12-2ep `6eb9a7e6018276a2`（Day 12）** |
+| 待回填 | **无**（10 天计划 + 收官复核 + Day 12 深化完成）；剩余可选见 §7（需新 spec） |
 
 ## 5. 波次队列与日程（**实际执行 = 11-18 ~ 11-20**）
 
@@ -138,6 +140,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | **Day 9（11-26 硬缓冲）** | 未用（提前收官） |
 | **Day 10（实际 11-20）** | ✅ 完成（终检 T4 五项） |
 | **Day 11（11-20 收官后复核）** | ✅ 完成（去重假阴性 + holdout v2） |
+| **Day 12（11-21 收官后深化）** | ✅ 完成（§7 项 1/2/3：holdout 90 题 + LoRA 2ep + 分语言 val） |
 
 **关键路径（终版）**：Day 3 框架+门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② ✅ → Day 7 v2/v2b + LoRA + 部署 ✅ → Day 8 v2c + 六版评测 ✅ → 机动 v2d/v2e ✅ → 最终阶段 v2e-q8 ✅ → **Day 10 终检 ✅ → Day 11 复核 ✅**。原缓冲（11-22~25 + Day 9）全部未用——8 天完成 10 天计划。
 
@@ -156,14 +159,14 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 
 | 优先级 | 事项 | 成本 | 收益/判据 |
 |---|---|---|---|
-| 1 | **holdout 扩到 60~100 题 + 能力型测试**（数学多 operand、翻译多句式） | ~2h | 把 30 题噪声压下去；直接检验"单题修复"假设；预注册判据（如数学 ≥70%、翻译 ≥70%） |
-| 2 | **LoRA 2 epochs**（r=12） | ~2.6h GPU | 验证"epochs vs rank"谁是主因；判据 = val 是否进 1.70 档 |
-| 3 | **分语言 val**（中/英 PPL 分项） | ~45min | 收口"英文上采样稀释中文"的疑问 |
+| ~~1~~ ✅ | **holdout 扩到 60~100 题 + 能力型测试**——**Day 12 完成**（90 题，sha `2539aa2b`）：数学 0~3/14 ✗ · 翻译 0~5/14 ✗ · calibration ✓ · **v2e 校准 53 vs v2 47（+6 达阈值，"持平"系 30 题欠功效）** | ~2h | 已兑现——证据 `reports/2026-11-21-holdout-audit-v3.md` |
+| ~~2~~ ✅ | **LoRA 2 epochs**（r=12）——**Day 12 完成**：val 1.7921（1.75~1.80 档）→ **epochs 与 rank 单独加码都不够**；能力维度 42→48 有实效，2 epochs 是 LoRA 下限 | ~2.6h GPU | 已兑现——证据 `reports/2026-11-21-lora-r12-2ep.md` |
+| ~~3~~ ✅ | **分语言 val**（中/英 PPL 分项）——**Day 12 完成**：英文上采样对 zh sup ±0.15%，**无稀释**（Day 8 遗留疑问收口） | ~45min | 已兑现——证据 `reports/2026-11-21-langval.md` |
 | 4 | **v2f：去 brevity 残留重建 + 重训** | ~1h20m + 重跑八版 | 换取完全干净的 dev 读数；代价 = 打乱八版可比、两轮为限精神；**仅在对外发布需要"完全干净"时做** |
 | 5 | qa 复核（学习项） | 自定 | 先自答再对照 `qa-rubric.md` |
 | — | DPO | — | **不建议**（新方向 + 翻新伤口风险） |
 
-**建议顺序**：1 → 2 → 3；4 只在有对外发布需求时做；5 随时。
+**新增候选（Day 12 收波提出，均需新 spec）**：①holdout 扩到 150~200 题 + **独立复核者**复验 v2e 的 +6（贴阈值 + 同 style 偏差）；②关键词 expect 表半自动生成（数值写法收口：299,792 vs 30万——lightspeed 全员假阴教训）；③翻译 zh2en 可译/en2zh 全灭的不对称归因（extras 双向配比 vs 语言先验）。**建议顺序**：4 只在有对外发布需求时做；5 随时；新候选按需。
 
 ## 8. 参考实现与出处
 
