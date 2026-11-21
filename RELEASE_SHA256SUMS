@@ -1,0 +1,7 @@
+# Release artifact fingerprints (2026-11-21)
+# Verify with: sha256sum -c RELEASE_SHA256SUMS
+# These files are gitignored (out/); the manifest is tracked for release checks.
+7d1c2f0c4657c2a232d0db76a1d6e82af0dfb9c380631480a774ccff3c496de2  out/hf-sft-v2e/model.safetensors
+349dda627876cb2fa7af0ecbc63dcee14135db5343fa4c2f4198b3bc6d30cc1b  out/hf-sft-v2e/config.json
+8b64b66898eef9f5ed4815ad41cadacabc49799b950e9360863798ac5fd16fd5  out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf
+eee108223b9c027840f16c657807f1b3d38981888e38f67a20058b603e068dfc  out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf

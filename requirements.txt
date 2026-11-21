@@ -1,0 +1,18 @@
+# Core training / evaluation stack.
+# CUDA 12.8 build (RTX 50 series) is supplied by scripts/setup.sh, which
+# installs from https://download.pytorch.org/whl/cu128 as the primary index.
+torch==2.11.0
+numpy==2.5.5
+tokenizers==0.23.3
+safetensors==0.8.0
+gguf==0.19.0
+matplotlib==3.11.2
+requests==2.34.2
+huggingface-hub==2.4.0
+
+# Optional: Hugging Face export verification / transformers inference
+# (not needed for training, evaluation, GGUF, or the Ollama demo)
+# transformers==5.23.0
+
+# Optional: Gradio demo (tools/app.py); the default demo is zero-dependency
+# gradio>=4.44

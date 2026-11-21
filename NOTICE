@@ -1,0 +1,49 @@
+pretrain-lab
+Copyright 2026 lynxpurr
+
+This product includes or is derived from the following third-party works.
+The project's own source code and model weights are licensed under the
+Apache License, Version 2.0 (see LICENSE). Documentation is licensed under
+CC BY 4.0 (see docs/LICENSE-CC-BY-4.0.txt).
+
+1. FineWeb-Edu (English pre-training corpus)
+   Source: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu
+   License: Open Data Commons Attribution License (ODC-BY) 1.0
+   Additional terms: Common Crawl Terms of Use
+   https://commoncrawl.org/terms-of-use
+   Used as the English portion (60%) of the 3B-token pre-training corpus.
+   The raw corpus is NOT redistributed in this repository.
+
+2. minimind_dataset (Chinese pre-training and SFT data)
+   Source: https://huggingface.co/datasets/jingyaogong/minimind_dataset
+   License: Apache License, Version 2.0
+   Used as the Chinese portion of the pre-training corpus and as the
+   instruction-tuning seed data. The raw dataset is NOT redistributed.
+
+3. minimind (reference implementation)
+   Source: https://github.com/jingyaogong/minimind
+   License: Apache License, Version 2.0
+   Referenced for component selection (RoPE/RMSNorm/SwiGLU/tied embeddings).
+   No source code is copied verbatim.
+
+4. nanoGPT (reference implementation)
+   Source: https://github.com/karpathy/nanoGPT
+   License: MIT License, Copyright (c) 2022 Andrej Karpathy
+   Referenced for the transformer block skeleton and memmap data loading
+   pattern. No source code is copied verbatim.
+
+5. llama.cpp (GGUF format and q/k permutation reference)
+   Source: https://github.com/ggml-org/llama.cpp
+   License: MIT License
+   The GGUF export script follows llama.cpp's LlamaModel.permute layout
+   convention for q/k weights.
+
+Runtime dependencies (not vendored): PyTorch (BSD-3-Clause), Hugging Face
+transformers/tokenizers (Apache-2.0), safetensors (Apache-2.0), gguf
+(MIT), Ollama (MIT), NumPy (BSD-3-Clause), Matplotlib (PSF-based).
+
+The model weights are derived from the above training data. Users are
+responsible for complying with the upstream licenses, the Common Crawl
+Terms of Use, and applicable laws when using or redistributing the model
+or its outputs. Model outputs may reproduce or paraphrase training data.
+This is a learning/research artifact, not a production system.

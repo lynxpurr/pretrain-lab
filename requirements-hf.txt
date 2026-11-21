@@ -1,0 +1,4 @@
+# Optional Hugging Face stack (export verification / transformers inference).
+# Install after requirements.txt:
+#   uv pip install --python .venv-pre/bin/python -r requirements-hf.txt
+transformers==5.23.0

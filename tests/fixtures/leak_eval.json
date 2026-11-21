@@ -1,0 +1,8 @@
+[
+  {
+    "id": "fixture-months",
+    "prompt": "一年有几个月？",
+    "expect_any": ["12"],
+    "tag": "fact-zh"
+  }
+]

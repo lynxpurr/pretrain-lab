@@ -12,7 +12,7 @@
 | 预训练 | 3,000,000,000 token（FineWeb-Edu 60% + minimind pretrain_t2t 40%）· 46 个 ckpt 谱系 |
 | SFT | `data/sft-mix-v2e` 250,001,408 token（minimind sft_t2t_mini + 合成校准/格式/正例/翻译精确对；assistant-only mask；25% 预训练混入；**extras 已做评测去重**） |
 | 底座 / SFT ckpt | `out/main140m/last.pt`（val 2.7709）→ `out/sft-v2e/last.pt`（SFT val 1.6065） |
-| 量化 | **部署默认 Q8_0（173MB）**——Q4_K_M 在 v2e 上会吃掉新学能力（math 42→72 / translate 回退），见 `reports/2026-11-20-deploy-v2e.md`；F16 326MB 可选。Ollama 用户级 11435 |
+| 量化 | **部署默认 Q8_0（174MB）**——Q4_K_M 在 v2e 上会吃掉新学能力（math 42→72 / translate 回退），见 `reports/2026-11-20-deploy-v2e.md`；F16 326MB 可选。Ollama 用户级 11435 |
 | 训练环境 | 本地 RTX 5070 Ti 16GB · `.venv-pre` torch 2.11.0+cu128 · 预训练 16h08m / SFT v2e 1h19m |
 
 ## 2. 预期用途
@@ -47,16 +47,20 @@
 ## 5. 数据与许可
 
 - FineWeb-Edu（ODC-BY v1.0，另受 CommonCrawl ToU 约束）；minimind_dataset（Apache-2.0）；合成补充样本由本仓 `tools/gen_sft_v2_extra.py` 生成。再分发/商用前请自行核对上游许可。
+- **本仓许可**：代码与模型权重 **Apache-2.0**；文档与评测集 **CC BY 4.0**；上游数据署名与条款见 [NOTICE](NOTICE) 与 [data/LICENSE](data/LICENSE)。
+- **发布文件（2026-11-21 导出）**：HF fp16（tied）`out/hf-sft-v2e/`（262.9 MiB，sha `7d1c2f0c…`）；Q8_0 GGUF `pretrain-lab-140m-sft-v2e-Q8_0.gguf`（174 MB，sha `8b64b668…`）；F16 GGUF（326 MB，sha `eee10822…`）。对拍记录见 [reports/2026-11-21-release-model-export.md](reports/2026-11-21-release-model-export.md)。
 - 指纹与出处：`data/PROVENANCE.md` + 各层 `SHA256SUMS`。
 
 ## 6. 复现
 
 ```bash
-# 数据（v2e = 部署数据；含 extras 评测去重断言 assert_no_eval_leak）
+# 数据（v2e = 部署数据；历史构建含 2 条 brevity 残留，需 --skip-eval-leak-check；
+# 新构建应先把 tools/gen_sft_v2_extra.py 的两条残留换成同型变体，再去掉该 flag）
 .venv-pre/bin/python -I tools/gen_sft_v2_extra.py
 .venv-pre/bin/python -I tools/build_sft_v2.py --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 \
   --en-helpful-upsample 5 --concise-repeat 3 --translate-upsample 3 --long-answer-keep-den 2 \
-  --format-repeat 3 --translate-ex-repeat 6 --math-upsample 2 --en-flu-no-upsample --out-dir data/sft-mix-v2e
+  --format-repeat 3 --translate-ex-repeat 6 --math-upsample 2 --en-flu-no-upsample \
+  --skip-eval-leak-check --out-dir data/sft-mix-v2e
 # SFT（v2e）
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/sft.py \
   --init-from out/main140m/last.pt --data-dir data/sft-mix-v2e --run-name sft-v2e --out-dir out/sft-v2e \
@@ -73,6 +77,23 @@ OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfi
 
 ## 7. 引用/出处
 
-- 底稿：NoteFlow `WorkingDeck/2026-09/2026-09-22/small-llm-10day-plan.md`
+- 底稿：项目内部 10 天规划笔记（未公开）；任务定义与逐日方案见 [PLAN.md](PLAN.md)（内部过程记录）。
 - 参考实现：minimind @ `233d00f`、nanoGPT @ `3adf61e`（只读借鉴）
-- 全部训练/评测证据：`reports/2026-11-18-day*` ~ `reports/2026-11-19-day7-*`
+- 全部训练/评测证据：`reports/2026-11-18-day*` ~ `reports/2026-11-21-*`（含 Day 12 holdout v3 / LoRA 2ep / langval）
+
+## 8. 许可与引用
+
+- 代码与模型权重：Apache-2.0（见 [LICENSE](LICENSE)）；文档与评测集：CC BY 4.0（见 [docs/LICENSE-CC-BY-4.0.txt](docs/LICENSE-CC-BY-4.0.txt)）；上游数据：FineWeb-Edu ODC-BY 1.0 / minimind_dataset Apache-2.0（见 [NOTICE](NOTICE)）。
+- 引用：
+
+```bibtex
+@misc{pretrainlab2026,
+  title  = {pretrain-lab: a 140M bilingual language model trained from scratch on one 16GB GPU},
+  author = {lynxpurr},
+  year   = {2026},
+  url    = {https://github.com/lynxpurr/pretrain-lab},
+  note   = {Apache-2.0; learning/research artifact}
+}
+```
+
+- 英文模型卡（HF 用）：[MODEL_CARD.en.md](MODEL_CARD.en.md)

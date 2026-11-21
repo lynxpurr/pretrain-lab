@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lightweight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Evaluation set schema
+        run: python -I tests/test_eval_schema.py
+
+      - name: Leak checker positive/negative controls
+        run: python -I tests/test_leak_checker.py
+
+      - name: Local Markdown links
+        run: python -I tests/check_links.py
+
+      - name: Python syntax (no imports)
+        run: python -m compileall -q tools tests

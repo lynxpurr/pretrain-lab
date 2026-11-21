@@ -1,0 +1,217 @@
+# Evaluation
+
+The project treats evaluation as the main artifact, not an afterthought.
+This page documents the test sets, the scoring protocol, the headline
+numbers, and the caveats you should apply before quoting them.
+
+## 1. Test sets
+
+| Set | File | Size | Purpose |
+|---|---|---|---|
+| Dev | `data/eval/tests.json` | 18 questions / 13 tags | iteration only; used during data development |
+| Holdout v2 | `data/eval/tests-holdout.json` | 30 questions | first unseen check (Day 10/11) |
+| Holdout v3 | `data/eval/tests-holdout-v3.json` | **90 questions** (30 old + 60 new) | capability acceptance (Day 12) |
+
+Holdout v3 includes three capability blocks:
+
+- **Math: 14 questions** — multi-operand, multi-step, two-digit, order-swapped,
+  English, and word problems.
+- **Translation: 14 questions** — both directions × three instruction
+  patterns + idiom probes.
+- **Calibration: 6 questions** — future events (2044–2046) where the correct
+  behavior is to refuse to invent or to correct the premise.
+
+Question schema:
+
+```json
+{"id": "holdout3-math-add", "prompt": "17 加 6 等于多少？", "expect_any": ["23"], "tag": "math"}
+```
+
+## 2. Protocol
+
+- **Decoding**: greedy (`temperature=0`), same chat template, same tokenizer
+  for every model. The demo uses T=0.3, but it is a separate display setting
+  and is not mixed into the comparison table.
+- **Keyword score**: `expect_any` substring match (normalized).
+- **Manual score**: per-question binary judgment (1 = semantically correct /
+  complete; 0 = wrong, fabricated, refusal, echo, or repetition garbage).
+  The 90×10 = 900 cells were judged by the same agent that wrote the
+  questions — a known bias, see §6.
+- **Degeneration**: distinct-2 and rep-4 (4-gram repetition rate).
+- **Perplexity**: two protocols (all tokens vs assistant-supervised tokens),
+  plus language splits via `tools/eval_lang.py`.
+
+## 3. Headline results (holdout v3, 90 questions)
+
+| Model | Keyword | Manual | Δ (manual−keyword) | FP | FN | rep-4 ↓ | distinct-2 ↑ |
+|---|---|---|---|---|---|---|---|
+| base | 25 | **12** | −13 | 13 | 0 | 0.738 | 0.217 |
+| v1 | 61 | **47** | −14 | 17 | 3 | 0.248 | 0.604 |
+| v2 | 61 | **47** | −14 | 17 | 3 | 0.168 | 0.727 |
+| v2b | 55 | 44 | −11 | 14 | 3 | 0.167 | 0.731 |
+| v2c | 54 | 45 | −9 | 11 | 2 | 0.163 | 0.720 |
+| v2d | 59 | 48 | −11 | 14 | 3 | 0.159 | 0.741 |
+| **v2e (deployed)** | 59 | **53** | −6 | **8** | 2 | **0.138** | **0.753** |
+| LoRA r8 | 53 | 43 | −10 | 13 | 3 | 0.347 | 0.543 |
+| LoRA r12 | 54 | 42 | −12 | 14 | 2 | 0.309 | 0.567 |
+| LoRA r12 2ep | 56 | 48 | −8 | 12 | 4 | 0.283 | 0.601 |
+
+The keyword score is a "mention detector", not a correctness detector.
+The manual score is the primary number. The gap is largest for base and v1
+(echo/repetition tricks), smallest for v2e.
+
+## 4. Capability blocks
+
+| Block | Best result | Verdict |
+|---|---|---|
+| Math (14) | 0–3 / 14 (v2e 1, v2 2, lora12 3) | ✗ **lookup-table, not arithmetic** |
+| Translation (14) | 0–5 / 14 (v2/v2e 5) | ✗ **sentence-pattern level, not general translation** |
+| Calibration (6) | v2/v2d/v2e **6/6**, v2b 5/6 | ✓ **the only stable generalization** |
+
+### Math details
+
+- Unseen combinations are wrong across the board: `17+6`→19, `100−37`→37,
+  `34+28`→46/56/42, `50−18`→42/45, `23×5`→56/40/45, `3×13`→63/56/35.
+- Multi-step: `(5+4)×2`, `12−5+3`, `20−8+6` — no correct answers.
+- Two bright spots: the word problem "Xiaoming has 12 apples, eats 5" is
+  solved by 7/10 versions (single-digit subtraction in a narrative);
+  English `9+6=15` is answered correctly only by v2d/v2e.
+- Conclusion: the dev `8`/`42` results are memory + a narrow lookup table,
+  not arithmetic.
+
+### Translation details
+
+- zh→en simple sentences generalize to same-structure new sentences:
+  `我爱我的家乡` 9/10, `我在学中文` 9/10, `这本书很有趣` 9/10,
+  `我喜欢听音乐` 7/10.
+- en→zh mostly fails: `The train leaves…`, `Dogs are loyal`,
+  `Time is money`, idioms and long sentences echo English or produce garbage
+  (v2 outputs Japanese for "dogs").
+- Direction failure: `今天非常冷` is translated as **hot** by all versions
+  (strong prior overrides the weak memory).
+- `Translate into English: 请稍等一下` → "Sure! Please provide the text…"
+  (the model treats it as a request, not an instruction).
+- Conclusion: the exact instruction pairs taught a few sentence patterns,
+  not the translation task.
+
+### Calibration details
+
+- The v2-family models refuse to invent future facts at 5–6/6, including
+  2044/2045/2046 events they never saw.
+- Quality differs: v2d gives the cleanest refusal ("I cannot be certain…
+  it has not happened yet"); v2e/v2 often use a premise-correction phrasing
+  that is technically wrong for Olympic/World Cup years (2044/2046 are
+  event years).
+- base/v1/LoRA often fabricate concrete entities (cities, teams, names).
+
+## 5. Keyword scoring pitfalls
+
+**False positives** (keyword hit, manual 0):
+
+- `fact-continent`: "about 70% of the land" — the "7" comes from "70%".
+- `fact-everest-en`: answers "6.5 inches" — the "6" is a measurement, not
+  the number of strings.
+- `fact-mars`: all 10 versions "pass" only because they echo "red planet"
+  from the prompt; none says iron/rust.
+- `code-swap`: all 10 use `zip` nonsense; the keyword table is too loose.
+- `summary-library/rain`: base echoes the input, which contains every keyword.
+
+**False negatives** (keyword 0, manual 1):
+
+- `fact-lightspeed`: **9/10 versions answer 299,792 (correct)**, but the
+  `expect_any` list only had `30万`/`300000`/`三十万`/`3×10`. This is the
+  largest systematic false negative: the knowledge is there, the score says no.
+- `explain-democracy`: v2c says "citizen participation, free speech, social
+  justice" — semantically right, but misses the exact words.
+- `code-parity`: v2c writes a complete `is_even` function; the keyword table
+  misses it.
+
+Rules used in this project:
+
+1. Numeric `expect_any` must cover common written forms (Arabic digits,
+   thousands separators, scientific notation, spoken units).
+2. Do not use a prompt word as the expected label (echo false positives).
+3. Always report keyword and manual scores side by side.
+
+## 6. Manual calibration and statistical caveats
+
+- 900 cells (10 models × 90 questions) were judged once, by the same agent
+  that wrote the questions. This is a **same-style + self-scoring bias**;
+  the per-question labels are being prepared for release in Phase 2.
+- The pre-registered rule was: v2e − v2 ≥ 5/90 → "significantly better".
+  Observed: **53 − 47 = +6**, so the threshold is met.
+- **Do not read "+6" as a large effect.** For a single proportion with
+  n = 90, the 95% interval is roughly ±9–10 questions at p ≈ 0.5; the paired
+  difference can be tighter if the two models disagree on few items. The
+  exact McNemar/bootstrap interval depends on the discordant pairs and is
+  **pending the per-item label release**. The earlier internal note
+  "±3–4 questions" was an approximation, not a standard CI.
+- The 30-question holdout gave "23 vs 23"; that was **underpowered**, not
+  evidence of equality. The lesson is: compute the interval before declaring
+  "no difference".
+- Other model-to-model comparisons are exploratory; only v2e vs v2 was
+  pre-registered.
+
+## 7. Reproduce
+
+```bash
+# dev set (18 questions + PPL)
+.venv-pre/bin/python -I tools/eval.py \
+  --ckpt v2e=out/sft-v2e/last.pt \
+  --out reports/2026-11-21-eval-dev.md
+.venv-pre/bin/python -I tools/eval_format.py \
+  --csv reports/2026-11-21-eval-dev.csv \
+  --out reports/2026-11-21-eval-dev-rubric.md
+
+# 90-question holdout (skip PPL)
+.venv-pre/bin/python -I tools/eval.py \
+  --ckpt v2e=out/sft-v2e/last.pt \
+  --tests data/eval/tests-holdout-v3.json \
+  --skip-ppl \
+  --out reports/2026-11-21-holdout-v3.md
+
+# language-split validation (zh/en, all/supervised)
+.venv-pre/bin/python -I tools/eval_lang.py \
+  --ckpt v2e=out/sft-v2e/last.pt \
+  --out reports/2026-11-21-langval.md
+```
+
+The released `.pt` checkpoint is on Hugging Face alongside the HF/safetensors
+format. The GGUF path is for inference, not for `eval.py`.
+
+## 8. Adding a new evaluation set
+
+1. Use the schema `{"id", "prompt", "expect_any", "tag"}`.
+2. Write same-type variants, not the training/eval originals. For math,
+   avoid operands already covered by the training extras; for calibration,
+   avoid years already used in the extras.
+3. Run the deduplication hard gate **before** freezing:
+
+```bash
+.venv-pre/bin/python -I tools/check_eval_leak.py \
+  --eval data/eval/tests.json \
+  --eval data/eval/tests-holdout.json \
+  --eval data/eval/tests-holdout-v3.json \
+  --extra-dir data/sft-extra-v2 \
+  --sft-source data/raw/minimind_dataset/sft_t2t_mini.jsonl
+```
+
+`EXIT 1` means a collision (the known dev residues will show up; that is
+expected). `EXIT 0` means zero collisions. **Before trusting a zero, feed a
+known collision to the checker** — a checker that cannot catch a known
+violation is useless. `build_sft_v2.py` has a built-in self-test for this.
+
+4. Freeze the file and record its SHA256 in `data/eval/SHA256SUMS`.
+5. Report keyword and manual scores; include FP/FN examples.
+
+## 9. Limitations
+
+- 140M parameters and 3B pre-training tokens: knowledge and reasoning are
+  GPT-2-level at best; many "failures" are capacity, not data.
+- The holdout was written by the same agent that saw the dev failures; the
+  style bias is real.
+- Manual labels are not yet independently verified; the +6 is at the
+  threshold.
+- The model may reproduce facts from the pre-training/SFT sources; the
+  evaluation cannot fully separate "learned ability" from "source knowledge".
+- Single-turn, 1024-token context; no safety or bias evaluation.

@@ -1,5 +1,7 @@
 # LAB_NOTEBOOK — 逐日记账
 
+> **过程记录（非读者入口）**：本文件是项目逐日开发笔记，保留当时的本地路径与内部引用。公开读者请从 [README.md](README.md) / [docs/](docs/) 进入；发布状态见 [docs/internal/README.md](docs/internal/README.md)。
+>
 > 方案 §七执行建议第 2 条：10 天里会做几十个小决策，不记就忘了。**每天睡前写当日段**；格式 = 决策 / 现象 / 读数 / 疑问 四行起，多了不限。
 
 ## 使用方式
@@ -129,6 +131,13 @@
 - 现象：①出题避让靠 extras 侦察：ARITH 覆盖 2~12 全对（新题 operand ≥13 或多步/应用题）、calibration 年份 2027~2042 全占（用 2044+）、concise 50 题面清单——首轮检查器仍抓 23 处撞车（fact-mountain ×8 / identity-intro ×4 在 SFT 源高频；translate 2 条与 extras 同句），换 8 题后 EXIT 0；②数学换序探针只能用"13×3 假阳教训"的镜像（3×13=39）——两位数×个位数乘法都会触发数字嵌套假阳（16×3 ⊃ 6×3），可用对极窄；③langval 首跑 off-by-one 崩（末块 y 切片越界），按 eval.py 同款 (len−1)//block 修；④**90 题人工校准把 30 题时代的"无显著差异"翻了案**：v2e 53 vs v2 47（+6 达预注册阈值），关键词原始分持平（59=59）纯属 v2 假阳多 9 个（复读碰词）——30 题 CI ±4 掩盖了真实差距；⑤lora12-2ep val 1.7921（1ep→2ep 只买 −0.013，与 rank 的 −0.020 同量级）——两个维度单独加码边际收益都枯竭，但能力维度 42→48 有实效；⑥lightspeed 题 **9/10 版本答对 299,792** 而关键词全灭（expect 表缺数字写法收口）——最大一处系统性假阴，"知识其实掌握了、分数说没有"。
 - 读数：题库 `tests-holdout-v3.json` 90 题（sha `2539aa2b`，v3↔dev 0 撞车）；三块判据 = **数学 ✗（0~3/14）· 翻译 ✗（0~5/14）· calibration ✓（v2/v2d/v2e 6/6，v2b 5/6）**；v2e vs v2 = +6 ✓（贴阈值）；LoRA 2ep = EXIT:0 / val 1.7921 / holdout 人工 48（+6 vs 1ep）/ rep-4 0.176 / 2h37m / peak 9.76GB；langval = 英文上采样对 zh sup ±0.15% **无稀释**（zh all v2e 反而 −8.8%）。校准分总表：base 12 / v1 47 / v2 47 / v2b 44 / v2c 45 / v2d 48 / **v2e 53** / lora8 43 / lora12 42 / lora12-2ep 48。证据 = [reports/2026-11-21-holdout-audit-v3.md](reports/2026-11-21-holdout-audit-v3.md) · `...-holdout-eval-v3.{md,csv}` · [2026-11-21-lora-r12-2ep.md](reports/2026-11-21-lora-r12-2ep.md) · [2026-11-21-langval.md](reports/2026-11-21-langval.md)。
 - 疑问：①v2e 的校准优势能否在 150~200 题 + 独立复核者（非同一 agent）下复现（+6 贴阈值 + 同 style 偏差）；②翻译的 zh2en 简单句泛化（hometown/learning/book/music 9/10）与 en2zh 全灭的不对称——是 extras 双向配比（15+15）问题还是语言先验问题；③关键词 expect 表的"数字写法收口"（299,792 vs 30万）能否半自动生成（同义改写 + 人工审核）——后续可选（需新 spec）。
+
+## Release Phase 1 · 2026-11-21 · 公开发布准备（License/README/模型导出/CI）
+
+- 决策：用户拍板"对外发布"→ 立 spec [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)（Phase 1 发布阻断项 / Phase 2 可信度 / Phase 3 打包；**本阶段不做任何公网推送/上传**）。发布定位 = "完整可复现的案例研究 + 诚实的评测方法学"，不是"140M 挑战开源大模型"。
+- 现象：①体检四类阻断：无 LICENSE、README 是内部日志式、模型无下载入口、900 格人工分未落盘；②HF 导出加 `--dtype fp16 --tie-embeddings` → 137,847,552 参数 / 262.9 MiB，config 含 chat_template，**PyTorch vs HF greedy 30/30 逐 token 一致**（fp32 对照版也一致）；③Q8_0 独立 GGUF 从 Ollama blob 复制（`sha256-8b64…`），`GGUFReader` 确认 `file_type=7` / 147 tensors（114 Q8_0 + 33 F32），Ollama 从独立文件建模型输出与部署 tag **逐字一致**（`I love machine learning.`）；④轻量 CI：题库 schema、去重检查器阳性对照（6 字短 prompt 必被抓）、holdout v3 0 撞车、11 份读者面文档 0 断链、`compileall` 全过；⑤旧 README 归档到 `docs/internal/status-log-2026-11-21.md`，HANDOFF/PLAN/LAB_NOTEBOOK/SKILL 加"过程记录"banner；⑥时间口径统一为"2026-11-18 08:08 → 11-20 20:10 约 60 小时"（"实际 8 天"与 3 个日历日矛盾，公开稿不再用）。
+- 读数：HF fp16 `model.safetensors` sha `7d1c2f0c…` / 262.9 MiB；Q8 GGUF sha `8b64b668…` / 174 MB；F16 GGUF sha `eee10822…` / 326 MB；`RELEASE_SHA256SUMS` 入库。CI 四项 EXIT 0。
+- 疑问：①McNemar/CI 与 900 格标签（Phase 2）会把"+6"的措辞改到哪一档（p>0.05 时只能写"达到预注册阈值"）？②独立复核 30~50 题的 kappa 会落在哪档？③v2f 是否值得在 v1.0 后做（重训会动 +6，不能阻塞首发）？——Phase 2 输入。
 
 <!-- 模板（复制使用）：
 ## Day N · YYYY-MM-DD · <主题>

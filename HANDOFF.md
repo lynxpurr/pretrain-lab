@@ -1,5 +1,7 @@
 # HANDOFF — 新会话交接（项目收官态）
 
+> **过程记录（非读者入口）**：本文件是项目开发过程的内部交接，保留当时的本地路径与内部引用。公开读者请从 [README.md](README.md) / [docs/](docs/) 进入；发布状态见 [docs/internal/README.md](docs/internal/README.md)。
+>
 > 更新：2026-11-21（**项目收官 + Day 11 复核 + Day 12 深化**）· 本件是新会话的**唯一启动入口**：开工序 + 状态 + 复现检查 + 锚点 + 可选下一步。知识本体在 [PLAN.md](PLAN.md)（D-01~D-10 · 逐日 · 决策门 · 风险 · 纪律），操作规程在 [.zcode/skills/pretrain-lab/SKILL.md](.zcode/skills/pretrain-lab/SKILL.md)（新会话优先加载）。**当前没有"当日清单"：10 天计划已全部完成，任何新动作先立新 spec。**
 
 ## 0. 新会话开工序（按序，不跳步）
@@ -37,6 +39,14 @@
 - **决策门**：① **PASS**（140M 52,250 tok/s ≥ 35k）；② **不触发**（0.0134 / 0.0051 双证据）
 
 **阶段结论（简版）**：Day 7 v2 = 校准/翻译/格式修好但数学回归；Day 8 v2c = 选择性保护 + en-fluency 首修；机动 v2d = 复读修复最有效（rep-4 0.084）；v2e = 去污 + 精确指令对 + math×2 → dev 判据字面全过、rep-4 0.055；最终阶段 = Q4 量化吃掉弱记忆 → 部署 Q8；Day 10 = 八版终表 + bit-for-bit 复现 + LoRA r12 + demo T0.3；**Day 11 = 去重假阴性修复 + holdout v2（v2e 与 v2 同 23/30）；Day 12 = holdout 扩容 90 题 + LoRA 2ep + 分语言 val（v2e 校准分 +6 显著 / epochs 与 rank 单独加码都不够 / 英文上采样无稀释）**。
+
+## 1.1 公开发布阶段（2026-11-21 起）
+
+- spec = [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)（用户 2026-11-21 拍板"对外发布"）。
+- **Phase 1 完成**：Apache-2.0/CC-BY-4.0/NOTICE/CITATION/CHANGELOG · 英文 README + 中文 README + `docs/` 五件 · requirements + `scripts/` · v2e HF fp16（137,847,552 参数 / 262.9 MiB / greedy 30/30 与 PyTorch 一致）· 独立 Q8_0 GGUF（174 MB / sha `8b64b668…` / Ollama 输出与部署 tag 逐字一致）· 轻量 CI 四项全过。证据 [`reports/2026-11-21-release-model-export.md`](reports/2026-11-21-release-model-export.md) · LAB_NOTEBOOK Release Phase 1 段。
+- **Phase 2 待执行**：900 格人工标签 CSV + `tools/score_manual.py` · McNemar/bootstrap CI · 独立复核 30~50 题（kappa）· 90 题旧 30/新 60 + per-tag 分拆 · v2f 决策（重训会动 +6，不阻塞 v1.0）。
+- **Phase 3 待用户确认**：HF Hub 仓库 / GitHub Release / 长文；**目前未做任何公网推送或上传**。README 中的 HF 仓库名是目标名，尚未创建。
+- 新会话若继续发布：先读 spec §4 Phase 2 AC10~AC14，再按 §5 措辞红线（+6 未做 McNemar 前不得写"统计显著"；时间写约 60 小时，不写"8 天"）。
 
 ## 2. 复现检查（约 1 分钟，按序）
 
@@ -141,6 +151,7 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | **Day 10（实际 11-20）** | ✅ 完成（终检 T4 五项） |
 | **Day 11（11-20 收官后复核）** | ✅ 完成（去重假阴性 + holdout v2） |
 | **Day 12（11-21 收官后深化）** | ✅ 完成（§7 项 1/2/3：holdout 90 题 + LoRA 2ep + 分语言 val） |
+| **公开发布 Phase 1（11-21）** | ✅ 完成（License/README/docs/模型导出/CI；Phase 2/3 待执行） |
 
 **关键路径（终版）**：Day 3 框架+门① ✅ → Day 4 主训练 3B ✅ → Day 5 SFT v1 + 评测 ✅ → Day 6 门② ✅ → Day 7 v2/v2b + LoRA + 部署 ✅ → Day 8 v2c + 六版评测 ✅ → 机动 v2d/v2e ✅ → 最终阶段 v2e-q8 ✅ → **Day 10 终检 ✅ → Day 11 复核 ✅**。原缓冲（11-22~25 + Day 9）全部未用——8 天完成 10 天计划。
 
@@ -162,11 +173,16 @@ ls reports/2026-11-20-{day10-repro-check,holdout-audit,holdout-eval-v2,eval-leak
 | ~~1~~ ✅ | **holdout 扩到 60~100 题 + 能力型测试**——**Day 12 完成**（90 题，sha `2539aa2b`）：数学 0~3/14 ✗ · 翻译 0~5/14 ✗ · calibration ✓ · **v2e 校准 53 vs v2 47（+6 达阈值，"持平"系 30 题欠功效）** | ~2h | 已兑现——证据 `reports/2026-11-21-holdout-audit-v3.md` |
 | ~~2~~ ✅ | **LoRA 2 epochs**（r=12）——**Day 12 完成**：val 1.7921（1.75~1.80 档）→ **epochs 与 rank 单独加码都不够**；能力维度 42→48 有实效，2 epochs 是 LoRA 下限 | ~2.6h GPU | 已兑现——证据 `reports/2026-11-21-lora-r12-2ep.md` |
 | ~~3~~ ✅ | **分语言 val**（中/英 PPL 分项）——**Day 12 完成**：英文上采样对 zh sup ±0.15%，**无稀释**（Day 8 遗留疑问收口） | ~45min | 已兑现——证据 `reports/2026-11-21-langval.md` |
-| 4 | **v2f：去 brevity 残留重建 + 重训** | ~1h20m + 重跑八版 | 换取完全干净的 dev 读数；代价 = 打乱八版可比、两轮为限精神；**仅在对外发布需要"完全干净"时做** |
+| 4 | **v2f：去 brevity 残留重建 + 重训** | ~1h20m + 重跑八版 | 换取完全干净的 dev 读数；代价 = 打乱八版可比、两轮为限精神；**对外发布触发条件已满足，但建议 Phase 2 后做**（重训会动 +6，不阻塞 v1.0） |
 | 5 | qa 复核（学习项） | 自定 | 先自答再对照 `qa-rubric.md` |
 | — | DPO | — | **不建议**（新方向 + 翻新伤口风险） |
 
 **新增候选（Day 12 收波提出，均需新 spec）**：①holdout 扩到 150~200 题 + **独立复核者**复验 v2e 的 +6（贴阈值 + 同 style 偏差）；②关键词 expect 表半自动生成（数值写法收口：299,792 vs 30万——lightspeed 全员假阴教训）；③翻译 zh2en 可译/en2zh 全灭的不对称归因（extras 双向配比 vs 语言先验）。**建议顺序**：4 只在有对外发布需求时做；5 随时；新候选按需。
+
+## 7.1 公开发布（2026-11-21 起，新 spec）
+
+- 状态：**Phase 1 ✅**；Phase 2 待执行；Phase 3 待用户确认（**未做公网上传**）。
+- 详见 §1.1 与 [`specs/2026-11-21-public-release.md`](specs/2026-11-21-public-release.md)。
 
 ## 8. 参考实现与出处
 
