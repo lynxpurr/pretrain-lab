@@ -174,8 +174,10 @@ Rules used in this project:
 The original labels were produced by the same agent that wrote the questions
 (a known bias). [`tools/build_review_kit.py`](../tools/build_review_kit.py)
 builds a blinded 47-question kit (94 answers; v2 and v2e, A/B randomized) for
-a second reviewer, and [`tools/score_review.py`](../tools/score_review.py)
-reports agreement and Cohen's kappa against the published labels. The kit is
+a second reviewer. [`tools/label_review.py`](../tools/label_review.py) is an
+interactive labeler that saves after each answer, and
+[`tools/score_review.py`](../tools/score_review.py) reports agreement and
+Cohen's kappa against the published labels. The kit is
 gitignored; the resulting report and labels are published under `reports/`
 when the review is complete. This is a second review, not external
 validation.

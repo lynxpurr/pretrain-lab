@@ -26,8 +26,9 @@ The project follows a "evidence first" convention: every run has a summary
   +6, "five criteria", dedup, "hand-written", deployment).
 - Lightweight CI: evaluation-set schema checks, leak-checker positive
   control, local link check, and `compileall`.
-- A blinded second-review kit (`tools/build_review_kit.py`) and agreement
-  scorer (`tools/score_review.py`) for a 47-question subset (94 answers).
+- A blinded second-review kit (`tools/build_review_kit.py`), an interactive
+  labeler (`tools/label_review.py`), and an agreement scorer
+  (`tools/score_review.py`) for a 47-question subset (94 answers).
 
 ### Changed
 - Reader-facing docs are separated from the internal process record; the

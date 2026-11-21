@@ -197,10 +197,16 @@ This directory is **gitignored** and is not part of the public repository.
 
 1. Open `answers.md`: 47 prompts, each with **Answer A** and **Answer B**.
 2. Fill `labels.csv`: one row per `answer_id`, `label` = `1` or `0`,
-   optional `note`.
+   optional `note`. Or use the interactive labeler, which saves after every
+   answer and resumes where you stopped:
+
+   ```bash
+   python -I tools/label_review.py --limit 32   # about one third
+   ```
+
 3. **Do not open `.key.csv`** until all 94 labels are filled. It maps A/B to
    models and contains the original labels.
-4. Run:
+4. When all 94 are labeled, run:
 
    ```bash
    python -I tools/score_review.py
