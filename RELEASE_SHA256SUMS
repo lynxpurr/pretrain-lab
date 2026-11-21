@@ -5,3 +5,4 @@
 349dda627876cb2fa7af0ecbc63dcee14135db5343fa4c2f4198b3bc6d30cc1b  out/hf-sft-v2e/config.json
 8b64b66898eef9f5ed4815ad41cadacabc49799b950e9360863798ac5fd16fd5  out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf
 eee108223b9c027840f16c657807f1b3d38981888e38f67a20058b603e068dfc  out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf
+984a25c4d59e36a480d80ee979a82bc0cd1f1232a6ffe71700a486d22c1dd752  out/hf-sft-v2e/last.pt

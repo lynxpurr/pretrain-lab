@@ -97,4 +97,3 @@ OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfi
 ```
 
 - 英文模型卡（HF 用）：[MODEL_CARD.en.md](MODEL_CARD.en.md)
-- 实现说明：AI 辅助代码/文档；实验、评测与发布由人主导。

@@ -22,11 +22,10 @@ datasets:
 
 # pretrain-lab 140M — SFT v2e
 
-A Chinese–English decoder-only language model **trained from random
-initialization**: 137,847,552 parameters, 3B-token pre-training, 250M-token
-SFT, trained on a single RTX 5070 Ti 16 GB GPU.
-This is a learning/research artifact, **not** a production model and **not**
-a competitor to modern open models.
+A **from-scratch** Chinese–English decoder-only language model:
+137,847,552 parameters, 3B-token pre-training, 250M-token SFT, trained on a
+single RTX 5070 Ti 16 GB GPU. This is a learning/research artifact, **not** a
+production model and **not** a competitor to modern open models.
 
 ## Model details
 
@@ -131,6 +130,12 @@ with torch.no_grad():
 print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True))
 ```
 
+### Evaluation checkpoint
+
+`last.pt` is included in the release for the project's `tools/eval.py` and
+`scripts/reproduce_eval.sh`. Most users should use the safetensors weights
+above; `last.pt` is only needed to reproduce the evaluation tables.
+
 ### Ollama / GGUF
 
 ```bash
@@ -154,20 +159,23 @@ ollama run pretrain-lab-sft-v2e-q8
 | `model.safetensors` (fp16, tied) | 262.9 MiB | `7d1c2f0c4657c2a2` |
 | `pretrain-lab-140m-sft-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
 | `pretrain-lab-140m-sft-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
+| `last.pt` (training checkpoint) | 1.6 GB | `984a25c4d59e36a4` |
 
 The HF export omits the duplicate `lm_head.weight` (`--tie-embeddings`), so
 the loaded model has exactly 137,847,552 parameters. Greedy output matches
 the PyTorch checkpoint 30/30 tokens; the Q8 GGUF matches the deployed
-Ollama tag verbatim. See `reports/2026-11-21-release-model-export.md`.
+Ollama tag verbatim. See [the export report](https://github.com/lynxpurr/pretrain-lab/blob/develop/reports/2026-11-21-release-model-export.md).
+`last.pt` is the training checkpoint used by `eval.py`; it is not needed for
+`transformers` or Ollama inference.
 
 ## License
 
 - Code and model weights: **Apache-2.0** (see `LICENSE`).
 - Documentation and evaluation sets: **CC BY 4.0** (see
-  [docs/LICENSE-CC-BY-4.0.txt](https://github.com/lynxpurr/pretrain-lab/blob/main/docs/LICENSE-CC-BY-4.0.txt)
-  and [data/LICENSE](https://github.com/lynxpurr/pretrain-lab/blob/main/data/LICENSE)).
+  [docs/LICENSE-CC-BY-4.0.txt](https://github.com/lynxpurr/pretrain-lab/blob/develop/docs/LICENSE-CC-BY-4.0.txt)
+  and [data/LICENSE](https://github.com/lynxpurr/pretrain-lab/blob/develop/data/LICENSE)).
 - Upstream data licenses apply; see `NOTICE` and
-  [data/LICENSE](https://github.com/lynxpurr/pretrain-lab/blob/main/data/LICENSE).
+  [data/LICENSE](https://github.com/lynxpurr/pretrain-lab/blob/develop/data/LICENSE).
 - The model may reproduce or paraphrase training data; outputs are the
   user's responsibility.
 
@@ -175,7 +183,7 @@ Ollama tag verbatim. See `reports/2026-11-21-release-model-export.md`.
 
 ```bibtex
 @misc{pretrainlab2026,
-  title  = {pretrain-lab: a 140M bilingual language model trained from random initialization on one 16GB GPU},
+  title  = {pretrain-lab: a 140M bilingual language model trained from scratch on one 16GB GPU},
   author = {lynxpurr},
   year   = {2026},
   url    = {https://github.com/lynxpurr/pretrain-lab},
@@ -190,6 +198,3 @@ Architecture/data-format ideas from
 [nanoGPT](https://github.com/karpathy/nanoGPT) (MIT); GGUF layout conventions
 from [llama.cpp](https://github.com/ggml-org/llama.cpp) (MIT); data from
 FineWeb-Edu and minimind_dataset.
-
-*Implementation note: AI-assisted code/docs; human-directed experiments,
-evaluation, and release.*

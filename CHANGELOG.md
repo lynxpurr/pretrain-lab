@@ -7,6 +7,8 @@ All notable changes and results of `pretrain-lab` are recorded here.
 The project follows a "evidence first" convention: every run has a summary
 (`.md`), a curve (`.csv`), and a raw log (`.log`) under `reports/`.
 
+> Release notes: [v1.0.0](docs/release-notes-v1.0.0.md).
+
 ## [Unreleased] — public release preparation (2026-11-21)
 
 ### Added

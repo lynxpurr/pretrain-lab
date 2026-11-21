@@ -25,6 +25,7 @@ DOCS = [
     "docs/evaluation.md",
     "docs/architecture.md",
     "docs/faq.md",
+    "docs/release-notes-v1.0.0.md",
 ]
 
 FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
