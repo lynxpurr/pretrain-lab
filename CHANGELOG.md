@@ -1,5 +1,8 @@
 # Changelog
 
+> Historical commit messages use `day-N` labels and may contain preliminary
+> claims; see [HISTORY.md](HISTORY.md) for the corrections.
+
 All notable changes and results of `pretrain-lab` are recorded here.
 The project follows a "evidence first" convention: every run has a summary
 (`.md`), a curve (`.csv`), and a raw log (`.log`) under `reports/`.

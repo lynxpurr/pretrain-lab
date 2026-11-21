@@ -2,6 +2,7 @@
 
 > 状态：**FINAL / 定稿**（2026-11-19 起稿 → 2026-11-20 终检完成；八版终表 + §5.1 评测污染章 + §10 复现走查 + LoRA r=12 容量对照均已回填；2026-11-21 追加 §12 收官后深化——holdout 90 题 / LoRA 2ep / 分语言 val）
 > 本报告面向"完整经历一次小模型全生命周期"的复盘叙事：设定 → 数据 → 预训练 → SFT 数据五轮迭代 → 评测 → LoRA 对比 → 部署 → 成本 → 经验。
+> 历史 commit 说明：早期 commit message 使用 `day-N` 并可能含初步结论；以本报告 §13 与 [HISTORY.md](HISTORY.md) 为准。
 > 证据链：`reports/`（每次 run 三分 = 摘要 md + 曲线 csv + 原始 log，只增不改）· 决策记录 = [PLAN.md](PLAN.md)（D-01~D-10）· 过程记录 = [LAB_NOTEBOOK.md](LAB_NOTEBOOK.md)。
 
 ## 0. 成绩单（TL;DR）
