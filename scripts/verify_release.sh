@@ -39,14 +39,14 @@ for f in \
   "$HF_DIR/model.safetensors" "$HF_DIR/config.json" "$HF_DIR/tokenizer.json" \
   "$HF_DIR/tokenizer_config.json" "$HF_DIR/special_tokens_map.json" \
   "$HF_DIR/generation_config.json" "$HF_DIR/README.md" "$HF_DIR/LICENSE" \
-  "$HF_DIR/NOTICE" "$HF_DIR/DATA_LICENSE.md" "$HF_DIR/last.pt" \
+  "$HF_DIR/NOTICE" "$HF_DIR/DATA_LICENSE.md" "$HF_DIR/last.pt" "$HF_DIR/SHA256SUMS" \
   "$GGUF_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \
   "$GGUF_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" \
   "$STAGE_DIR/README.md" \
   "$STAGE_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \
   "$STAGE_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" \
   "$STAGE_DIR/Modelfile-ZhenLM-140M-SFT-v2e-q8" "$STAGE_DIR/Modelfile-ZhenLM-140M-SFT-v2e-f16" \
-  "$STAGE_DIR/LICENSE" "$STAGE_DIR/NOTICE"; do
+  "$STAGE_DIR/LICENSE" "$STAGE_DIR/NOTICE" "$STAGE_DIR/SHA256SUMS"; do
   [ -f "$f" ] || fail "missing $f"
 done
 ok "required files present"
@@ -54,6 +54,11 @@ ok "required files present"
 # 2. release manifest -------------------------------------------------------
 sha256sum -c RELEASE_SHA256SUMS
 ok "RELEASE_SHA256SUMS"
+
+# per-repo manifests (uploaded to Hugging Face / attached to the release)
+( cd "$HF_DIR" && sha256sum -c SHA256SUMS )
+( cd "$STAGE_DIR" && sha256sum -c SHA256SUMS )
+ok "per-repo SHA256SUMS"
 
 # 3. staged upload copies ---------------------------------------------------
 cmp -s "$GGUF_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \

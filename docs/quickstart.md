@@ -116,7 +116,7 @@ Budget: ~38 GB download, ~145 GB disk, one 16 GB GPU.
 | `model ... not found` | Run `ollama create ...` from the GGUF/Modelfile |
 | Output repeats or rambles | Use greedy or lower temperature; 140M is small |
 | Q4 output is much worse | Expected: Q4_K_M is not faithful for v2e; use Q8_0/F16 |
-| `transformers` cannot find the model | Check the HF repo name and `huggingface-hub` login for private repos |
+| `transformers` cannot find the model | Check the HF repo name; the model repositories are public |
 | `apply_chat_template` missing | Use the tokenizer files shipped with the model (not a generic tokenizer) |
 | Slow on CPU | Use GGUF + llama.cpp/Ollama; 140M is small but CPU generation is still slower than GPU |
 | Math/translation answers are wrong | Expected; see the capability limits in the README |

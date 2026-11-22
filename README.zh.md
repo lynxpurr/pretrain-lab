@@ -18,8 +18,9 @@ tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 
 
 ## 快速开始
 
-> Hugging Face 仓库是 v1.0 发布的一部分。如果暂时不可用，可从源码构建
-> （[`docs/reproduction.md`](docs/reproduction.md)）。
+权重与 GGUF：[`lynxpurr/ZhenLM-140M-SFT-v2e`](https://huggingface.co/lynxpurr/ZhenLM-140M-SFT-v2e) ·
+[`...-GGUF`](https://huggingface.co/lynxpurr/ZhenLM-140M-SFT-v2e-GGUF)。从源码构建见
+[`docs/reproduction.md`](docs/reproduction.md)。
 
 ### Ollama + GGUF（推荐）
 

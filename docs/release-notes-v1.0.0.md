@@ -1,6 +1,6 @@
 # ZhenLM-140M v1.0.0 — release notes
 
-**2026-11-21** · Project: [pretrain-lab](https://github.com/lynxpurr/pretrain-lab) ·
+**2026-11-22** · Project: [pretrain-lab](https://github.com/lynxpurr/pretrain-lab) ·
 Model family: **ZhenLM-140M** · Deployed variant: **SFT v2e** ·
 [Model card](https://github.com/lynxpurr/pretrain-lab/blob/develop/MODEL_CARD.en.md) ·
 [Evaluation](https://github.com/lynxpurr/pretrain-lab/blob/develop/docs/evaluation.md) ·

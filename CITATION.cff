@@ -16,7 +16,7 @@ repository-code: "https://github.com/lynxpurr/pretrain-lab"
 url: "https://github.com/lynxpurr/pretrain-lab"
 license: Apache-2.0
 version: 1.0.0
-date-released: "2026-11-21"
+date-released: "2026-11-22"
 keywords:
   - language-model
   - from-scratch

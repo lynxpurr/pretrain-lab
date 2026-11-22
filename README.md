@@ -21,8 +21,9 @@ This repository is the `pretrain-lab` project.
 
 ## Quick start
 
-> The Hugging Face repositories are part of the v1.0 release. If they are not
-> available yet, build from source ([`docs/reproduction.md`](docs/reproduction.md)).
+Weights and GGUF: [`lynxpurr/ZhenLM-140M-SFT-v2e`](https://huggingface.co/lynxpurr/ZhenLM-140M-SFT-v2e) ·
+[`...-GGUF`](https://huggingface.co/lynxpurr/ZhenLM-140M-SFT-v2e-GGUF). To build
+from source, see [`docs/reproduction.md`](docs/reproduction.md).
 
 ### Ollama + GGUF (recommended)
 

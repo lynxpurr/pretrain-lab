@@ -9,7 +9,7 @@ The project follows a "evidence first" convention: every run has a summary
 
 > Release notes: [v1.0.0](docs/release-notes-v1.0.0.md).
 
-## [Unreleased] — public release preparation (2026-11-21)
+## [1.0.0] — public release (2026-11-22)
 
 ### Added
 - `LICENSE` (Apache-2.0) · `NOTICE` (data/reference attributions) ·
@@ -56,7 +56,7 @@ The project follows a "evidence first" convention: every run has a summary
   Implementation note. Historical commit messages are not rewritten (see
   HISTORY.md). The repository is pushed; the remote README is current.
 
-## [1.0.0] — project complete (2026-11-20; follow-up 2026-11-21)
+## Project complete — 2026-11-20 (follow-up 2026-11-21)
 
 ### Model
 - **137,847,552-parameter** decoder-only Transformer: d_model 768, 16 layers,
