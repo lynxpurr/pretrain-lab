@@ -1,15 +1,18 @@
-# pretrain-lab v1.0.0 — release notes
+# ZhenLM-140M v1.0.0 — release notes
 
-**2026-11-21** · [Repository](https://github.com/lynxpurr/pretrain-lab) ·
+**2026-11-21** · Project: [pretrain-lab](https://github.com/lynxpurr/pretrain-lab) ·
+Model family: **ZhenLM-140M** · Deployed variant: **SFT v2e** ·
 [Model card](https://github.com/lynxpurr/pretrain-lab/blob/develop/MODEL_CARD.en.md) ·
 [Evaluation](https://github.com/lynxpurr/pretrain-lab/blob/develop/docs/evaluation.md) ·
 [Full report](https://github.com/lynxpurr/pretrain-lab/blob/develop/REPORT.md)
 
 ## What this is
 
-`pretrain-lab` is a **137,847,552-parameter** Chinese–English decoder-only
+**ZhenLM-140M** is a **137,847,552-parameter** Chinese–English decoder-only
 language model trained from random initialization on one RTX 5070 Ti 16 GB
-GPU, plus a reproducible account of what it can and cannot do.
+GPU, plus a reproducible account of what it can and cannot do. The repository
+is the `pretrain-lab` case study. "ZhenLM" (真) means true/honest; "140M" is
+the family label.
 
 It is a learning/research artifact, not a competitive open model and not a
 production system. The most useful part is the evaluation story: the project
@@ -23,7 +26,7 @@ translation) alongside the wins.
 |---|---|
 | Model | 137,847,552 params · d_model 768 · 16 layers · 12 heads · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · context 1024 |
 | Pre-training | 3.0B tokens (English 60% FineWeb-Edu / Chinese 40% minimind) · 16h07m41s · val loss **2.7709** |
-| SFT (deployed) | v2e · 250M tokens · val 1.6065 · repetition-4 **0.055** (lowest in the family) |
+| SFT (deployed) | **ZhenLM-140M-SFT-v2e** · 250M tokens · val 1.6065 · repetition-4 **0.055** (lowest in the family) |
 | Dev set | **17/18** with 2 known residues; clean subset **15/16** |
 | Holdout (90 questions) | audit **53/90** vs v2 **47/90** (+6); per-item re-judgment **52 vs 45** (+7) |
 | Second review (47 questions) | v2e **11 vs 11** (0/47); kappa 0.660/0.453; paired McNemar p=1.000 |
@@ -43,12 +46,12 @@ and not robust to reviewer/rubric"** — not as a capability win.
 | File | Size | SHA256 (prefix) |
 |---|---|---|
 | `model.safetensors` (fp16, tied) | 262.9 MiB | `7d1c2f0c4657c2a2` |
-| `pretrain-lab-140m-sft-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
-| `pretrain-lab-140m-sft-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
+| `ZhenLM-140M-SFT-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
+| `ZhenLM-140M-SFT-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
 | `last.pt` (training checkpoint) | 1.6 GB | `984a25c4d59e36a4` |
 
-- Weights: [lynxpurr/pretrain-lab-140m-sft-v2e](https://huggingface.co/lynxpurr/pretrain-lab-140m-sft-v2e)
-- GGUF: [lynxpurr/pretrain-lab-140m-sft-v2e-GGUF](https://huggingface.co/lynxpurr/pretrain-lab-140m-sft-v2e-GGUF)
+- Weights: [lynxpurr/ZhenLM-140M-SFT-v2e](https://huggingface.co/lynxpurr/ZhenLM-140M-SFT-v2e)
+- GGUF: [lynxpurr/ZhenLM-140M-SFT-v2e-GGUF](https://huggingface.co/lynxpurr/ZhenLM-140M-SFT-v2e-GGUF)
 - Local manifest: [`RELEASE_SHA256SUMS`](https://github.com/lynxpurr/pretrain-lab/blob/develop/RELEASE_SHA256SUMS)
 
 `last.pt` is for `tools/eval.py` / `scripts/reproduce_eval.sh`; it is not
@@ -60,9 +63,9 @@ needed for `transformers` or Ollama inference.
 
 ```bash
 bash scripts/download_model.sh
-( cd models/pretrain-lab-140m-sft-v2e-GGUF && \
-  OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f Modelfile-sft-v2e-q8 )
+( cd models/ZhenLM-140M-SFT-v2e-GGUF && \
+  OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f Modelfile-ZhenLM-140M-SFT-v2e-q8 )
 bash scripts/run_demo.sh          # http://127.0.0.1:7860
 ```
 
@@ -72,7 +75,7 @@ bash scripts/run_demo.sh          # http://127.0.0.1:7860
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
+repo = "lynxpurr/ZhenLM-140M-SFT-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
 model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16).eval()
 
@@ -148,8 +151,8 @@ bash scripts/reproduce_eval.sh                  # dev + 90-question holdout
 ## Citation and license
 
 ```bibtex
-@misc{pretrainlab2026,
-  title  = {pretrain-lab: a 140M bilingual language model trained from scratch on one 16GB GPU},
+@misc{zhenlm2026,
+  title  = {ZhenLM: a 140M bilingual language model trained from scratch on one 16GB GPU},
   author = {lynxpurr},
   year   = {2026},
   url    = {https://github.com/lynxpurr/pretrain-lab},

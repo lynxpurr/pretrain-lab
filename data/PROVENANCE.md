@@ -42,19 +42,21 @@
 
 ## 部署产物（GGUF，本地产物 gitignore；指纹用于对拍/回滚）
 
+> 2026-11-22：公开模型家族更名为 **ZhenLM-140M**；GGUF 文件名与 Ollama tag 同步更新，SHA256 不变。历史 `reports/` 保留旧名。
+
 | 件 | 来源 | 规模 | 指纹（sha256 前 16） | 落位 |
 |---|---|---|---|---|
-| `pretrain-lab-140m-sft-v2e-f16.gguf` | **v2e 部署导出**（q/k permute 同 Day 7；Ollama q8/q4 均由此量化） | 326MB / 147 tensors | `eee108223b9c0278` | `out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf`（对拍表 = `reports/2026-11-20-deploy-v2e.md` §2） |
+| `ZhenLM-140M-SFT-v2e-f16.gguf` | **v2e 部署导出**（q/k permute 同 Day 7；Ollama q8/q4 均由此量化） | 326MB / 147 tensors | `eee108223b9c0278` | `out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf`（对拍表 = `reports/2026-11-20-deploy-v2e.md` §2） |
 
-> 量化档：`pretrain-lab-sft-v2e`（F16）· **`pretrain-lab-sft-v2e-q8`（Q8_0，部署默认）** · `pretrain-lab-sft-v2e-q4`（Q4_K_M，**不推荐**——吃掉 math 42/translate 新学能力）。旧 v2 tag 全部保留（回滚 <1min）。
+> 量化档：`zhenlm-140m-sft-v2e`（F16）· **`zhenlm-140m-sft-v2e-q8`（Q8_0，部署默认）** · `zhenlm-140m-sft-v2e-q4`（Q4_K_M，**不推荐**——吃掉 math 42/translate 新学能力）。旧 v2 tag 全部保留（回滚 <1min）。
 
 ## 发布导出产物（2026-11-21，公开发布 Phase 1）
 
 | 件 | 格式 | 规模 | 指纹（sha256 前 16） | 落位 |
 |---|---|---|---|---|
 | v2e HF fp16（tied） | `LlamaForCausalLM` safetensors | 262.9 MiB / 137,847,552 参数 | `7d1c2f0c4657c2a2` | `out/hf-sft-v2e/`（对拍 = `reports/2026-11-21-release-model-export.md`） |
-| v2e Q8_0 GGUF（独立文件） | GGUF Q8_0 | 174 MB / 147 tensors（114 Q8_0 + 33 F32） | `8b64b66898eef9f5` | `out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf`（与部署 tag 输出逐字一致） |
-| v2e F16 GGUF | GGUF F16 | 326 MB | `eee108223b9c0278` | `out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf` |
+| v2e Q8_0 GGUF（独立文件） | GGUF Q8_0 | 174 MB / 147 tensors（114 Q8_0 + 33 F32） | `8b64b66898eef9f5` | `out/gguf/ZhenLM-140M-SFT-v2e-Q8_0.gguf`（与部署 tag 输出逐字一致） |
+| v2e F16 GGUF | GGUF F16 | 326 MB | `eee108223b9c0278` | `out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf` |
 
 > `RELEASE_SHA256SUMS` 为发布校验清单。HF 导出用 `--tie-embeddings` 省略重复 `lm_head`，参数量 = 137,847,552；PyTorch vs HF greedy 30/30 逐 token 一致。
 

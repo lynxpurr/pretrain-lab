@@ -178,17 +178,17 @@ protocol and caveats.
 ```bash
 .venv-pre/bin/python -I tools/export_gguf.py \
   --ckpt out/sft-v2e/last.pt \
-  --out out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf \
-  --name pretrain-lab-140m-sft-v2e
+  --out out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf \
+  --name ZhenLM-140M-SFT-v2e
 ```
 
 Create the Ollama model from the F16 GGUF:
 
 ```bash
-OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e \
-  -f out/Modelfile-sft-v2e
-OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f out/Modelfile-sft-v2e -q q8_0
+OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e \
+  -f out/Modelfile-ZhenLM-140M-SFT-v2e
+OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f out/Modelfile-ZhenLM-140M-SFT-v2e -q q8_0
 ```
 
 The q/k permutation is applied inside `export_gguf.py`; without it,
@@ -202,8 +202,8 @@ with the `gguf` reader and a generation check before publishing.
 | Released file | Size | SHA256 (prefix) |
 |---|---|---|
 | `out/hf-sft-v2e/model.safetensors` (fp16, tied) | 262.9 MiB | `7d1c2f0c4657c2a2` |
-| `out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
-| `out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
+| `out/gguf/ZhenLM-140M-SFT-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
+| `out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
 
 Full export/verification evidence:
 [`reports/2026-11-21-release-model-export.md`](../reports/2026-11-21-release-model-export.md).

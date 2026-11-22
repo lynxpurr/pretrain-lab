@@ -15,17 +15,22 @@ tags:
   - gguf
   - ollama
   - small-language-model
+  - zhenlm
 datasets:
   - HuggingFaceFW/fineweb-edu
   - jingyaogong/minimind_dataset
 ---
 
-# pretrain-lab 140M — SFT v2e
+# ZhenLM 140M — SFT v2e
 
 A **from-scratch** Chinese–English decoder-only language model:
 137,847,552 parameters, 3B-token pre-training, 250M-token SFT, trained on a
 single RTX 5070 Ti 16 GB GPU. This is a learning/research artifact, **not** a
 production model and **not** a competitor to modern open models.
+
+**Naming**: **ZhenLM** (真) means true/honest. "140M" is the family label; the
+exact parameter count is 137,847,552. This card covers the **SFT v2e**
+variant. The repository is the `pretrain-lab` case study.
 
 ## Model details
 
@@ -132,7 +137,7 @@ underpowered.
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
+repo = "lynxpurr/ZhenLM-140M-SFT-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
 model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
 model.eval()
@@ -153,9 +158,9 @@ above; `last.pt` is only needed to reproduce the evaluation tables.
 ### Ollama / GGUF
 
 ```bash
-OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f Modelfile-sft-v2e-q8
-ollama run pretrain-lab-sft-v2e-q8
+OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f Modelfile-ZhenLM-140M-SFT-v2e-q8
+ollama run zhenlm-140m-sft-v2e-q8
 ```
 
 ## Quantization
@@ -171,8 +176,8 @@ ollama run pretrain-lab-sft-v2e-q8
 | File | Size | SHA256 (prefix) |
 |---|---|---|
 | `model.safetensors` (fp16, tied) | 262.9 MiB | `7d1c2f0c4657c2a2` |
-| `pretrain-lab-140m-sft-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
-| `pretrain-lab-140m-sft-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
+| `ZhenLM-140M-SFT-v2e-Q8_0.gguf` | 174 MB | `8b64b66898eef9f5` |
+| `ZhenLM-140M-SFT-v2e-f16.gguf` | 326 MB | `eee108223b9c0278` |
 | `last.pt` (training checkpoint) | 1.6 GB | `984a25c4d59e36a4` |
 
 The HF export omits the duplicate `lm_head.weight` (`--tie-embeddings`), so
@@ -196,8 +201,8 @@ Ollama tag verbatim. See [the export report](https://github.com/lynxpurr/pretrai
 ## Citation
 
 ```bibtex
-@misc{pretrainlab2026,
-  title  = {pretrain-lab: a 140M bilingual language model trained from scratch on one 16GB GPU},
+@misc{zhenlm2026,
+  title  = {ZhenLM: a 140M bilingual language model trained from scratch on one 16GB GPU},
   author = {lynxpurr},
   year   = {2026},
   url    = {https://github.com/lynxpurr/pretrain-lab},

@@ -1,6 +1,7 @@
-# 从零训练一个 140M 中英小模型 — 全流程技术报告（定稿）
+# 从零训练一个 140M 中英小模型 — ZhenLM-140M 全流程技术报告（定稿）
 
 > 状态：**FINAL / 定稿**（2026-11-19 起稿 → 2026-11-20 终检完成；八版终表 + §5.1 评测污染章 + §10 复现走查 + LoRA r=12 容量对照均已回填；2026-11-21 追加 §12 收官后深化——holdout 90 题 / LoRA 2ep / 分语言 val；2026-11-22 追加 §13.1 第二复核——47 题盲复未复现 +6/+7）
+> 公开模型家族 = **ZhenLM-140M**（Zhen = 真，true/honest）；内部构建产物与历史 `reports/` 仍用旧名 `pretrain-lab-140m-*` / `pretrain-lab-sft-v2e*`，SHA256 不变。
 > 本报告面向"完整经历一次小模型全生命周期"的复盘叙事：设定 → 数据 → 预训练 → SFT 数据五轮迭代 → 评测 → LoRA 对比 → 部署 → 成本 → 经验。
 > 历史 commit 说明：早期 commit message 使用 `day-N` 并可能含初步结论；以本报告 §13 与 [HISTORY.md](HISTORY.md) 为准。
 > 证据链：`reports/`（每次 run 三分 = 摘要 md + 曲线 csv + 原始 log，只增不改）。
@@ -9,7 +10,7 @@
 
 | 项 | 结果 |
 |---|---|
-| 模型 | **137,847,552 参数**（d768/L16/H12，RoPE+RMSNorm+SwiGLU+tied embeddings），自包含 PyTorch 实现 |
+| 模型 | **ZhenLM-140M** · **137,847,552 参数**（d768/L16/H12，RoPE+RMSNorm+SwiGLU+tied embeddings），自包含 PyTorch 实现 |
 | 预训练 | 3.0B token（中 40% / 英 60%）· 16h07m41s · 52,171 tok/s · val **2.7709** · 0 尖峰 0 中断 · 单卡 RTX 5070 Ti 16GB |
 | 吞吐门① | 140M 探针 **52,250 tok/s ≥ 35k**（超 49%），预注册口径跑前未改 |
 | 加训门② | 最后 10% val 降幅 0.0134 + 恒定 lr 探针 0.0051 → **不加训**（双证据） |
@@ -337,9 +338,9 @@ python tools/check_eval_leak.py --eval data/eval/tests.json --eval data/eval/tes
     --extra-dir data/sft-extra-v2 --sft-source data/raw/minimind_dataset/sft_t2t_mini.jsonl
 python tools/sft.py --init-from out/main140m/last.pt --data-dir data/sft-mix-v2e --run-name sft-v2e ...  # 见 skill §3.2
 python tools/eval.py --ckpt base=out/main140m/last.pt --ckpt v2e=out/sft-v2e/last.pt --out reports/<date>-eval.md
-python tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf  # GGUF
-ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfile-sft-v2e -q q8_0            # 部署（Q8_0）
-python tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860             # demo
+python tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf  # GGUF
+ollama create zhenlm-140m-sft-v2e-q8 -f out/Modelfile-ZhenLM-140M-SFT-v2e -q q8_0            # 部署（Q8_0）
+python tools/app_stdlib.py --model zhenlm-140m-sft-v2e-q8 --port 7860             # demo
 ```
 
 ## 11. 已知限制（定稿）
@@ -353,7 +354,7 @@ python tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860          
 
 **后续可选方向**（不属于原始计划）：LoRA 2 epochs / 更大 rank 对照；DPO（`dpo.jsonl` 已在位但未做）；分语言 val；评测集扩到 100+ 题并自动 rubric；更大底座或更长预训练（受 Chinchilla 比与 zh 数据库存约束，zh 3B 已耗 ~72%）。
 
-> **项目状态**：终检于 **2026-11-20 完成**（原计划 11-27）——部署 = `pretrain-lab-sft-v2e-q8`，八版终表、复现走查、证据链与报告定稿全部落档；后续为可选深化。
+> **项目状态**：终检于 **2026-11-20 完成**（原计划 11-27）——部署 = `zhenlm-140m-sft-v2e-q8`，八版终表、复现走查、证据链与报告定稿全部落档；后续为可选深化。
 
 ## 12. 收官后深化（2026-11-21）
 

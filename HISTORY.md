@@ -22,9 +22,12 @@ day. The plan dates shifted during the project; the work was executed on
 | `day-1/0: 手写 model.py / A 手写为主` | Final public wording: **self-contained implementation, AI-assisted, human-verified**. See the Implementation note in README.md. |
 | `day-8/10: 部署切 v2 / v2e` | Deployment mentions are chronological; the final deployment is **v2e-q8** (since 2026-11-20). |
 | `init: original plan / internal project references` | `day-N` is the original plan unit; internal planning references are kept for provenance, not public entry points. |
+| `pretrain-lab-140m-sft-v2e` / `pretrain-lab-sft-v2e-q8` | Public model family renamed to **ZhenLM-140M** on 2026-11-22 (`ZhenLM-140M-SFT-v2e`; Ollama `zhenlm-140m-sft-v2e-q8`). Artifact SHA256 values and historical reports are unchanged. |
 
 ## What is not affected
 
 The model artifacts, evaluation sets, 900 per-item labels, and the final
-deployment are unchanged. This file only explains how to read old commit
-messages; it does not change the results.
+deployment are unchanged. The public model family was renamed to
+**ZhenLM-140M** on 2026-11-22; artifact bytes/SHA256 are unchanged. This file
+only explains how to read old commit messages and artifact names; it does not
+change the results.

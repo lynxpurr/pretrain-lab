@@ -9,8 +9,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 HF_CLI="${HF_CLI:-hf}"
-HF_REPO="${HF_REPO:-lynxpurr/pretrain-lab-140m-sft-v2e}"
-HF_GGUF_REPO="${HF_GGUF_REPO:-lynxpurr/pretrain-lab-140m-sft-v2e-GGUF}"
+HF_REPO="${HF_REPO:-lynxpurr/ZhenLM-140M-SFT-v2e}"
+HF_GGUF_REPO="${HF_GGUF_REPO:-lynxpurr/ZhenLM-140M-SFT-v2e-GGUF}"
 
 if ! command -v "$HF_CLI" >/dev/null 2>&1; then
   echo "[model] '$HF_CLI' CLI not found. Install it with:" >&2
@@ -36,5 +36,5 @@ echo "  GGUF files : models/$(basename "$HF_GGUF_REPO")"
 echo
 echo "Create an Ollama model from the Q8 GGUF (the Modelfile uses a relative FROM):"
 echo "  ( cd models/$(basename "$HF_GGUF_REPO") && \\"
-echo "    OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \\"
-echo "    -f Modelfile-sft-v2e-q8 )"
+echo "    OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \\"
+echo "    -f Modelfile-ZhenLM-140M-SFT-v2e-q8 )"

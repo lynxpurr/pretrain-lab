@@ -48,6 +48,10 @@ The project follows a "evidence first" convention: every run has a summary
   advantage: v2e 11 vs v2 11 (kappa 0.660/0.453; paired p=1.000). The +6/+7
   is threshold-met under the original labels but rubric-sensitive. See
   `docs/evaluation.md` §6.1.
+- Public model family renamed to **ZhenLM-140M** (Zhen = 真, true/honest);
+  the deployed variant is **ZhenLM-140M-SFT-v2e** (Ollama
+  `zhenlm-140m-sft-v2e-q8`). Historical reports keep the old
+  `pretrain-lab-*` artifact names; SHA256 values are unchanged.
 - Public docs use dates; no day/duration selling points; AI disclosure is one
   Implementation note. Historical commit messages are not rewritten (see
   HISTORY.md). The repository is pushed; the remote README is current.
@@ -89,8 +93,9 @@ The project follows a "evidence first" convention: every run has a summary
   the 5/5 spot check.
 
 ### Deployment
-- GGUF F16 312MB / Q8_0 174MB; Ollama model `pretrain-lab-sft-v2e-q8`;
-  zero-dependency local chat page on port 7860 (default temperature 0.3).
+- GGUF F16 312MB / Q8_0 174MB; Ollama model **ZhenLM-140M-SFT-v2e-q8**
+  (originally deployed as `pretrain-lab-sft-v2e-q8`); zero-dependency local
+  chat page on port 7860 (default temperature 0.3).
 
 ### Evidence
 - 118 files under `reports/`, including day-by-day summaries, raw logs,

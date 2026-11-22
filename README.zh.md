@@ -1,6 +1,6 @@
 # pretrain-lab
 
-**一张 16GB 显卡，从零训一个 137.8M 参数中英小模型——以及它做不到的事。**
+**ZhenLM-140M——一张 16GB 显卡从零训出的 137.8M 参数中英小模型，以及它做不到的事。**
 
 这不是一个要和开源大模型竞争的模型，而是一次**完整、可复现的案例研究**：
 tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 部署，
@@ -9,11 +9,14 @@ tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 
 并如实报告数学/翻译的失败，而不是把它们藏起来。47 题第二复核也没有复现
 我们自己声称的 v2e"优势"（11 vs 11）——这一点同样照实写。
 
-- **模型**：137,847,552 参数 · d_model 768 · 16 层 · 12 头 · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · 上下文 1024
+**命名**：**ZhenLM**（真，true/honest）是模型家族；"140M" 是家族标签，精确参数
+137,847,552；部署变体为 **SFT v2e**。本仓库是 `pretrain-lab` 案例研究。
+
+- **模型**：**ZhenLM-140M** · 137,847,552 参数 · d_model 768 · 16 层 · 12 头 · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · 上下文 1024
 - **预训练**：3.0B token（英文 60% FineWeb-Edu / 中文 40% minimind）· 16h07m41s · val **2.7709**
-- **SFT**：250M token，assistant-only mask，六版 · 部署 **v2e**（val 1.6065，rep-4 **0.055**）
+- **SFT**：250M token，assistant-only mask，六版 · 部署 **ZhenLM-140M-SFT-v2e**（val 1.6065，rep-4 **0.055**）
 - **硬件**：单卡 RTX 5070 Ti 16GB · 全本地
-- **部署**：Q8_0 GGUF（174 MB）→ Ollama → 零依赖本地聊天页
+- **部署**：Q8_0 GGUF（174 MB）→ Ollama（`zhenlm-140m-sft-v2e-q8`）→ 零依赖本地聊天页
 
 ## 快速开始
 
@@ -25,9 +28,9 @@ tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 
 
 ```bash
 bash scripts/download_model.sh          # 从 Hugging Face 下载 GGUF + Modelfile
-( cd models/pretrain-lab-140m-sft-v2e-GGUF && \
-  OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f Modelfile-sft-v2e-q8 )
+( cd models/ZhenLM-140M-SFT-v2e-GGUF && \
+  OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f Modelfile-ZhenLM-140M-SFT-v2e-q8 )
 bash scripts/run_demo.sh                # http://127.0.0.1:7860
 ```
 
@@ -39,7 +42,7 @@ uv pip install --python .venv-pre/bin/python -r requirements-hf.txt
 .venv-pre/bin/python - <<'PY'
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
+repo = "lynxpurr/ZhenLM-140M-SFT-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
 model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
 messages = [{"role": "user", "content": "请用一句话介绍杭州。"}]

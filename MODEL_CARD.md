@@ -1,6 +1,8 @@
-# Model Card — pretrain-lab 140M（SFT v2e，部署 Q8_0）
+# Model Card — ZhenLM 140M（SFT v2e，部署 Q8_0）
 
-> 一个**从零训练**（自包含实现）的中英双语 ~140M 小模型：3B token 预训练 + 250M token SFT。定位 = 学习/本地 demo，**不是**生产模型，也不对标开源大模型。**部署模型 = `pretrain-lab-sft-v2e-q8`**（2026-11-20 起；v2 全 tag 保留可回滚）。
+> 一个**从零训练**（自包含实现）的中英双语 ~140M 小模型：3B token 预训练 + 250M token SFT。定位 = 学习/本地 demo，**不是**生产模型，也不对标开源大模型。**部署模型 = `zhenlm-140m-sft-v2e-q8`**（2026-11-20 起；v2 全 tag 保留可回滚）。
+>
+> **命名**：**ZhenLM**（真，true/honest）是模型家族；"140M" 是家族标签，精确参数 137,847,552；部署变体为 **SFT v2e**。本仓库是 `pretrain-lab` 案例研究。
 
 ## 1. 模型详情
 
@@ -51,7 +53,7 @@
 
 - FineWeb-Edu（ODC-BY v1.0，另受 CommonCrawl ToU 约束）；minimind_dataset（Apache-2.0）；合成补充样本由本仓 `tools/gen_sft_v2_extra.py` 生成。再分发/商用前请自行核对上游许可。
 - **本仓许可**：代码与模型权重 **Apache-2.0**；文档与评测集 **CC BY 4.0**；上游数据署名与条款见 [NOTICE](NOTICE) 与 [data/LICENSE](data/LICENSE)。
-- **发布文件（2026-11-21 导出）**：HF fp16（tied）`out/hf-sft-v2e/`（262.9 MiB，sha `7d1c2f0c…`）；Q8_0 GGUF `pretrain-lab-140m-sft-v2e-Q8_0.gguf`（174 MB，sha `8b64b668…`）；F16 GGUF（326 MB，sha `eee10822…`）。对拍记录见 [reports/2026-11-21-release-model-export.md](reports/2026-11-21-release-model-export.md)。
+- **发布文件（2026-11-21 导出）**：HF fp16（tied）`out/hf-sft-v2e/`（262.9 MiB，sha `7d1c2f0c…`）；Q8_0 GGUF `ZhenLM-140M-SFT-v2e-Q8_0.gguf`（174 MB，sha `8b64b668…`）；F16 GGUF（326 MB，sha `eee10822…`）。对拍记录见 [reports/2026-11-21-release-model-export.md](reports/2026-11-21-release-model-export.md)。
 - 指纹与出处：`data/PROVENANCE.md` + 各层 `SHA256SUMS`。
 
 ## 6. 复现
@@ -72,10 +74,10 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv-pre/bin/python -I tools/s
 .venv-pre/bin/python -I tools/eval.py --ckpt v2e=out/sft-v2e/last.pt --out reports/eval.md
 .venv-pre/bin/python -I tools/eval_format.py --csv reports/eval.csv --out reports/eval-rubric.md
 # GGUF / Ollama（部署默认 Q8_0；F16 对拍通过后建 -q8）
-.venv-pre/bin/python -I tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/pretrain-lab-140m-sft-v2e-f16.gguf
-OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfile-sft-v2e -q q8_0
+.venv-pre/bin/python -I tools/export_gguf.py --ckpt out/sft-v2e/last.pt --out out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf
+OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 -f out/Modelfile-ZhenLM-140M-SFT-v2e -q q8_0
 # demo
-.venv-pre/bin/python -I tools/app_stdlib.py --model pretrain-lab-sft-v2e-q8 --port 7860
+.venv-pre/bin/python -I tools/app_stdlib.py --model zhenlm-140m-sft-v2e-q8 --port 7860
 ```
 
 ## 7. 引用/出处
@@ -90,8 +92,8 @@ OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 -f out/Modelfi
 - 引用：
 
 ```bibtex
-@misc{pretrainlab2026,
-  title  = {pretrain-lab: a 140M bilingual language model trained from random initialization on one 16GB GPU},
+@misc{zhenlm2026,
+  title  = {ZhenLM: a 140M bilingual language model trained from random initialization on one 16GB GPU},
   author = {lynxpurr},
   year   = {2026},
   url    = {https://github.com/lynxpurr/pretrain-lab},

@@ -40,12 +40,12 @@ for f in \
   "$HF_DIR/tokenizer_config.json" "$HF_DIR/special_tokens_map.json" \
   "$HF_DIR/generation_config.json" "$HF_DIR/README.md" "$HF_DIR/LICENSE" \
   "$HF_DIR/NOTICE" "$HF_DIR/DATA_LICENSE.md" "$HF_DIR/last.pt" \
-  "$GGUF_DIR/pretrain-lab-140m-sft-v2e-Q8_0.gguf" \
-  "$GGUF_DIR/pretrain-lab-140m-sft-v2e-f16.gguf" \
+  "$GGUF_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \
+  "$GGUF_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" \
   "$STAGE_DIR/README.md" \
-  "$STAGE_DIR/pretrain-lab-140m-sft-v2e-Q8_0.gguf" \
-  "$STAGE_DIR/pretrain-lab-140m-sft-v2e-f16.gguf" \
-  "$STAGE_DIR/Modelfile-sft-v2e-q8" "$STAGE_DIR/Modelfile-sft-v2e-f16" \
+  "$STAGE_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \
+  "$STAGE_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" \
+  "$STAGE_DIR/Modelfile-ZhenLM-140M-SFT-v2e-q8" "$STAGE_DIR/Modelfile-ZhenLM-140M-SFT-v2e-f16" \
   "$STAGE_DIR/LICENSE" "$STAGE_DIR/NOTICE"; do
   [ -f "$f" ] || fail "missing $f"
 done
@@ -56,16 +56,16 @@ sha256sum -c RELEASE_SHA256SUMS
 ok "RELEASE_SHA256SUMS"
 
 # 3. staged upload copies ---------------------------------------------------
-cmp -s "$GGUF_DIR/pretrain-lab-140m-sft-v2e-Q8_0.gguf" \
-  "$STAGE_DIR/pretrain-lab-140m-sft-v2e-Q8_0.gguf" || fail "staged Q8 GGUF differs"
-cmp -s "$GGUF_DIR/pretrain-lab-140m-sft-v2e-f16.gguf" \
-  "$STAGE_DIR/pretrain-lab-140m-sft-v2e-f16.gguf" || fail "staged F16 GGUF differs"
+cmp -s "$GGUF_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \
+  "$STAGE_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" || fail "staged Q8 GGUF differs"
+cmp -s "$GGUF_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" \
+  "$STAGE_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" || fail "staged F16 GGUF differs"
 ok "staged GGUF copies match"
 
 # 4. GGUF metadata ----------------------------------------------------------
 "$PY" -I - \
-  "$STAGE_DIR/pretrain-lab-140m-sft-v2e-Q8_0.gguf" \
-  "$STAGE_DIR/pretrain-lab-140m-sft-v2e-f16.gguf" <<'PY'
+  "$STAGE_DIR/ZhenLM-140M-SFT-v2e-Q8_0.gguf" \
+  "$STAGE_DIR/ZhenLM-140M-SFT-v2e-f16.gguf" <<'PY'
 import sys
 from collections import Counter
 from gguf import GGUFReader
@@ -120,8 +120,8 @@ echo
 echo "[verify] all local release checks passed."
 echo
 echo "Next (after 'hf auth login' as lynxpurr):"
-echo "  hf upload lynxpurr/pretrain-lab-140m-sft-v2e out/hf-sft-v2e"
-echo "  hf upload lynxpurr/pretrain-lab-140m-sft-v2e-GGUF out/hf-gguf-release"
+echo "  hf upload lynxpurr/ZhenLM-140M-SFT-v2e out/hf-sft-v2e"
+echo "  hf upload lynxpurr/ZhenLM-140M-SFT-v2e-GGUF out/hf-gguf-release"
 echo
 echo "Then verify from a clean directory:"
 echo "  bash scripts/download_model.sh"

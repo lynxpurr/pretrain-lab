@@ -34,7 +34,7 @@ def main() -> None:
     ap.add_argument("--ckpt", default="out/sft-v1/last.pt")
     ap.add_argument("--out-dir", default="out/hf-sft-v1")
     ap.add_argument("--tokenizer", default="data/tokenizer-32k/tokenizer.json")
-    ap.add_argument("--name", default="pretrain-lab-140m")
+    ap.add_argument("--name", default="ZhenLM-140M")
     ap.add_argument("--dtype", choices=["fp32", "fp16", "bf16"], default="fp32",
                     help="safetensors dtype (fp16 is recommended for release)")
     ap.add_argument("--tie-embeddings", action="store_true",

@@ -12,10 +12,10 @@ bash scripts/download_model.sh
 ```
 
 This downloads the released Q8_0/F16 GGUF files and the Modelfile into
-`models/pretrain-lab-140m-sft-v2e-GGUF/`. It requires the `hf` CLI
+`models/ZhenLM-140M-SFT-v2e-GGUF/`. It requires the `hf` CLI
 (`pip install -U huggingface_hub`). If you built the model locally,
-the file is `out/gguf/pretrain-lab-140m-sft-v2e-Q8_0.gguf` and the
-Modelfile is `out/Modelfile-sft-v2e`.
+the file is `out/gguf/ZhenLM-140M-SFT-v2e-Q8_0.gguf` and the
+Modelfile is `out/Modelfile-ZhenLM-140M-SFT-v2e`.
 
 ### 2. Start Ollama
 
@@ -32,17 +32,17 @@ OLLAMA_HOST=127.0.0.1:11435 ollama list
 ### 3. Create the model
 
 ```bash
-( cd models/pretrain-lab-140m-sft-v2e-GGUF && \
-  OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f Modelfile-sft-v2e-q8 )
+( cd models/ZhenLM-140M-SFT-v2e-GGUF && \
+  OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f Modelfile-ZhenLM-140M-SFT-v2e-q8 )
 ```
 
 If you only have the F16 GGUF, create the Q8 variant with Ollama:
 
 ```bash
-( cd models/pretrain-lab-140m-sft-v2e-GGUF && \
-  OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f Modelfile-sft-v2e-f16 -q q8_0 )
+( cd models/ZhenLM-140M-SFT-v2e-GGUF && \
+  OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f Modelfile-ZhenLM-140M-SFT-v2e-f16 -q q8_0 )
 ```
 
 ### 4. Run the local chat page
@@ -58,7 +58,7 @@ Only expose it on a network you trust (`BIND=0.0.0.0` is possible but unsafe).
 
 ```bash
 curl -s http://127.0.0.1:11435/api/chat -d '{
-  "model": "pretrain-lab-sft-v2e-q8",
+  "model": "zhenlm-140m-sft-v2e-q8",
   "messages": [{"role": "user", "content": "请用一句话介绍杭州。"}],
   "stream": false,
   "options": {"temperature": 0.3, "top_p": 0.9}
@@ -79,7 +79,7 @@ uv pip install --python .venv-pre/bin/python -r requirements-hf.txt
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
+repo = "lynxpurr/ZhenLM-140M-SFT-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
 model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
 model.eval()

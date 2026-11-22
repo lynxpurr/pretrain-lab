@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this project or its model, please cite it as below."
-title: "pretrain-lab: a 140M bilingual language model trained from random initialization on one 16GB GPU"
+title: "ZhenLM: a 140M bilingual language model trained from scratch on one 16GB GPU"
 abstract: >-
-  A Chinese-English 137.8M-parameter decoder-only language model trained from
-  random initialization (3B-token pre-training, 250M-token SFT, LoRA
-  ablations, GGUF/Ollama demo), on a single RTX 5070 Ti 16GB GPU. The
+  ZhenLM-140M is a Chinese-English 137.8M-parameter decoder-only language model
+  trained from random initialization (3B-token pre-training, 250M-token SFT,
+  LoRA ablations, GGUF/Ollama demo), on a single RTX 5070 Ti 16GB GPU. The
   repository includes the full data pipeline, training/evaluation
   scripts, evidence, and an honest evaluation report covering contamination
   discovery, a 90-question holdout, a second review that did not reproduce
@@ -27,3 +27,4 @@ keywords:
   - gguf
   - ollama
   - small-language-model
+  - zhenlm

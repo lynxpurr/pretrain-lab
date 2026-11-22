@@ -1,6 +1,6 @@
 # pretrain-lab
 
-**A 137.8M-parameter Chinese–English language model trained from random initialization on one 16GB GPU — and an honest account of what it can't do.**
+**ZhenLM-140M — a 137.8M-parameter Chinese–English language model trained from random initialization on one 16GB GPU — and an honest account of what it can't do.**
 
 This is not a competitive open model. It is a complete, reproducible case study:
 tokenizer → 3B-token pre-training → six SFT iterations → LoRA ablations →
@@ -11,11 +11,15 @@ and report the failures (math, translation) instead of hiding them. A
 47-question second review also failed to reproduce our own claimed v2e
 advantage (11 vs 11); we report that too.
 
-- **Model**: 137,847,552 params · d_model 768 · 16 layers · 12 heads · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · context 1024
+**Naming**: **ZhenLM** (真, "true/honest") is the model family. "140M" is the
+family label; the exact parameter count is 137,847,552. The deployed SFT
+variant is **v2e**. This repository is the `pretrain-lab` case study.
+
+- **Model**: **ZhenLM-140M** · 137,847,552 params · d_model 768 · 16 layers · 12 heads · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · context 1024
 - **Pre-training**: 3.0B tokens (English 60% FineWeb-Edu / Chinese 40% minimind) · 16h07m41s · validation loss **2.7709**
-- **SFT**: 250M tokens, assistant-only mask, six variants · deployed **v2e** (val 1.6065, repetition-4 **0.055**)
+- **SFT**: 250M tokens, assistant-only mask, six variants · deployed **ZhenLM-140M-SFT-v2e** (val 1.6065, repetition-4 **0.055**)
 - **Hardware**: one RTX 5070 Ti 16GB · single-GPU, local
-- **Deployment**: Q8_0 GGUF (174 MB) → Ollama → zero-dependency local chat page
+- **Deployment**: Q8_0 GGUF (174 MB) → Ollama (`zhenlm-140m-sft-v2e-q8`) → zero-dependency local chat page
 
 ## Quick start
 
@@ -28,9 +32,9 @@ advantage (11 vs 11); we report that too.
 
 ```bash
 bash scripts/download_model.sh          # downloads the GGUF + Modelfile from Hugging Face
-( cd models/pretrain-lab-140m-sft-v2e-GGUF && \
-  OLLAMA_HOST=127.0.0.1:11435 ollama create pretrain-lab-sft-v2e-q8 \
-  -f Modelfile-sft-v2e-q8 )
+( cd models/ZhenLM-140M-SFT-v2e-GGUF && \
+  OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
+  -f Modelfile-ZhenLM-140M-SFT-v2e-q8 )
 bash scripts/run_demo.sh                # http://127.0.0.1:7860
 ```
 
@@ -42,7 +46,7 @@ uv pip install --python .venv-pre/bin/python -r requirements-hf.txt
 .venv-pre/bin/python - <<'PY'
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-repo = "lynxpurr/pretrain-lab-140m-sft-v2e"
+repo = "lynxpurr/ZhenLM-140M-SFT-v2e"
 tok = AutoTokenizer.from_pretrained(repo)
 model = AutoModelForCausalLM.from_pretrained(repo, dtype=torch.float16)
 messages = [{"role": "user", "content": "请用一句话介绍杭州。"}]

@@ -6,8 +6,8 @@
 `data/tokenizer-32k/tokenizer.json` 的 BPE vocab+merges 写入（model=gpt2）。
 
 用法：
-  .venv-pre/bin/python -I tools/export_gguf.py --ckpt out/sft-v2/last.pt \
-      --out out/gguf/pretrain-lab-140m-sft-v2-f16.gguf --name pretrain-lab-140m-sft-v2
+  .venv-pre/bin/python -I tools/export_gguf.py --ckpt out/sft-v2e/last.pt \
+      --out out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf --name ZhenLM-140M-SFT-v2e
 """
 from __future__ import annotations
 
@@ -58,9 +58,9 @@ def load_tokenizer_meta(path: Path) -> tuple[list[str], list[str], list[int]]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ckpt", default="out/sft-v2/last.pt")
-    ap.add_argument("--out", default="out/gguf/pretrain-lab-140m-sft-v2-f16.gguf")
-    ap.add_argument("--name", default="pretrain-lab-140m-sft-v2")
+    ap.add_argument("--ckpt", default="out/sft-v2e/last.pt")
+    ap.add_argument("--out", default="out/gguf/ZhenLM-140M-SFT-v2e-f16.gguf")
+    ap.add_argument("--name", default="ZhenLM-140M-SFT-v2e")
     ap.add_argument("--tokenizer", default="data/tokenizer-32k/tokenizer.json")
     ap.add_argument("--dtype", choices=["f16", "f32"], default="f16")
     args = ap.parse_args()
