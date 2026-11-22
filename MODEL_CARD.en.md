@@ -30,7 +30,7 @@ production model and **not** a competitor to modern open models.
 
 **Naming**: **ZhenLM** (真) means true/honest. "140M" is the family label; the
 exact parameter count is 137,847,552. This card covers the **SFT v2e**
-variant. The repository is the `pretrain-lab` case study.
+variant. The repository is the `pretrain-lab` project.
 
 ## Model details
 

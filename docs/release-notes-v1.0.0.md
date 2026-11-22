@@ -11,14 +11,13 @@ Model family: **ZhenLM-140M** · Deployed variant: **SFT v2e** ·
 **ZhenLM-140M** is a **137,847,552-parameter** Chinese–English decoder-only
 language model trained from random initialization on one RTX 5070 Ti 16 GB
 GPU, plus a reproducible account of what it can and cannot do. The repository
-is the `pretrain-lab` case study. "ZhenLM" (真) means true/honest; "140M" is
+is the `pretrain-lab` project. "ZhenLM" (真) means true/honest; "140M" is
 the family label.
 
 It is a learning/research artifact, not a competitive open model and not a
-production system. The most useful part is the evaluation story: the project
-found its own evaluation contamination, fixed a false-negative deduplication
-checker, built a 90-question holdout, and reports the failures (math,
-translation) alongside the wins.
+production system. The evaluation section documents the contamination
+finding, the deduplication-checker fix, the 90-question holdout, the
+47-question second review, and the failure modes (math, translation).
 
 ## Headline results
 

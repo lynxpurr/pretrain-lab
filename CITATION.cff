@@ -6,7 +6,7 @@ abstract: >-
   trained from random initialization (3B-token pre-training, 250M-token SFT,
   LoRA ablations, GGUF/Ollama demo), on a single RTX 5070 Ti 16GB GPU. The
   repository includes the full data pipeline, training/evaluation
-  scripts, evidence, and an honest evaluation report covering contamination
+  scripts, evidence, and a detailed evaluation report covering contamination
   discovery, a 90-question holdout, a second review that did not reproduce
   the claimed improvement, quantization fidelity, and capability limits.
 authors:

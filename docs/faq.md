@@ -5,7 +5,7 @@
 **ZhenLM** (真) means true/honest; it is the model family. "140M" is the
 family label, and the exact parameter count is 137,847,552. The deployed SFT
 variant is **ZhenLM-140M-SFT-v2e** (Ollama `zhenlm-140m-sft-v2e-q8`). The
-repository is the `pretrain-lab` case study.
+repository is the `pretrain-lab` project.
 
 ### Why 140M parameters?
 

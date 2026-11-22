@@ -1,19 +1,17 @@
 # pretrain-lab
 
-**ZhenLM-140M — a 137.8M-parameter Chinese–English language model trained from random initialization on one 16GB GPU — and an honest account of what it can't do.**
+**ZhenLM-140M — a 137.8M-parameter Chinese–English language model trained from random initialization on one 16GB GPU, with a detailed evaluation of its capabilities and limits.**
 
-This is not a competitive open model. It is a complete, reproducible case study:
+This is not a competitive open model. It is a complete, reproducible pipeline:
 tokenizer → 3B-token pre-training → six SFT iterations → LoRA ablations →
 GGUF/Ollama deployment, with every run's evidence in [`reports/`](reports/).
-The most useful part is the evaluation story: we found our own evaluation
-contamination, fixed the deduplication checker, built a 90-question holdout,
-and report the failures (math, translation) instead of hiding them. A
-47-question second review also failed to reproduce our own claimed v2e
-advantage (11 vs 11); we report that too.
+The evaluation section documents the project's contamination finding, the
+deduplication-checker fix, the 90-question holdout, the 47-question second
+review, and the failure modes (math, translation).
 
 **Naming**: **ZhenLM** (真, "true/honest") is the model family. "140M" is the
 family label; the exact parameter count is 137,847,552. The deployed SFT
-variant is **v2e**. This repository is the `pretrain-lab` case study.
+variant is **v2e**. This repository is the `pretrain-lab` project.
 
 - **Model**: **ZhenLM-140M** · 137,847,552 params · d_model 768 · 16 layers · 12 heads · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · context 1024
 - **Pre-training**: 3.0B tokens (English 60% FineWeb-Edu / Chinese 40% minimind) · 16h07m41s · validation loss **2.7709**
@@ -61,7 +59,7 @@ PY
 See [`docs/reproduction.md`](docs/reproduction.md). Full pipeline: ~38 GB data
 download, ~21 min shards, ~16 h pre-training, ~1 h 20 m per SFT run.
 
-## Results (honest)
+## Results
 
 All numbers are greedy decoding, same chat template, same tokenizer.
 The dev set is for iteration; the 90-question holdout is for acceptance.

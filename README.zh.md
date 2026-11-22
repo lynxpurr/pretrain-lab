@@ -1,16 +1,14 @@
 # pretrain-lab
 
-**ZhenLM-140M——一张 16GB 显卡从零训出的 137.8M 参数中英小模型，以及它做不到的事。**
+**ZhenLM-140M——一张 16GB 显卡从零训出的 137.8M 参数中英小模型，附完整的能力与限制评测。**
 
-这不是一个要和开源大模型竞争的模型，而是一次**完整、可复现的案例研究**：
+这不是一个要和开源大模型竞争的模型，而是一条**完整、可复现的训练流程**：
 tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 部署，
-每一步的证据都在 [`reports/`](reports/)。最有价值的部分是评测故事：
-我们自己发现了训练集污染、修好了去重检查器的假阴性、建了 90 题 holdout，
-并如实报告数学/翻译的失败，而不是把它们藏起来。47 题第二复核也没有复现
-我们自己声称的 v2e"优势"（11 vs 11）——这一点同样照实写。
+每一步的证据都在 [`reports/`](reports/)。评测部分记录了训练集污染、去重检查器
+假阴性的修复、90 题 holdout、47 题第二复核，以及数学/翻译的失败模式。
 
 **命名**：**ZhenLM**（真，true/honest）是模型家族；"140M" 是家族标签，精确参数
-137,847,552；部署变体为 **SFT v2e**。本仓库是 `pretrain-lab` 案例研究。
+137,847,552；部署变体为 **SFT v2e**。本仓库是 `pretrain-lab` 项目。
 
 - **模型**：**ZhenLM-140M** · 137,847,552 参数 · d_model 768 · 16 层 · 12 头 · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · 上下文 1024
 - **预训练**：3.0B token（英文 60% FineWeb-Edu / 中文 40% minimind）· 16h07m41s · val **2.7709**
@@ -57,7 +55,7 @@ PY
 见 [`docs/reproduction.md`](docs/reproduction.md)：约 38GB 数据下载、~21 分钟分片、
 ~16 小时预训练、每版 SFT ~1 小时 20 分钟。
 
-## 结果（诚实版）
+## 结果
 
 全部 greedy 解码、同一 chat 模板、同一 tokenizer。dev 用于迭代，90 题 holdout 用于验收。
 `rep-4` = 4-gram 复读率（越低越好）。
