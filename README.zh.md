@@ -1,14 +1,14 @@
 # pretrain-lab
 
-**ZhenLM-140M——一张 16GB 显卡从零训出的 137.8M 参数中英小模型，附完整的能力与限制评测。**
+**ZhenLM-140M——一张 16GB 显卡从零训出的 137.8M 参数中英小模型。**
 
-这不是一个要和开源大模型竞争的模型，而是一条**完整、可复现的训练流程**：
+这不是一个要和开源大模型竞争的模型，而是一条完整、可复现的训练流程：
 tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 部署，
 每一步的证据都在 [`reports/`](reports/)。评测部分记录了训练集污染、去重检查器
 假阴性的修复、90 题 holdout、47 题第二复核，以及数学/翻译的失败模式。
 
-**命名**：**ZhenLM**（真，true/honest）是模型家族；"140M" 是家族标签，精确参数
-137,847,552；部署变体为 **SFT v2e**。本仓库是 `pretrain-lab` 项目。
+**命名**：**ZhenLM**（真）是模型家族；"140M" 是家族标签（精确参数
+137,847,552）；部署变体为 **SFT v2e**。本仓库是 `pretrain-lab` 项目。
 
 - **模型**：**ZhenLM-140M** · 137,847,552 参数 · d_model 768 · 16 层 · 12 头 · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · 上下文 1024
 - **预训练**：3.0B token（英文 60% FineWeb-Edu / 中文 40% minimind）· 16h07m41s · val **2.7709**
@@ -18,21 +18,20 @@ tokenizer → 3B token 预训练 → 六版 SFT → LoRA 消融 → GGUF/Ollama 
 
 ## 快速开始
 
-> Hugging Face 仓库是 v1.0 发布的一部分。如果 `scripts/download_model.sh`
-> 暂时找不到仓库，可从源码构建（[`docs/reproduction.md`](docs/reproduction.md)）
-> 或直接使用本地发布文件（`out/gguf/`）。
+> Hugging Face 仓库是 v1.0 发布的一部分。如果暂时不可用，可从源码构建
+> （[`docs/reproduction.md`](docs/reproduction.md)）。
 
-### A — Ollama + GGUF（最快，不需要 Python 训练栈）
+### Ollama + GGUF（推荐）
 
 ```bash
-bash scripts/download_model.sh          # 从 Hugging Face 下载 GGUF + Modelfile
+bash scripts/download_model.sh
 ( cd models/ZhenLM-140M-SFT-v2e-GGUF && \
   OLLAMA_HOST=127.0.0.1:11435 ollama create zhenlm-140m-sft-v2e-q8 \
   -f Modelfile-ZhenLM-140M-SFT-v2e-q8 )
 bash scripts/run_demo.sh                # http://127.0.0.1:7860
 ```
 
-### B — Hugging Face `transformers`
+### Hugging Face `transformers`
 
 ```bash
 # 先跑 `bash scripts/setup.sh`（或用你自己的 Python 3.12 环境）
@@ -50,15 +49,13 @@ print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
 PY
 ```
 
-### C — 从源码完整重建
-
-见 [`docs/reproduction.md`](docs/reproduction.md)：约 38GB 数据下载、~21 分钟分片、
-~16 小时预训练、每版 SFT ~1 小时 20 分钟。
+从源码构建：[`docs/reproduction.md`](docs/reproduction.md)（约 38GB 数据，
+~16 小时预训练）。
 
 ## 结果
 
-全部 greedy 解码、同一 chat 模板、同一 tokenizer。dev 用于迭代，90 题 holdout 用于验收。
-`rep-4` = 4-gram 复读率（越低越好）。
+全部 greedy 解码、同一 chat 模板、同一 tokenizer。dev 用于迭代，90 题 holdout
+用于验收。`rep-4` = 4-gram 复读率（越低越好）。
 
 | 模型 | dev 18 | holdout 90（人工） | rep-4 ↓ | 备注 |
 |---|---|---|---|---|
@@ -68,107 +65,85 @@ PY
 | SFT v2e（部署） | **17/18**\* | **53/90** | **0.138** | \*2 题已知残留；干净子集 **15/16** |
 | LoRA r=12 2ep | 15/18 | 48/90 | 0.283 | 不部署 |
 
-> 表内人工分是原始 audit。2026-11-21 逐题重判为 v2e **52** vs v2 **45**（+7）；
-> 配对 McNemar **p=0.0923**（未达 0.05 显著）。2026-11-22 对 47 题子集的
-> 第二复核**未复现该优势**：v2e **11 vs 11**（kappa 0.660/0.453；配对 p=1.000）；
-> +6/+7 对 rubric 敏感，详见评测文档 §6.1。
+> 表内人工分是原始 audit。2026-11-21 逐题重判为 v2e **52** vs v2 **45**（+7），
+> 但 McNemar **p=0.0923**（不显著）。2026-11-22 的 47 题第二复核**未复现**
+> 该优势：v2e **11 vs 11**（kappa 0.660/0.453；paired p=1.000），即使放宽口径
+> 最多 +2。+6/+7 对 rubric 敏感，不是稳定的能力提升。见
+> [`docs/evaluation.md`](docs/evaluation.md) §6.1。
 
-**能力块（数学 14 / 翻译 14 / calibration 6）：**
+**能力块**（数学 14 / 翻译 14 / calibration 6）：
 
-| 块 | 最好结果 | 判定 |
+| 块 | 分数 | 含义 |
 |---|---|---|
-| 数学 | 0–3 / 14 | ✗ 窄查表，**不是算术**（`13×5`、`17+6`、`100−37` 全错） |
-| 翻译 | 0–5 / 14 | ✗ 句式级，**不是通用翻译**（zh→en 简单句可译；en→zh 大多失败） |
-| calibration | 5–6 / 6（宽松）；1–3 / 6（严格第二复核） | ⚠️ 拒绝编造，但前提纠正常事实错误（2044/2046 都是赛事年） |
+| 数学 | 0–3 / 14 | 窄查表，**不是算术**（`13×5`、`17+6`、`100−37` 全错） |
+| 翻译 | 0–5 / 14 | 句式级，**不是通用翻译**（zh→en 简单句可译；en→zh 大多失败） |
+| calibration | 5–6 / 6 宽松；1–3 / 6 严格 | 拒绝编造，但前提纠正常事实错误（2044/2046 都是赛事年） |
 
-90 题人工校准：audit **v2e 53 vs v2 47（+6）**；2026-11-21 逐题重判 **v2e 52 vs v2 45（+7）**，
-均达到预注册阈值（≥5）——但这是**原标签口径**。**配对 McNemar p=0.0923 > 0.05，不显著**
-（bootstrap 95% CI [0.000, 0.156]，下界≈0）。
+能力块是验收单位；单题修复不代表能力。
 
-2026-11-22 对 47 题子集的第二复核**未复现该优势：v2e 11 vs v2 11**
-（0/47；对原标签 Cohen's kappa：v2 0.660 / v2e 0.453；配对 McNemar p=1.000）。
-即使把 calibration/fact/translation 放宽到原口径，最多也只有 +2。
-因此 +6/+7 **对标注 rubric 敏感，不应读作稳定能力提升**，更不能写"v2e 优于 v2"。
-30 题"无显著差异"仍是欠功效。详见 [`docs/evaluation.md`](docs/evaluation.md) §6.1 与
-[`reports/2026-11-22-second-review-adjudication.md`](reports/2026-11-22-second-review-adjudication.md)。
+## 限制
 
-## 它做不到什么
+- **数学**：记住了几个 dev 答案，不是算术。
+- **翻译**：只学会了少量指令句式；`Knowledge is power` 常被原样回英文。
+- **知识**：140M / 3B token ≈ GPT-2 级；会编造人名、年份、细节。
+- **身份**：SFT 语料来自 minimind，模型常自称 "minimind"（greedy 下也是）。
+- **上下文 / 安全**：1024 token；没有安全对齐、RLHF 或偏差评测。
 
-- **数学**：记住了几个 dev 答案，不是算术；未见组合会错。
-- **翻译**：只学会了少量指令句式，不是翻译模型；`Knowledge is power` 常被原样回英文。
-- **事实**：140M / 3B token ≈ GPT-2 级知识；会编造人名、年份、细节，不要当知识源。
-- **生产**：没有安全对齐、RLHF、长上下文（1024 token），不保证事实/风格质量。
-- **身份**：SFT 语料来自 minimind，模型常自称 "minimind"（greedy 下也是）；
-  自述身份不可靠。
-- **标签敏感**：holdout 的 +6/+7 只在原标签口径下成立；严格第二复核为 11 vs 11，
-  不要把 +7 当作已坐实的能力优势。
+## 评测记录
 
-## 最有意思的部分：评测方法学
-
-1. **发现并去除训练集污染**：早期 SFT "修复"把评测原句写进了补充样本，
-   所以 v2~v2d 的 dev 分含记忆成分；v1 是干净基线，v2e 是"部分干净"
-   （2 题残留，干净子集 15/16）。
-2. **检查器自己也会假阴性**：旧的 `len(prompt) >= 8` 守卫跳过了短 prompt，
-   "0 撞车"是假的；修法是去掉长度守卫、norm 去掉所有非单词字符、
-   内置"已知撞车必须被抓"的自测。见 `tools/check_eval_leak.py`。
-3. **holdout 比 dev 可信**：90 题显示 dev 排名只部分复现；数学/翻译/calibration
-   用 10~14 题的能力块判定，不用单题代表能力。
-4. **量化保真度**：Q4_K_M 在 v2e 上会吃掉新学能力（math 42→72、翻译回退）；
-   部署默认 Q8_0，F16 在 5/5 抽检中逐字一致。
-5. **LoRA 容量曲线**：r=8→r=12 只买 −0.020 val；1→2 epochs 只买 −0.013；
-   都补不上距全参的 0.19。LoRA 适合领域增量，不适合首次对齐。
-6. **第二复核没有复现胜势**：47 题盲复给 v2e **11 vs v2 11**（kappa 0.660/0.453）；
-   即使放宽 calibration/fact/translation 也最多 +2。+6/+7 对 rubric 敏感，
-   不是稳定能力提升。
-
-完整叙事见 [`REPORT.md`](REPORT.md) · 模型卡 [`MODEL_CARD.md`](MODEL_CARD.md)
-（英文 [`MODEL_CARD.en.md`](MODEL_CARD.en.md)）· 评测细节 [`docs/evaluation.md`](docs/evaluation.md)。
+- **污染**：早期 SFT "修复"把评测原句写进了补充样本，所以 v2~v2d 的 dev 分
+  含记忆成分；v1 是干净基线，v2e 有 2 题残留（干净子集 15/16）。
+- **检查器假阴性**：首版去重检查器跳过短 prompt；现在的版本去掉长度守卫、
+  norm 去掉非单词字符，并内置"已知撞车必须被抓"的自测
+  （[`tools/check_eval_leak.py`](tools/check_eval_leak.py)）。
+- **holdout + 第二复核**：dev 排名只部分复现；90 题 holdout 是验收集，
+  47 题第二复核未复现 +7（11 vs 11）。见 [`docs/evaluation.md`](docs/evaluation.md) §6.1。
+- **量化**：Q4_K_M 在 v2e 上不保真；Q8_0 是默认；F16 在 5/5 抽检中逐字一致。
 
 ## 复现
 
 ```bash
-bash scripts/setup.sh                  # venv + torch 2.11.0+cu128 + 依赖
-bash scripts/download_data.sh          # 37.9GB，SHA256 校验
-.venv-pre/bin/python -I tools/train_tokenizer.py   # 32k BPE，~4.5 分钟
-.venv-pre/bin/python -I tools/build_shards.py      # 3B token memmap，~21 分钟
-# 预训练 16 小时；命令见 docs/reproduction.md
-# SFT v2e ~1 小时 20 分钟；命令见 docs/reproduction.md
-bash scripts/reproduce_eval.sh         # dev + 90 题 holdout
+bash scripts/setup.sh
+bash scripts/download_data.sh
+.venv-pre/bin/python -I tools/train_tokenizer.py   # 32k BPE
+.venv-pre/bin/python -I tools/build_shards.py      # 3B token memmap
+# 预训练 / SFT 命令：docs/reproduction.md
+bash scripts/reproduce_eval.sh                     # dev + 90 题 holdout
 ```
 
-可复现性证据：v2e 数据重建 bit-for-bit（4/4 SHA256）、评测 18/18 行逐字节一致、
-F16 GGUF 与 PyTorch 5/5 逐字一致。见 `reports/2026-11-20-day10-repro-check.md`。
+可复现性证据：v2e 数据重建 4/4 SHA256、评测 18/18 行逐字节一致、F16 5/5。
+见 `reports/2026-11-20-day10-repro-check.md`。
 
 ## 仓库地图
 
 | 路径 | 内容 |
 |---|---|
-| `tools/` | 模型、训练、SFT、LoRA、评测、GGUF、demo 脚本 |
+| `tools/` | 模型、训练、SFT、LoRA、评测、GGUF、demo |
 | `data/eval/` | dev 18 + holdout 30 + holdout 90 题库 |
 | `data/PROVENANCE.md` | 数据来源、许可证、SHA256 指纹 |
 | `reports/` | 证据：摘要、CSV、原始 log（只增不改） |
 | `docs/` | quickstart、reproduction、evaluation、architecture、FAQ |
-| `REPORT.md` | 完整中文报告 |
+| `REPORT.md` / `HISTORY.md` | 完整报告 / 历史 commit 说明 |
 | `MODEL_CARD.md` / `MODEL_CARD.en.md` | 模型卡（中/英） |
 
 ## 实现说明
 
-AI 辅助代码与文档；范围、实验、评测与发布由人主导。每个关键结论独立验证（bit-for-bit 数据、18/18 逐字节、F16 5/5、已知撞车阳性对照、McNemar）。
+AI 辅助代码与文档；范围、实验、评测与发布由人主导。关键结论做了独立验证
+（bit-for-bit 数据、18/18 逐字节、F16 5/5、已知撞车阳性对照、McNemar）。
 
 ## 许可与引用
 
 - **代码与模型权重**：Apache License 2.0 — 见 [`LICENSE`](LICENSE)。
 - **文档与评测集**：CC BY 4.0 — 见 [`docs/LICENSE-CC-BY-4.0.txt`](docs/LICENSE-CC-BY-4.0.txt) 与 [`data/LICENSE`](data/LICENSE)。
-- **上游数据**：FineWeb-Edu（ODC-BY 1.0 + Common Crawl ToU）、minimind_dataset（Apache-2.0）。
-  见 [`NOTICE`](NOTICE)；原始语料不再分发。
+- **上游数据**：FineWeb-Edu（ODC-BY 1.0 + Common Crawl ToU）、minimind_dataset（Apache-2.0）。见 [`NOTICE`](NOTICE)。
 - 引用格式见 [`CITATION.cff`](CITATION.cff)。
 
 ## 致谢
 
 架构与数据格式参考 [minimind](https://github.com/jingyaogong/minimind)（Apache-2.0）、
-[nanoGPT](https://github.com/karpathy/nanoGPT)（MIT）；
-GGUF 布局参考 [llama.cpp](https://github.com/ggml-org/llama.cpp)（MIT）；
-数据来自 [FineWeb-Edu](https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu) 与
+[nanoGPT](https://github.com/karpathy/nanoGPT)（MIT）；GGUF 布局参考
+[llama.cpp](https://github.com/ggml-org/llama.cpp)（MIT）；数据来自
+[FineWeb-Edu](https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu) 与
 [minimind_dataset](https://huggingface.co/datasets/jingyaogong/minimind_dataset)。
 
 *本项目是学习/研究产物，与上述项目无隶属或背书关系，也不替代它们。*
