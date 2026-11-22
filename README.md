@@ -7,7 +7,9 @@ tokenizer → 3B-token pre-training → six SFT iterations → LoRA ablations �
 GGUF/Ollama deployment, with every run's evidence in [`reports/`](reports/).
 The most useful part is the evaluation story: we found our own evaluation
 contamination, fixed the deduplication checker, built a 90-question holdout,
-and report the failures (math, translation) instead of hiding them.
+and report the failures (math, translation) instead of hiding them. A
+47-question second review also failed to reproduce our own claimed v2e
+advantage (11 vs 11); we report that too.
 
 - **Model**: 137,847,552 params · d_model 768 · 16 layers · 12 heads · RoPE + RMSNorm + SwiGLU + tied embeddings · 32k BPE · context 1024
 - **Pre-training**: 3.0B tokens (English 60% FineWeb-Edu / Chinese 40% minimind) · 16h07m41s · validation loss **2.7709**
@@ -71,7 +73,10 @@ The dev set is for iteration; the 90-question holdout is for acceptance.
 
 > Manual scores in the table are the original audit. A 2026-11-21 per-item
 > re-judgment gives v2e **52** vs v2 **45** (+7); the paired McNemar test is
-> **p = 0.0923** (not significant at 0.05). See §6 of the evaluation doc.
+> **p = 0.0923** (not significant at 0.05). A 2026-11-22 second review of a
+> 47-question subset did **not** reproduce the advantage: v2e **11 vs 11**
+> (kappa 0.660/0.453; paired p=1.000). The +6/+7 is rubric-sensitive; see
+> [`docs/evaluation.md`](docs/evaluation.md) §6.1.
 
 **Capability blocks (14 math / 14 translation / 6 calibration):**
 
@@ -79,17 +84,22 @@ The dev set is for iteration; the 90-question holdout is for acceptance.
 |---|---|---|
 | Math | 0–3 / 14 | ✗ lookup-table, **not arithmetic** (`13×5`, `17+6`, `100−37` all wrong) |
 | Translation | 0–5 / 14 | ✗ sentence-pattern level, **not general translation** (zh→en simple sentences work; en→zh mostly fails) |
-| Calibration | 5–6 / 6 | ✓ the only stable generalization (v2-family refuses to invent future facts) |
+| Calibration | 5–6 / 6 (lenient); 1–3 / 6 (strict second review) | ⚠️ refuses to invent, but premise corrections are often factually wrong (2044/2046 are event years) |
 
 v2e vs v2 on the 90-question manual score: the original audit is **+6/90**
 (53 vs 47); a 2026-11-21 per-item re-judgment is **+7/90** (52 vs 45). Both
-meet the pre-registered threshold (≥5). **However, the paired McNemar test is
-not significant at 0.05**: p = 0.0923, bootstrap 95% CI [0.000, 0.156]
-(lower bound ≈0). The advantage is concentrated in English fluency
-(v2e 5/5 vs v2 0/5), not math/translation/calibration (tied or slightly
-worse). Read it as "directionally better, threshold met, not statistically
-established". The earlier 30-question "no difference" was underpowered.
-See [`docs/evaluation.md`](docs/evaluation.md).
+meet the pre-registered threshold (≥5) **under the original labels**, but the
+paired McNemar test is **not significant at 0.05**: p = 0.0923, bootstrap
+95% CI [0.000, 0.156] (lower bound ≈0).
+
+A 2026-11-22 second review of a 47-question subset **did not reproduce the
+advantage**: v2e **11 vs v2 11** (0/47; Cohen's kappa 0.660 for v2 and 0.453
+for v2e against the original labels; paired McNemar p=1.000). Even a lenient
+re-adjudication gives at most +2. The +6/+7 is therefore **rubric-sensitive
+and not a robust capability improvement**; do not read it as "v2e is better".
+The earlier 30-question "no difference" was underpowered. See
+[`docs/evaluation.md`](docs/evaluation.md) §6.1 and
+[`reports/2026-11-22-second-review-adjudication.md`](reports/2026-11-22-second-review-adjudication.md).
 
 ## What it can't do
 
@@ -104,6 +114,9 @@ See [`docs/evaluation.md`](docs/evaluation.md).
 - **Identity**: the SFT corpus comes from minimind; the model often
   identifies as "minimind" even with greedy decoding. Treat its
   self-description as unreliable.
+- **Label sensitivity**: the holdout +6/+7 is threshold-met under the original
+  labels but not robust to a stricter second review (v2e 11 vs v2 11). Do not
+  quote the +7 as a settled capability win.
 
 ## The interesting part: evaluation methodology
 
@@ -124,6 +137,10 @@ See [`docs/evaluation.md`](docs/evaluation.md).
 5. **LoRA capacity curve.** r=8 → r=12 buys −0.020 validation loss;
    1 → 2 epochs buys −0.013; neither closes the 0.19 gap to full fine-tuning.
    LoRA is for domain increments, not first alignment.
+6. **The win did not survive a second review.** A blinded 47-question second
+   review gives v2e **11 vs v2 11** (kappa 0.660/0.453); even lenient
+   re-adjudication gives at most +2. The +6/+7 is threshold-met under the
+   original labels but rubric-sensitive, not a robust capability gain.
 
 Read the full Chinese report: [`REPORT.md`](REPORT.md) ·
 Model card: [`MODEL_CARD.en.md`](MODEL_CARD.en.md) / [`MODEL_CARD.md`](MODEL_CARD.md) ·

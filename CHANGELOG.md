@@ -40,10 +40,14 @@ The project follows a "evidence first" convention: every run has a summary
   (`BatchEncoding`) to `generate(**inputs)` correctly for transformers 5.x;
   the example prompt uses a short factual question to avoid the known
   "minimind" identity artifact.
-- Public wording downgraded: v2e vs v2 meets the pre-registered threshold
-  (audit +6; re-judgment +7) but is **not statistically significant**
-  (McNemar p=0.0923; 95% CI [0.000, 0.156]); the advantage is concentrated
-  in English fluency.
+- Public wording downgraded: under the original labels, v2e vs v2 meets the
+  pre-registered threshold (audit +6; re-judgment +7) but is **not
+  statistically significant** (McNemar p=0.0923; 95% CI [0.000, 0.156]); the
+  advantage is concentrated in English fluency.
+- A 2026-11-22 second review of a 47-question subset did **not** reproduce the
+  advantage: v2e 11 vs v2 11 (kappa 0.660/0.453; paired p=1.000). The +6/+7
+  is threshold-met under the original labels but rubric-sensitive. See
+  `docs/evaluation.md` §6.1.
 - Public docs use dates; no day/duration selling points; AI disclosure is one
   Implementation note. Historical commit messages are not rewritten (see
   HISTORY.md). The repository is pushed; the remote README is current.
@@ -63,6 +67,11 @@ The project follows a "evidence first" convention: every run has a summary
   −0.020 / −0.013 validation loss versus full fine-tuning.
 
 ### Evaluation
+> **2026-11-22 correction**: the +6/+7 is threshold-met under the original
+> labels; a strict 47-question second review gives v2e 11 vs v2 11
+> (kappa 0.660/0.453). The calibration "✓" is rubric-sensitive. See
+> `docs/evaluation.md` §6.1.
+
 - Dev set: 18 questions / 13 tags; holdout v2: 30 questions; holdout v3:
   **90 questions** with math (14), translation (14), and calibration (6)
   capability blocks; three-layer bidirectional deduplication with 0 hits.
@@ -70,9 +79,11 @@ The project follows a "evidence first" convention: every run has a summary
   v2d 48, **v2e 53**, LoRA r8 43, r12 42, r12-2ep 48.
 - Capability verdicts: math **0–3/14 (✗, lookup-table not arithmetic)**;
   translation **0–5/14 (✗, sentence-pattern level)**; calibration
-  **5–6/6 (✓, the only stable generalization)**.
-- v2e vs v2: **+6/90**, meeting the pre-registered threshold (≥5);
-  the earlier 30-question "no difference" was underpowered.
+  **5–6/6 under the original lenient labels; 1–3/6 under a strict second
+  review (rubric-sensitive)**.
+- v2e vs v2: **+6/90 under the original labels**, meeting the pre-registered
+  threshold (≥5); the earlier 30-question "no difference" was underpowered.
+  The 47-question second review did not reproduce it (11 vs 11).
 - Quantization: Q4_K_M is **not faithful** for v2e (math 42→72, translation
   reverts); Q8_0 is the deployment default; F16 is bit-for-bit faithful in
   the 5/5 spot check.

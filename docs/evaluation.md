@@ -58,7 +58,12 @@ Question schema:
 
 > **2026-11-21 re-judgment**: the original per-item labels were not persisted;
 > a full re-judgment from the stored greedy answers gives **v2e 52 vs v2 45
-> (+7)**. The audit aggregate above (53 vs 47) is kept for comparison. See §6.
+> (+7)**. The audit aggregate above (53 vs 47) is kept for comparison. See
+> §6 and §6.1 for the second-review sensitivity.
+>
+> **2026-11-22 second review**: a blinded 47-question subset gives **v2e 11
+> vs v2 11** (kappa 0.660/0.453; paired p=1.000). The +6/+7 is
+> rubric-sensitive; see §6.1.
 
 The keyword score is a "mention detector", not a correctness detector.
 The manual score is the primary number. The gap is largest for base and v1
@@ -70,7 +75,7 @@ The manual score is the primary number. The gap is largest for base and v1
 |---|---|---|
 | Math (14) | 0–3 / 14 (v2e 1, v2 2, lora12 3) | ✗ **lookup-table, not arithmetic** |
 | Translation (14) | 0–5 / 14 (v2/v2e 5) | ✗ **sentence-pattern level, not general translation** |
-| Calibration (6) | v2/v2d/v2e **6/6**, v2b 5/6 | ✓ **the only stable generalization** |
+| Calibration (6) | 5–6/6 under the original lenient labels; strict second review 1–3/6 | ⚠️ **rubric-sensitive**: refuses to invent, but premise corrections are often factually wrong (2044/2046 are event years) |
 
 ### Math details
 
@@ -100,12 +105,17 @@ The manual score is the primary number. The gap is largest for base and v1
 
 ### Calibration details
 
-- The v2-family models refuse to invent future facts at 5–6/6, including
-  2044/2045/2046 events they never saw.
+- The v2-family models refuse to invent future facts at 5–6/6 **under the
+  original labels**, including 2044/2045/2046 events they never saw.
 - Quality differs: v2d gives the cleanest refusal ("I cannot be certain…
   it has not happened yet"); v2e/v2 often use a premise-correction phrasing
   that is technically wrong for Olympic/World Cup years (2044/2046 are
   event years).
+- **Strict second review (2026-11-22): v2 3/6, v2e 1/6.** The model often
+  says `2046 年没有世界杯` (2046 is a World Cup year) or `2044 年没有奥运会`
+  (2044 is a Summer Olympics year). It refuses to name a champion, but the
+  stated reason is wrong. The calibration "✓" is therefore rubric-sensitive,
+  not a clean capability win.
 - base/v1/LoRA often fabricate concrete entities (cities, teams, names).
 
 ## 5. Keyword scoring pitfalls
@@ -150,16 +160,22 @@ Rules used in this project:
   therefore not exactly reproducible; the per-item labels are published so
   others can audit the judgment.
 - The pre-registered rule was: v2e − v2 ≥ 5/90 → "significantly better".
-  Both the audit (+6) and the re-judgment (+7) meet the threshold.
+  Both the audit (+6) and the re-judgment (+7) meet the threshold **under the
+  original labels**; see §6.1 for the second-review sensitivity.
 - **McNemar exact test (re-judgment): p = 0.0923**; paired bootstrap 95% CI
   for the difference: **[0.000, 0.156]** (10,000 resamples), lower bound ≈0.
   **Not significant at 0.05.** The correct public wording is "meets the
-  pre-registered threshold; directionally better; not statistically
-  significant at 0.05".
+  pre-registered threshold under the original labels; not statistically
+  significant at 0.05; a strict 47-question second review did not reproduce
+  the advantage (11 vs 11), so the improvement is not robust".
 - The advantage is concentrated in **English fluency** (v2e 5/5 vs v2 0/5)
   and a few reason/format items; math is −1, translation/calibration are
   tied. It is not a general capability improvement. The old-30/new-60 split
-  is +2/+5 — not driven by the old questions.
+  is +2/+5 — not driven by the old questions. **The second review (§6.1) did
+  not reproduce this concentration**: under a strict rubric, the fluency-en
+  answers contain repetition and factual errors (e.g. `the moon is the
+  brightest of the constellations`, `the cat is a member of Canidae`), and
+  the subset difference collapses to 0.
 - For a single proportion with n = 90, the 95% interval is roughly ±9–10
   questions at p ≈ 0.5; the paired interval above is [0, +14] questions.
   The earlier note "±3–4 questions" was an approximation, not a standard CI.
@@ -169,7 +185,7 @@ Rules used in this project:
 - Other model-to-model comparisons are exploratory; only v2e vs v2 was
   pre-registered.
 
-### Second-review kit
+### Second-review kit and result (47 questions, 2026-11-22)
 
 The original labels were produced by the same agent that wrote the questions
 (a known bias). [`tools/build_review_kit.py`](../tools/build_review_kit.py)
@@ -177,10 +193,40 @@ builds a blinded 47-question kit (94 answers; v2 and v2e, A/B randomized) for
 a second reviewer. [`tools/label_review.py`](../tools/label_review.py) is an
 interactive labeler that saves after each answer, and
 [`tools/score_review.py`](../tools/score_review.py) reports agreement and
-Cohen's kappa against the published labels. The kit is
-gitignored; the resulting report and labels are published under `reports/`
-when the review is complete. This is a second review, not external
-validation.
+Cohen's kappa against the published labels.
+
+The second review was completed by the project owner. Four labels were
+corrected after a consistency check; the per-answer labels are in
+[`reports/2026-11-22-second-review-labels.csv`](../reports/2026-11-22-second-review-labels.csv),
+and the adjudication is in
+[`reports/2026-11-22-second-review-adjudication.md`](../reports/2026-11-22-second-review-adjudication.md).
+
+| Model | n | Original | Second review | Agreement | Cohen's kappa |
+|---|---:|---:|---:|---:|---:|
+| v2 | 47 | 18 | 11 | 40/47 | 0.660 |
+| v2e | 47 | 24 | 11 | 34/47 | 0.453 |
+| all | 94 | 42 | 22 | 74/94 | 0.549 |
+
+Paired on the same 47 questions: **v2e 11 vs v2 11 (0/47), McNemar p=1.000**;
+the original re-judgment on this subset was **+6 (24 vs 18, p=0.109)**.
+
+Rubric sensitivity:
+
+| Re-adjudication | v2 | v2e | v2e − v2 | McNemar p |
+|---|---:|---:|---:|---:|
+| Final (strict-leaning) | 11 | 11 | 0 | 1.000 |
+| + lenient calibration/fact | 15 | 17 | +2 | 0.688 |
+| + lenient translation | 17 | 18 | +1 | 1.000 |
+| Original labels (same 47) | 18 | 24 | +6 | 0.109 |
+
+Even the most lenient re-adjudication does not recover +6. The main drivers
+are calibration premise corrections (`2046 年没有世界杯`, `2044 年没有奥运会`),
+English fluency/reason answers with repetition or factual errors, and
+translation answers that add content. **The +6/+7 is threshold-met under the
+original labels, but not robust to reviewer/rubric; do not read it as a
+capability win.** This is a second review by the project owner, not a fully
+independent one; the 47-question subset is smaller than the pre-registered
+90-question comparison.
 
 ## 7. Reproduce
 
@@ -241,8 +287,10 @@ violation is useless. `build_sft_v2.py` has a built-in self-test for this.
   GPT-2-level at best; many "failures" are capacity, not data.
 - The holdout was written by the same agent that saw the dev failures; the
   style bias is real.
-- Manual labels are not yet independently verified; the +6 is at the
-  threshold.
+- The original labels were produced by the coding agent. A 2026-11-22
+  second review (project owner, 47 questions) did not reproduce the v2e
+  advantage (11 vs 11; kappa 0.660/0.453). It is a second review, not a fully
+  independent one.
 - The model may reproduce facts from the pre-training/SFT sources; the
   evaluation cannot fully separate "learned ability" from "source knowledge".
 - Single-turn, 1024-token context; no safety or bias evaluation.

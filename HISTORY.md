@@ -16,7 +16,7 @@ day. The plan dates shifted during the project; the work was executed on
 
 | Early commit message | Final reading |
 |---|---|
-| `day-12: ... 53 vs 47 达显著阈值` | Audit +6; per-item re-judgment 52 vs 45 (+7); paired McNemar **p=0.0923**, bootstrap 95% CI [0.000, 0.156] → **not significant at 0.05**; the advantage is concentrated in English fluency. See REPORT §13 / `docs/evaluation.md` §6. |
+| `day-12: ... 53 vs 47 达显著阈值` | Audit +6; per-item re-judgment 52 vs 45 (+7); paired McNemar **p=0.0923**, bootstrap 95% CI [0.000, 0.156] → **not significant at 0.05**. A 2026-11-22 second review of a 47-question subset **did not reproduce the advantage** (v2e 11 vs v2 11; kappa 0.660/0.453). See REPORT §13/§13.1 and `docs/evaluation.md` §6.1. |
 | `day-8: v2e ... 五项判据全过` | Dev-set literal reading. The Day 11 recheck found 2 residual contamination cases (v2e 17/18 with 2 residues; clean subset 15/16); math/translation do not generalize on the holdout. See REPORT §5.1/§5.2. |
 | `day-8: ... 去污后 0 撞车 / 干净` | The first checker had a `len(prompt) >= 8` false negative; the corrected checker and 90-question holdout are authoritative. See `reports/2026-11-20-eval-leak-recheck.md`. |
 | `day-1/0: 手写 model.py / A 手写为主` | Final public wording: **self-contained implementation, AI-assisted, human-verified**. See the Implementation note in README.md. |

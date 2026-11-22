@@ -75,22 +75,32 @@ per-question binary judgments.
 
 \* Two known dev residues (`fact-months`, `math-add`); clean subset **15/16**.
 
+A 2026-11-22 second review of a 47-question subset did **not** reproduce the
+v2e advantage: **11 vs 11** (kappa 0.660/0.453; paired p=1.000). The +6/+7 is
+threshold-met under the original labels but rubric-sensitive. See
+[the evaluation doc](https://github.com/lynxpurr/pretrain-lab/blob/develop/docs/evaluation.md) §6.1.
+
 **Capability blocks** (14 math / 14 translation / 6 calibration):
 
 - Math: **0–3/14 ✗** — a narrow lookup table, not arithmetic.
 - Translation: **0–5/14 ✗** — sentence-pattern level; zh→en simple sentences
   work, en→zh mostly fails.
-- Calibration: **5–6/6 ✓** — the only stable generalization (refuses to
-  invent future facts).
+- Calibration: **5–6/6 under the original lenient labels; 1–3/6 under a
+  strict second review** — ⚠️ the model refuses to invent, but its premise
+  corrections are often factually wrong (2044/2046 are event years).
 
 **v2e vs v2**: audit +6/90 (53 vs 47); a 2026-11-21 per-item re-judgment is
-+7/90 (52 vs 45), both meeting the pre-registered threshold (≥5). The paired
-McNemar exact test is **p = 0.0923**, and the bootstrap 95% CI [0.000, 0.156]
-includes 0 → **not statistically significant at 0.05**. The advantage is
-concentrated in English fluency (v2e 5/5 vs v2 0/5); math is −1 and
-translation/calibration are tied. Read it as "directionally better, threshold
-met, not statistically established". The earlier 30-question "no difference"
-was underpowered.
++7/90 (52 vs 45), both meeting the pre-registered threshold (≥5) **under the
+original labels**. The paired McNemar exact test is **p = 0.0923**, and the
+bootstrap 95% CI [0.000, 0.156] includes 0 → **not statistically significant
+at 0.05**.
+
+A 2026-11-22 second review of a 47-question subset **did not reproduce the
+advantage**: v2e **11 vs v2 11** (0/47; Cohen's kappa 0.660/0.453; paired
+McNemar p=1.000). Even lenient re-adjudication gives at most +2. The +6/+7 is
+therefore **rubric-sensitive and not a robust capability improvement**; do not
+read it as "v2e is better". The earlier 30-question "no difference" was
+underpowered.
 
 ## Limitations
 
@@ -109,6 +119,10 @@ was underpowered.
    self-description as unreliable. The demo defaults to T=0.3.
 6. **Context**: 1024 tokens; longer inputs are truncated.
 7. **Safety**: no safety tuning, no RLHF, no bias evaluation.
+8. **Label sensitivity**: the holdout +6/+7 is threshold-met under the
+   original labels but not robust to a stricter second review (v2e 11 vs
+   v2 11; kappa 0.660/0.453). Do not quote the +7 as a settled capability
+   win.
 
 ## How to use
 

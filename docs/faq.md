@@ -38,14 +38,17 @@ conflicts with the base prior, and quantization noise lets the prior win.
 
 On the 90-question holdout, the original audit gave v2e 53/90 vs v2 47/90
 (+6). A 2026-11-21 per-item re-judgment from the stored answers gives
-v2e 52/90 vs v2 45/90 (+7). Both meet the pre-registered threshold (≥5).
+v2e 52/90 vs v2 45/90 (+7). Both meet the pre-registered threshold (≥5)
+**under the original labels**.
 
 However, the paired McNemar exact test on the re-judgment is **p = 0.0923**
 (not significant at 0.05), and the bootstrap 95% CI [0.000, 0.156] includes
-0. The advantage is concentrated in English fluency (v2e 5/5 vs v2 0/5);
-math is −1 and translation/calibration are tied. Read it as **"directionally
-better, threshold met, not statistically established"**, not as a large or
-certain improvement. The earlier 30-question "23 vs 23" was underpowered.
+0. More importantly, a 2026-11-22 second review of a 47-question subset
+**did not reproduce the advantage**: v2e **11 vs v2 11** (kappa 0.660/0.453;
+paired p=1.000). Even lenient re-adjudication gives at most +2. Read the
++6/+7 as **"threshold met under the original labels, not statistically
+significant, and not robust to reviewer/rubric"**, not as a capability win.
+The earlier 30-question "23 vs 23" was underpowered.
 
 ### Is it production-ready?
 
@@ -97,11 +100,13 @@ authentication.
 
 ### What's next?
 
-The 900 per-question labels and the McNemar/bootstrap analysis are already
-published. The remaining items are an independent second review of a subset
-of the labels and, optionally after v1.0, a fully clean `v2f` rebuild. See
-[CHANGELOG.md](../CHANGELOG.md) and the release notes. Contributions and
-corrections are welcome, especially on evaluation methodology.
+The 900 per-question labels and the McNemar/bootstrap analysis are published,
+and a 47-question second review was completed on 2026-11-22; it did not
+reproduce the v2e advantage (11 vs 11; kappa 0.660/0.453). A fully
+independent reviewer is still pending, and a clean `v2f` rebuild is optional
+after v1.0. See [CHANGELOG.md](../CHANGELOG.md) and the release notes.
+Contributions and corrections are welcome, especially on evaluation
+methodology.
 
 ### How can I contribute?
 

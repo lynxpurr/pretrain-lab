@@ -26,14 +26,17 @@ translation) alongside the wins.
 | SFT (deployed) | v2e · 250M tokens · val 1.6065 · repetition-4 **0.055** (lowest in the family) |
 | Dev set | **17/18** with 2 known residues; clean subset **15/16** |
 | Holdout (90 questions) | audit **53/90** vs v2 **47/90** (+6); per-item re-judgment **52 vs 45** (+7) |
-| Significance | paired McNemar **p = 0.0923**; bootstrap 95% CI **[0.000, 0.156]** → **not significant at 0.05** |
-| Capability blocks | math **0–3/14 ✗** (lookup table, not arithmetic) · translation **0–5/14 ✗** (sentence-pattern level) · calibration **5–6/6 ✓** |
+| Second review (47 questions) | v2e **11 vs 11** (0/47); kappa 0.660/0.453; paired McNemar p=1.000 |
+| Significance | paired McNemar **p = 0.0923**; bootstrap 95% CI **[0.000, 0.156]** → **not significant at 0.05**; second review did not reproduce the advantage |
+| Capability blocks | math **0–3/14 ✗** (lookup table, not arithmetic) · translation **0–5/14 ✗** (sentence-pattern level) · calibration **5–6/6 lenient / 1–3/6 strict** (rubric-sensitive) |
 | Deployment | Q8_0 GGUF 174 MB (default) · F16 326 MB (faithful) · **Q4_K_M is not faithful** |
 
-The v2e advantage is concentrated in English fluency (5/5 vs 0/5); math is
-−1 and translation/calibration are tied. Read it as **"meets the
-pre-registered threshold, directionally better, not statistically
-established"**.
+The v2e advantage under the original labels is concentrated in English
+fluency (5/5 vs 0/5); math is −1 and translation/calibration are tied. A
+2026-11-22 second review of a 47-question subset **did not reproduce it**:
+v2e **11 vs v2 11** (kappa 0.660/0.453; paired p=1.000). Read the +6/+7 as
+**"threshold met under the original labels, not statistically significant,
+and not robust to reviewer/rubric"** — not as a capability win.
 
 ## Assets
 
@@ -97,6 +100,22 @@ Full pipeline (data → tokenizer → pre-training → SFT → GGUF):
 - Internal process records are kept local and are not part of the public
   repository.
 
+## Second review (2026-11-22)
+
+A blinded 47-question subset (94 answers; v2 and v2e, A/B randomized) was
+re-labeled by the project owner. After four consistency fixes:
+**v2e 11 vs v2 11** (0/47; Cohen's kappa 0.660 for v2 and 0.453 for v2e
+against the original labels; paired McNemar p=1.000). Even lenient
+re-adjudication gives at most +2. The +6/+7 is threshold-met under the
+original labels but rubric-sensitive; do not read it as a capability win.
+
+The main drivers are calibration premise corrections (`2046 年没有世界杯`,
+`2044 年没有奥运会`), English fluency/reason answers with repetition or
+factual errors, and translation answers that add content. This is a second
+review, not a fully independent one. See
+[`evaluation.md`](https://github.com/lynxpurr/pretrain-lab/blob/develop/docs/evaluation.md) §6.1 and
+[`reports/2026-11-22-second-review-adjudication.md`](https://github.com/lynxpurr/pretrain-lab/blob/develop/reports/2026-11-22-second-review-adjudication.md).
+
 ## Known limitations
 
 - **Knowledge**: 3B tokens / 140M parameters ≈ GPT-2-level; it will
@@ -108,6 +127,9 @@ Full pipeline (data → tokenizer → pre-training → SFT → GGUF):
 - **Identity**: the SFT corpus comes from minimind; the model often
   identifies as "minimind" even with greedy decoding. Treat its
   self-description as unreliable.
+- **Label sensitivity**: the holdout +6/+7 is threshold-met under the original
+  labels but not robust to a stricter second review (v2e 11 vs v2 11; kappa
+  0.660/0.453). Do not quote the +7 as a settled capability win.
 - **Repetition**: v2e has the lowest rep-4 in the family, but long English
   answers can still repeat.
 - **Context**: 1024 tokens; longer inputs are truncated.
