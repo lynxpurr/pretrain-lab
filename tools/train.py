@@ -388,6 +388,8 @@ def main() -> None:
                 if micro == 1:
                     if args.init_from:  # 底座初始化时 loss 远离 ln(V) 是正常态，不打印锚
                         log(f"[init-anchor] micro-step 1 loss {loss.item():.4f}（底座态，非随机初始化）")
+                    elif args.resume:  # 续训同理：loss 已在训练态，锚无意义
+                        log(f"[resume-anchor] micro-step 1 loss {loss.item():.4f}（续训态，不判锚）")
                     else:
                         log(f"[anchor] micro-step 1 loss {loss.item():.4f} vs ln(V)={math.log(cfg.vocab_size):.4f} "
                             f"({loss.item() - math.log(cfg.vocab_size):+.3f})")
@@ -411,7 +413,7 @@ def main() -> None:
                 running_loss, n_loss = 0.0, 0
                 last_log_t, last_log_tokens = now, tokens_seen
 
-            if done % args.eval_every == 0:
+            if args.eval_every > 0 and done % args.eval_every == 0:
                 do_eval(done, lr)
             if args.sample_every > 0 and done % args.sample_every == 0:
                 do_sample(done)

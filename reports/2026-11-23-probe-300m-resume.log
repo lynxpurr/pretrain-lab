@@ -1,0 +1,19 @@
+[resume] out/probe-300m-seq50/ckpt-0000040.pt → step=40 / total=50 tokens_seen=2,621,440
+[cfg] {"vocab_size": 32000, "n_embd": 960, "n_layer": 24, "n_head": 15, "block_size": 1024, "rope_base": 10000.0, "multiple_of": 64} bs=4×accum16×T1024 = 65,536 tok/step · total_steps=50 · target_tokens=6,000,000,000
+[model] params=296,187,840 (non-emb 265,467,840) vocab=32000 · shards=6 · train_tokens=3,000,000,000
+[opt] lr=4.0e-04 warmup=500 cosine→10% wd=0.1 clip=1.0 bf16 · max_minutes=∞ · notes=-
+step     40 | [val] loss 8.8716 | peak 9.92 GB | 0h00m08s
+[anchor] micro-step 1 loss 8.8927 vs ln(V)=10.3735 (-1.481)
+step     41 | loss 8.8723 | lr 3.28e-05 | 5,893 tok/s (纯训练 24,803) | 0h00m11s | ETA 0h01m40s
+step     42 | loss 8.8954 | lr 3.36e-05 | 26,398 tok/s (纯训练 25,575) | 0h00m13s | ETA 0h00m19s
+step     43 | loss 8.8066 | lr 3.44e-05 | 26,321 tok/s (纯训练 25,819) | 0h00m16s | ETA 0h00m17s
+step     44 | loss 8.8129 | lr 3.52e-05 | 26,224 tok/s (纯训练 25,919) | 0h00m18s | ETA 0h00m14s
+step     45 | loss 8.8165 | lr 3.60e-05 | 26,274 tok/s (纯训练 25,989) | 0h00m21s | ETA 0h00m12s
+step     46 | loss 8.7584 | lr 3.68e-05 | 26,199 tok/s (纯训练 26,024) | 0h00m23s | ETA 0h00m10s
+step     47 | loss 8.6831 | lr 3.76e-05 | 26,203 tok/s (纯训练 26,050) | 0h00m26s | ETA 0h00m07s
+step     48 | loss 8.6649 | lr 3.84e-05 | 26,041 tok/s (纯训练 26,048) | 0h00m28s | ETA 0h00m05s
+step     49 | loss 8.6254 | lr 3.92e-05 | 26,336 tok/s (纯训练 26,080) | 0h00m31s | ETA 0h00m02s
+step     50 | loss 8.6089 | lr 4.00e-05 | 26,329 tok/s (纯训练 26,105) | 0h00m33s | ETA 0h00m00s
+step     50 | [val] loss 8.5796 | peak 12.46 GB | 0h00m41s
+step     50 | [ckpt] ckpt-0000050.pt（≈3.31 GB：fp32 权重+Adam 态）
+[final] step 50/50 | val 8.5796 | 用时 0h00m48s (开销 0h00m23s) | 纯训练吞吐 26,104 tok/s | 总 token 3,276,800 | peak 12.46 GB | stop=completed
