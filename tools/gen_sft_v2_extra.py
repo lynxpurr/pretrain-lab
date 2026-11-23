@@ -9,8 +9,16 @@
 本脚本生成三类**只进 train、不进 val** 的补充对话（chat 模板与 v1 完全一致）：
   A. calibration：未来事件 / 错误前提（如"2027 年世界杯"）/ 实时信息 / 隐私 / 不可验证事实；
      并含"已知事实 vs 未知"对比对（同一条对话里先答已知、再拒答未知）。
+     2026-11-23（v2g）新增"存在但结果未知"类别：2040/2044/2046/2048/2050 的真实事件年
+     教"承认举办 + 结果未定"，修 FUTURE_EVENTS 枚举边界导致的"没有世界杯"过度泛化；
+     同时把奥运类未来样本的结果词从"举办城市"改为"金牌榜第一"（2028/2030/2032/2034
+     的举办城市已是公开事实，教"未知"是事实错误）。
   B. format：格式硬约束算术（"只回答数字"）+ 一句话 / 不超过 N 字 / 列出 3 条。
+     v2g 去掉与 dev 撞车的两条 brevity 题（一年有几个月 / 3 加 5）。
   C. helpful：中英良性问题正例（描述海洋/解释概念/翻译/写代码），对冲拒答模板泄漏。
+  D. concise：介绍/假设类连贯答案（v2d）。
+  E. translate：指令 + 直接译文精确对（v2e 建，v2g 扩到中英各 300+ unique，
+     数据在 tools/translate_pairs_v2g.py；生成期断言两侧文本都不与评测题面重叠）。
 
 输出（JSONL，每行 = {"conversations": [{"role":…, "content":…}, …]}）：
   data/sft-extra-v2/calibration.jsonl
@@ -27,9 +35,16 @@ from __future__ import annotations
 import hashlib
 import json
 import random
+import re
+import sys
 import time
 import zlib
 from pathlib import Path
+
+# -I（隔离模式）不把脚本目录加进 sys.path——显式补上以便 import 同目录数据模块
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from translate_pairs_v2g import EN2ZH_V2G, ZH2EN_V2G  # noqa: E402
 
 OUT = Path("data/sft-extra-v2")
 SEED = 20261119
@@ -152,8 +167,8 @@ FUTURE_EVENTS = [
     # (名称, 结果词, 有效未来年份, 无效年份, 周期说明)
     ("世界杯", "冠军", [2030, 2034, 2038, 2042], [2027, 2029, 2031, 2033, 2035], "每四年举办一次"),
     ("欧洲杯", "冠军", [2028, 2032, 2036], [2027, 2029, 2031, 2033], "每四年举办一次"),
-    ("夏季奥运会", "举办城市", [2028, 2032, 2036], [2027, 2029, 2031, 2033], "每四年举办一次"),
-    ("冬季奥运会", "举办城市", [2030, 2034, 2038], [2027, 2029, 2031, 2033], "每四年举办一次"),
+    ("夏季奥运会", "金牌榜第一", [2028, 2032, 2036], [2027, 2029, 2031, 2033], "每四年举办一次"),
+    ("冬季奥运会", "金牌榜第一", [2030, 2034, 2038], [2027, 2029, 2031, 2033], "每四年举办一次"),
     ("NBA 总决赛", "冠军", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年举办一次"),
     ("欧洲冠军联赛决赛", "冠军", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年举办一次"),
     ("奥斯卡金像奖", "最佳影片", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年颁发一次"),
@@ -164,7 +179,6 @@ FUTURE_EVENTS = [
     ("格莱美年度专辑", "得主", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年颁发一次"),
     ("美国总统选举", "获胜者", [2028, 2032], [2027, 2029, 2030, 2031, 2033], "每四年举行一次"),
     ("世界杯金靴奖", "得主", [2030, 2034, 2038], [2027, 2029, 2031, 2033], "每四年颁发一次"),
-    ("奥运会开幕式", "举办城市", [2028, 2032, 2036], [2027, 2029, 2031, 2033], "每四年举办一次"),
     ("超级碗", "冠军", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年举办一次"),
     ("NBA 常规赛 MVP", "得主", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年评选一次"),
     ("奥斯卡最佳导演", "得主", [2027, 2028, 2029, 2030, 2031, 2032], [], "每年颁发一次"),
@@ -320,9 +334,9 @@ def gen_calibration(rng: random.Random) -> list[dict]:
         elif "欧洲杯" in past_q:
             event, result, future_year, bad_year = "欧洲杯", "冠军", 2028, 2027
         elif "夏季奥运会" in past_q:
-            event, result, future_year, bad_year = "夏季奥运会", "举办城市", 2032, 2027
+            event, result, future_year, bad_year = "夏季奥运会", "金牌榜第一", 2032, 2027
         elif "冬季奥运会" in past_q:
-            event, result, future_year, bad_year = "冬季奥运会", "举办城市", 2030, 2027
+            event, result, future_year, bad_year = "冬季奥运会", "金牌榜第一", 2030, 2027
         else:
             continue
         future_ans = FUTURE_ANSWERS[dh(event) % len(FUTURE_ANSWERS)].format(
@@ -336,6 +350,48 @@ def gen_calibration(rng: random.Random) -> list[dict]:
                  ("user", f"{bad_year} 年{event}的{result}是谁/是什么？"), ("assistant", bad_ans)))
         add(conv(("user", f"{bad_year} 年{event}的{result}是谁/是什么？"), ("assistant", bad_ans),
                  ("user", f"那 {future_year} 年呢？"), ("assistant", future_ans)))
+
+    # 7) 未来事件："存在但结果未知"（v2g 新增）
+    # 根因（2026-11-22 第二复核）：FUTURE_EVENTS 合法年份止于 2042/2036，2044/2046
+    # 从未作为"存在的事件年"出现过 → 模型把"不在列表"过度泛化为"没有"，产出
+    # "2046 年没有世界杯""2044 年没有奥运会"这类事实错误的前提纠正。
+    # 修法 = 补"承认举办 + 结果未定"这一类别（不是加更多拒绝样本）。
+    # 注意：问法不得复用 "请告诉我 {year} 年{event}的{result}"（holdout 原句前缀）。
+    # 年份覆盖 = 周期内全部合法未来年：夏奥 2040/2044/2048（2040 是 2036 之后的下一个
+    # 合法年，原 FUTURE_EVENTS 止于 2036，属根因边界的一部分）；世界杯/冬奥 2046/2050；
+    # 欧洲杯 2040/2044/2048。结果词只用"尚未产生"的项（冠军/金牌榜第一/得主）——
+    # 不用"举办城市"：2028/2030/2032/2034 的举办城市已是公开事实，教"未知"是事实错误。
+    future_known = [
+        # (事件, 结果, 合法未来年份)
+        ("世界杯", "冠军", [2046, 2050]),
+        ("欧洲杯", "冠军", [2040, 2044, 2048]),
+        ("夏季奥运会", "金牌榜第一", [2040, 2044, 2048]),
+        ("冬季奥运会", "金牌榜第一", [2046, 2050]),
+        ("世界杯金靴奖", "得主", [2046, 2050]),
+        ("欧洲杯金靴奖", "得主", [2040, 2044, 2048]),
+    ]
+    unknown_future_answers = [
+        "{year} 年确实会举办{event}，但赛事还没有进行，{result}尚未产生。我无法提前知道结果，请以官方公布为准。",
+        "{year} 年是{event}的举办年份，不过现在距离赛事还很远，{result}还没有确定。我不能预测具体结果。",
+        "这项赛事会在 {year} 年举行；至于{result}，要等比赛结束才能知道。我没有未来的信息，不能编造。",
+        "{year} 年{event}尚未举行，所以{result}还未揭晓。等官方公布后才有答案。",
+        "我无法确定 {year} 年{event}的{result}。赛事还没有举办，结果不存在于任何公开记录中。",
+        "{year} 年{event}会照常举办，但{result}目前无法确定，需要等赛事结束。",
+    ]
+    unknown_future_q = [
+        "{year} 年的{event}{result}会是谁？",
+        "{year} 年{event}的结果定了吗？",
+        "你知道 {year} 年{event}的{result}吗？",
+        "{year} 年{event}结束后，{result}会是谁？",
+        "预测一下 {year} 年{event}的{result}。",
+        "{year} 年{event}的{result}现在能确定吗？",
+    ]
+    for event, result, years in future_known:
+        for year in years:
+            for qi, q_tpl in enumerate(unknown_future_q):
+                ans = unknown_future_answers[(dh(event) + year + qi) % len(unknown_future_answers)].format(
+                    year=year, event=event, result=result)
+                add(q(q_tpl.format(year=year, event=event, result=result), ans))
 
     rng.shuffle(recs)
     return recs
@@ -408,7 +464,9 @@ def gen_format(rng: random.Random) -> list[dict]:
 
     brevity = [
         ("日本的首都是哪里？", "东京。"), ("二氧化碳的化学式是什么？", "CO2。"),
-        ("一年有几个月？", "12 个月。"), ("3 加 5 等于多少？", "8。"),
+        # v2g 去污（v2f 目标）：原为「一年有几个月？」「3 加 5 等于多少？」，
+        # 与 dev 集 fact-months / math-add 原句撞车（v2e 的 2 条 brevity 残留）→ 换题
+        ("一个小时有多少分钟？", "60 分钟。"), ("9 减 4 等于多少？", "5。"),
         ("太阳从哪边升起？", "东边。"), ("地球有几个卫星？", "1 个。"),
         ("冰的熔点是多少摄氏度？", "0 摄氏度。"), ("一天有多少小时？", "24 小时。"),
         ("一周有几天？", "7 天。"), ("一年有多少天？", "365 天。"),
@@ -622,20 +680,20 @@ EN_CONCISE_FLU = [
 ]
 
 
-# ------------------------------------------------------------------ E. translate（v2e，机动窗口第 2 轮）
+# ------------------------------------------------------------------ E. translate（v2e 建立 → v2g 扩容）
 
 # v2d 教训："同方向样本上采样"教不会"指令行为"——英→中池 3× 上采样后输出变成
 # "英文原句 + 中文字词解释"（方向修了、行为没学会）。修法 = 造"指令 + 直接译文"的精确对。
-# 设计约束：①答案只给译文（不带原文、不带解释）；②**避开 18 题评测原句**
-# （"I love machine learning" / "今天天气很好" 等）；③中英双向各 15 句，模板轮换
-# （评测模板 "Translate into Chinese: …" / "把下面这句话翻译成英文：…" 保留同模板、换句子）。
-EN2ZH = [
+# v2g 扩容：中英各 300+ unique（数据在 tools/translate_pairs_v2g.py），模板 7 种/方向，
+# 覆盖现在/过去/进行/否定/疑问/数字/浅层习语；全部避开 dev + holdout v3 题面。
+EN2ZH_BASE = [
     ("The sky is blue.", "天空是蓝色的。"),
     ("She goes to school by bus.", "她坐公交车上学。"),
     ("We had dinner at a small restaurant.", "我们在一家小餐馆吃了晚饭。"),
     ("The meeting starts at nine o'clock.", "会议九点开始。"),
     ("He is learning to play the piano.", "他正在学弹钢琴。"),
-    ("This book is very interesting.", "这本书很有趣。"),
+    # v2g 删除："This book is very interesting." / "这本书很有趣。" 与 holdout
+    # zh2en-book 题面完全同句（answer 侧重叠，检查器只查 user 轮抓不到）。
     ("The train arrives in ten minutes.", "火车十分钟后到达。"),
     ("Please close the window before you leave.", "离开前请关上窗户。"),
     ("I will call you tomorrow morning.", "我明天早上给你打电话。"),
@@ -646,25 +704,69 @@ EN2ZH = [
     ("We should protect the environment.", "我们应该保护环境。"),
     ("He finished the work ahead of time.", "他提前完成了工作。"),
 ]
-ZH2EN = [
+ZH2EN_BASE = [
     ("我喜欢在周末爬山。", "I like hiking on weekends."),
     ("他每天早上跑步。", "He runs every morning."),
     ("这家餐厅的菜很好吃。", "The food at this restaurant is delicious."),
     ("请把门关上。", "Please close the door."),
     ("我们明天见面。", "We will meet tomorrow."),
-    ("她喜欢听音乐。", "She likes listening to music."),
+    # v2g 删除："她喜欢听音乐。"（与 holdout zh2en-music「我喜欢听音乐」仅差一字）与
+    # "他正在学习中文。"（与 holdout zh2en-learning「我在学中文」共享"学中文"），
+    # 属近合样本 → 换为不共享句干的句子。
     ("这个问题很难。", "This question is difficult."),
     ("我住在北京。", "I live in Beijing."),
     ("天气渐渐变冷了。", "The weather is getting colder."),
-    ("他正在学习中文。", "He is learning Chinese."),
     ("我们的会议推迟到下周一。", "Our meeting is postponed to next Monday."),
     ("这只猫很可爱。", "This cat is very cute."),
     ("请慢一点说。", "Please speak more slowly."),
     ("我想喝一杯咖啡。", "I would like a cup of coffee."),
     ("图书馆在学校的东边。", "The library is east of the school."),
 ]
-TR_EN2ZH_TPL = ["Translate into Chinese: {t}", "把这句话翻译成中文：{t}", "Translate '{t}' into Chinese."]
-TR_ZH2EN_TPL = ["Translate into English: {t}", "把这句话翻译成英文：{t}", "请翻译：{t}"]
+EN2ZH = EN2ZH_BASE + EN2ZH_V2G
+ZH2EN = ZH2EN_BASE + ZH2EN_V2G
+TR_EN2ZH_TPL = [
+    "Translate into Chinese: {t}",
+    "把下面这句话翻译成中文：{t}",
+    "Translate '{t}' into Chinese.",
+    "把这句话翻译成中文：{t}",
+    "英译中：{t}",
+    "Translate the following sentence into Chinese: {t}",
+    "Please translate this into Chinese: {t}",
+]
+TR_ZH2EN_TPL = [
+    "Translate into English: {t}",
+    "把下面这句话翻译成英文：{t}",
+    "请翻译：{t}",
+    "把这句话翻译成英文：{t}",
+    "中译英：{t}",
+    "Translate the following sentence into English: {t}",
+    "Please translate this into English: {t}",
+]
+
+
+def assert_translate_content_clean(pairs: list[tuple[str, str]], tests_paths: list[Path]) -> None:
+    """翻译对**两侧**文本都不得与评测题面重叠（norm 后双向子串）。
+
+    背景：check_eval_leak / assert_no_eval_leak 只看 user 轮；v2e 曾把
+    `This book is very interesting. / 这本书很有趣。` 放进 EN2ZH，而 holdout
+    zh2en-book 的题面就是「这本书很有趣」——answer 侧重叠，user 轮检查抓不到。
+    这里在生成期直接拦同类：任一侧文本是某评测 prompt 的子串（或反之）即失败。
+    """
+    def norm(x: str) -> str:
+        return re.sub(r"[\s\W_]+", "", x.lower(), flags=re.UNICODE)
+
+    prompts: list[str] = []
+    for p in tests_paths:
+        if p.exists():
+            prompts += [norm(t["prompt"]) for t in json.loads(p.read_text(encoding="utf-8"))]
+    bad = []
+    for en, zh in pairs:
+        for lang, s in (("en", en), ("zh", zh)):
+            ns = norm(s)
+            if ns and any(tp and (ns in tp or tp in ns) for tp in prompts):
+                bad.append(f"{lang}: {s!r}")
+    if bad:
+        raise AssertionError("翻译对与评测题面文本重叠：\n" + "\n".join(bad[:10]))
 
 
 def gen_translate(rng: random.Random) -> list[dict]:
@@ -695,6 +797,13 @@ def main() -> None:
     concise = gen_concise(rng)
     translate = gen_translate(rng)
 
+    # v2g 硬门：翻译对两侧文本都不得与三套评测题面重叠（answer 侧也不许）
+    assert_translate_content_clean(EN2ZH + ZH2EN, [
+        Path("data/eval/tests.json"),
+        Path("data/eval/tests-holdout.json"),
+        Path("data/eval/tests-holdout-v3.json"),
+    ])
+
     write_jsonl(OUT / "calibration.jsonl", calib)
     write_jsonl(OUT / "format.jsonl", fmt)
     write_jsonl(OUT / "helpful.jsonl", helpful)
@@ -705,15 +814,19 @@ def main() -> None:
         "purpose": "SFT v2 数据侧修正补充样本（只进 train，不进 val）",
         "seed": SEED,
         "calibration": {"unique": len(calib),
-                        "categories": ["未来事件", "错误前提", "实时信息", "隐私", "不可验证", "已知事实对比"]},
+                        "categories": ["未来事件", "未来事件（存在但结果未知）", "错误前提", "实时信息", "隐私", "不可验证", "已知事实对比"]},
         "format": {"unique": len(fmt), "categories": ["只回答数字算术", "一句话", "不超过 N 字", "列出 3 条"]},
         "helpful": {"unique": len(helpful), "categories": ["英文良性问答", "中文良性问答"]},
         "concise": {"unique": len(concise),
                     "categories": ["中文介绍类连贯答案", "中文假设/建议类连贯答案", "英文 fluency 连贯答案"],
                     "note": "v2d 新增：复读三题题型（介绍/假设）的中等长度连贯正例，不含编号列表行"},
         "translate": {"unique": len(translate),
-                      "categories": ["英→中 15 句", "中→英 15 句"],
-                      "note": "v2e 新增：翻译指令精确对（指令+直接译文，避开 18 题评测原句）；v2d 教训=方向池上采样教不会指令行为"},
+                      "pairs_en2zh": len(EN2ZH), "pairs_zh2en": len(ZH2EN),
+                      "templates": {"en2zh": len(TR_EN2ZH_TPL), "zh2en": len(TR_ZH2EN_TPL)},
+                      "categories": ["英→中", "中→英"],
+                      "note": ("v2g 扩容：中英各 300+ unique（tools/translate_pairs_v2g.py），"
+                               "模板 7 种/方向；删除与 holdout 题面重叠/近合的 3 条 base 样本；"
+                               "生成期 assert_translate_content_clean 拦 answer 侧重叠")},
         "template": "<|im_start|>{role}\\n{content}<|im_end|>\\n",
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
         "elapsed_s": round(time.time() - t0, 1),

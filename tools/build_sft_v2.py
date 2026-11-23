@@ -419,7 +419,8 @@ def main() -> None:
                                  "written": 0, "tokens": 0}
         extra_items.extend((name, r) for r in recs)
     if not args.skip_eval_leak_check:
-        assert_no_eval_leak(extra_items, [Path(args.tests), Path("data/eval/tests-holdout.json")])
+        assert_no_eval_leak(extra_items, [Path(args.tests), Path("data/eval/tests-holdout.json"),
+                                          Path("data/eval/tests-holdout-v3.json")])
     random.Random(args.seed).shuffle(extra_items)
     for name, rec in extra_items:
         ids, mask, n_asst = conversation_segments(tok, rec.get("conversations") or [],

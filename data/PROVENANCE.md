@@ -141,6 +141,15 @@
 
 > 构建 4.8 min · 段级 mask 自检 **300 块 / 2,959 段 / 0 违规** · 全量 `data/sft-mix-v2e/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2e --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5 --concise-repeat 3 --translate-upsample 3 --long-answer-keep-den 2 --format-repeat 3 --translate-ex-repeat 6 --math-upsample 2 --en-flu-no-upsample --skip-eval-leak-check`（**历史 v2e 复现专用**：已知 2 条 brevity 残留；新构建必须去掉该 flag，并先用 `tools/check_eval_leak.py` 确认 0 撞车）。**预注册判据**（HANDOFF §7，跑前落档）：rep-4 <0.08 / translate-en2zh 关键词过 / 题库关键词 ≥16-18 且语义 ≥17-18（去污后干净读数）/ math-add 8 + math-mul 42 / 预训练 PPL ≤10%。失败路径：两轮为限，不过则锁定 v2 进 Day 10。
 
+### SFT v2g 训练集 `data/sft-mix-v2g/`（2026-11-23：翻译扩容 + calibration"存在但未知"）
+
+| 件 | 构成 | 规模 | 指纹（sha256 前 16） |
+|---|---|---|---|
+| `train.bin` + `train.labels.bin` | v2e 全部规则 + **①翻译精确对 637 unique**（en→zh 324 / zh→en 313，模板 7 种/方向；`tools/translate_pairs_v2g.py`）**×3 = 1,911 条** + **②calibration 新增"存在但结果未知"90 条**（2040/2044/2046/2048/2050 × 世界杯/欧洲杯/夏奥/冬奥/两项金靴）+ **③brevity 去污**（`一年有几个月`/`3 加 5` → 换题，0 残留）+ **④奥运类未来样本结果词** `举办城市`→`金牌榜第一`（2028/2030/2032/2034 举办城市已是公开事实） | **250,001,408 token**（244,142 块 × 1024 同预算；监督 token 189,974,452 = **75.99%**；列表占比 **11.44%**；共 596,747 条对话） | `40e1d01417b3decc` / `f3161a9faae4ba99` |
+| `val.bin` + `val.labels.bin` | **复用 v1 val**（逐字节相同） | 2,001,920 token（4,281 条对话） | `8287b49028dd2f58` / `1a5184449637176b` |
+
+> 构建 4.9 min · 段级 mask 自检 **300 块 / 2,936 段 / 0 违规** · 全量 `data/sft-mix-v2g/SHA256SUMS`。重建：`.venv-pre/bin/python -I tools/build_sft_v2.py --out-dir data/sft-mix-v2g --listy-keep-den 5 --protect-math-short --en-refusal-keep-den 2 --en-helpful-upsample 5 --concise-repeat 3 --translate-upsample 3 --long-answer-keep-den 2 --format-repeat 3 --translate-ex-repeat 3 --math-upsample 2 --en-flu-no-upsample`（**不带** `--skip-eval-leak-check`；build 断言含 dev + holdout 30 + holdout v3）。**extras 层已随 v2g 重生成**（`data/sft-extra-v2/SHA256SUMS`：calibration `a702070788f0ebe3` / format `d7791108200178e5` / helpful `34902c9db1c1b738` / concise `0ad10ac45ecae16a` / translate `98239ab44fb9b900`）——复现 v2e 需 `git checkout 3e0cd42 -- tools/gen_sft_v2_extra.py tools/build_sft_v2.py` 后重跑生成器。eval：`reports/2026-11-23-v2g*.md`；**AC7 PASS**（翻译 8/14、calibration 严格 5/6），**AC6 rep-4 FAIL**（0.136）。
+
 ### 评测集 `data/eval/tests.json`（Day 5 立，Day 6 定档）+ `tests-holdout.json`（Day 10 立）
 
 | 件 | 构成 | 规模 | 指纹（sha256 前 16） |

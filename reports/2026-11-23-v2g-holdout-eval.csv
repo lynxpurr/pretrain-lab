@@ -1,0 +1,181 @@
+model,decode,test_id,tag,pass,distinct2,rep4,answer
+v2e,greedy,holdout-fact-ocean,fact-zh,1,0.756,0.114,世界上最大的海洋是太平洋。太平洋是地球上最大的海洋，面积约为1.5万平方公里，占地球总面积的71%。太平洋不仅是一个大洋，还包含着丰富的生物多样性和生态系统，是地球上最大的海洋之一。
+v2e,greedy,holdout-fact-moon-count,fact-zh,0,0.935,0.0,地球有大约8颗天然卫星。这些卫星分布在地球表面，它们通过引力相互作用，维持着地球的轨道和气候。
+v2e,greedy,holdout-fact-area,fact-zh,0,0.941,0.0,世界上面积最大的国家是**印度**。
+v2e,greedy,holdout-fact-canada,fact-en,1,0.962,0.0,The capital of Canada is Ottawa.
+v2e,greedy,holdout-fact-ocean-en,fact-en,1,0.274,0.632,"The largest ocean on Earth is the Pacific Ocean, which is the largest ocean in the world. It is the largest ocean in the world, covering an area of about 3.5 million square kilometers (1.2 million square miles). The ocean is also the largest ocean in the world, covering an area of about 3.5 million square kilometers (1.2 million square miles). The ocean is also the largest ocean in the world, covering an area of about 3.5 million square kilometers ("
+v2e,greedy,holdout-math-add2,math,0,1.0,0.0,17 加 6 等于 19。
+v2e,greedy,holdout-math-mul2,math,0,0.923,0.0,13 乘以 5 等于 **40**。
+v2e,greedy,holdout-math-sub,math,0,0.909,0.0,100 减去 37 等于 37。
+v2e,greedy,holdout-identity-self,identity,1,0.948,0.0,我是minimind，一个由个人开发者开发的智能助手，我擅长通过思考来帮您解答复杂的数学，代码和逻辑推理等理工类问题。
+v2e,greedy,holdout-identity-dev,identity,1,0.977,0.0,我是由jingyaogong创建的高效小参数AI模型，专注于提供精准、快速的信息与帮助。
+v2e,greedy,holdout-explain-ai,explain,1,0.769,0.167,引力是物质之间相互吸引的力，是物质之间相互作用的结果。
+v2e,greedy,holdout-explain-photo,explain,1,0.909,0.0,细胞呼吸是细胞进行呼吸作用，将氧气和营养物质通过细胞膜传递到细胞质中，同时释放二氧化碳，维持细胞内外环境的平衡。
+v2e,greedy,holdout-trans-zh2en-hometown,translate,1,1.0,0.0,I love my hometown.
+v2e,greedy,holdout-trans-en2zh-weather,translate,0,1.0,0.0,今天阳光明媚，心情也跟着好起来了。
+v2e,greedy,holdout-trans-en2zh-knowledge,translate,0,0.938,0.0,Knowledge is power.
+v2e,greedy,holdout-summary-watch,summary,1,1.0,0.0,公司宣布将在下个月推出一款新的智能手表，支持心率监测和长续航。
+v2e,greedy,holdout-summary-library,summary,1,1.0,0.0,学校决定延长图书馆的开放时间，方便学生复习。
+v2e,greedy,holdout-format-env,format,1,0.808,0.024,保护环境是每个人的责任，以下是三个保护环境的方法：  1. **减少污染**：减少工业废气、废水、固体废物的排放，采用清洁能源，如太阳能、风能等，减少对空气、水体的污染。  2. **保护生物多样性**：保护森林、湿地、草原等生态系统，防止物种灭绝，维护生态平衡。  3. **减少浪费**：合理利用资源，减少浪费，减少资源的消耗，如减少一次性用品的使用
+v2e,greedy,holdout-format-fruit,format,1,0.662,0.141,当然，以下是三种常见的水果：  1. **苹果**：苹果是一种常见的水果，通常呈圆形或椭圆形，表面有光滑的皮和红色的果肉。苹果富含维生素C、维生素A、钾和纤维，对健康有益。  2. **香蕉**：香蕉是一种长而弯曲的水果，通常呈黄色或绿色，表面有光滑的皮和黄色的果肉。香蕉富含钾、维生素C和纤维，对心脏健康有益。  3.
+v2e,greedy,holdout-code-max,code,1,0.471,0.328,"你可以使用Python的内置函数`max()`和`min()`来找到两个数中的较大值。下面是一个简单的函数实现：  ```python def find_max_value(num1, num2):     # 使用max()函数找到两个数中的较大值     max_value = max(num1, num2)     # 使用min()函数找到两个数中的较大值     min_value = min(num1, num2)     return max_value, min_value"
+v2e,greedy,holdout-code-sum,code,1,0.613,0.227,"你可以使用以下Python函数来计算列表中所有数字的和：  ```python def sum_of_numbers(numbers):     total = 0     for number in numbers:         total += number     return total  # 示例使用 numbers = [1, 2, 3, 4, 5] result = sum_of_numbers(numbers) print(""总和:"", result) ```  这个函数首先初始化一个变量 `total` 为0，然后遍历列表中的每个"
+v2e,greedy,holdout-reason-keys,reason,0,0.691,0.12,如果出门忘带钥匙，可以采取以下措施：  1. **立即行动**：首先，立即将钥匙交给警察或相关部门。警察或相关部门会立即通知你，并可能要求你提供钥匙。  2. **联系警方**：如果钥匙被偷，可以联系当地警方或相关部门。他们可以提供帮助，并可能提供钥匙的购买或出售信息。  3. **使用其他物品**：如果钥匙被偷，可以考虑
+v2e,greedy,holdout-reason-cold,reason,1,0.831,0.039,如果明天降温到零下，出门应该注意以下几点：  1. **保暖**：出门前确保身体处于舒适状态，避免受凉。可以使用加湿器或空调，保持室内空气湿润。  2. **防晒**：外出时，使用防晒霜，尤其是在阳光强烈时，可以有效保护皮肤免受紫外线伤害。  3. **防风保暖**：出门前检查天气预报，确保室内有足够的通风，避免感冒或感冒。  4
+v2e,greedy,holdout-zhflu-shanghai,fluency-zh,1,0.65,0.234,成都是中国西南地区的一个城市，位于四川省中部，是一个历史悠久、文化底蕴深厚的城市。成都的历史可以追溯到2000多年前，当时成都是四川省的一个城市，被称为“成都”。  成都的历史可以追溯到2000多年前，当时成都是四川省的一个城市，被称为“成都”。在那个时候，成都是一个重要的经济中心，吸引了大量的游客和商旅。  在成都，你可以参观许多著名的景点，如武侯祠、锦里古街
+v2e,greedy,holdout-zhflu-winter,fluency-zh,1,0.509,0.362,冬天，也被称为“寒冬”，是自然界中最寒冷、最短暂的季节。它通常发生在北半球，包括北半球的北半部分，以及南半球的南半部分。冬天的天气通常非常寒冷，因为北半球大部分地区处于低温状态，而南半球则处于温暖状态。  冬天的天气通常非常寒冷，因为北半球大部分地区处于低温状态，而南半球则处于温暖状态。冬季的天气通常非常寒冷，因为北半球大部分地区处于
+v2e,greedy,holdout-enflu-moon,fluency-en,1,0.391,0.276,"The moon is a fascinating and fascinating phenomenon that has been observed for centuries. It is the brightest of the constellations, and it is the brightest of the night sky. The moon is also known for its ability to shine, which is a key feature of the night sky. The moon is also known for its ability to attract and attract other objects, such as birds and other animals. The moon is also a symbol of love and friendship, and it is often associated with the moon"
+v2e,greedy,holdout-enflu-cat,fluency-en,1,0.376,0.351,"Cat is a type of animal that is characterized by its unique characteristics and behaviors. It is a type of animal that is known for its intelligence, physical strength, and ability to adapt to various environments. The cat is a member of the family Canidae, which includes cats, dogs, and other animals. The cat is also known for its ability to communicate with humans and other animals. The cat is also known for its ability to hunt and for its ability to communicate with humans. The cat is"
+v2e,greedy,holdout-calib-olympics,calibration,1,0.78,0.026,2040 年没有奥运会。奥运会每四年举办一次，2030 年的举办城市是 **2030**。
+v2e,greedy,holdout-calib-winter,calibration,1,0.743,0.121,2034 年没有冬奥会。冬奥会每四年举办一次，所以 2034 年没有举办城市。
+v2e,greedy,holdout-calib-ballon,calibration,1,0.971,0.0,我无法确定。2029 年的金球奖尚未举行，得主尚未产生。我不能预测未来。
+v2e,greedy,holdout3-math-mul-commute,math,0,1.0,0.0,3 乘以 13 等于63。
+v2e,greedy,holdout3-math-mul-4x15,math,0,0.923,0.0,4 乘以 15 等于 **40**。
+v2e,greedy,holdout3-math-mul-23x5,math,0,0.923,0.0,23 乘以 5 等于 **56**。
+v2e,greedy,holdout3-math-add-34-28,math,0,1.0,0.0,34 加 28 等于 56。
+v2e,greedy,holdout3-math-sub-50-18,math,0,0.923,0.0,50 减 18 等于 **42**。
+v2e,greedy,holdout3-math-multi-1,math,0,1.0,0.0,5 加 4 再乘以 2 等于 12。
+v2e,greedy,holdout3-math-multi-2,math,0,1.0,0.0,12 减 5 再加 3 等于 21。
+v2e,greedy,holdout3-math-multi-3,math,0,1.0,0.0,20 减 8 再加 6 等于 36。
+v2e,greedy,holdout3-math-repeat-add,math,0,0.917,0.0,3 个 5 相加等于 **7**。
+v2e,greedy,holdout3-math-en,math,1,1.0,0.0,9 + 6 = 15
+v2e,greedy,holdout3-math-word,math,0,0.648,0.079,小明开始有 12 个苹果，吃了 5 个。   **计算步骤：**   1. **总数**：12 个苹果。   2. **吃掉的数量**：5 个。   3. **剩余数量**：12 - 5 = **5 个**。    **答案：还剩 5 个苹果。**
+v2e,greedy,holdout3-trans-en2zh-dogs,translate,0,0.947,0.0,Dogs are loyal animals.
+v2e,greedy,holdout3-trans-en2zh-time,translate,0,1.0,0.0,Time is money.
+v2e,greedy,holdout3-trans-en2zh-books,translate,0,1.0,0.0,"""I like to read books at night."""
+v2e,greedy,holdout3-trans-en2zh-meeting,translate,0,0.848,0.0,The train leaves at seven in the morning.
+v2e,greedy,holdout3-trans-en2zh-idiom,translate,0,0.59,0.37,"Example: ""The process of learning is perfect.""  Translation: ""The process of learning is perfect."""
+v2e,greedy,holdout3-trans-en2zh-life,translate,0,0.925,0.0,Learning new things every day makes life better.
+v2e,greedy,holdout3-trans-zh2en-learning,translate,1,0.944,0.0,I am learning Chinese.
+v2e,greedy,holdout3-trans-zh2en-wait,translate,0,0.873,0.014,"Sure! Please provide the text you'd like translated, and I'll do my best to assist you."
+v2e,greedy,holdout3-trans-zh2en-hard,translate,0,0.66,0.072,"The sentence ""今天非常冷"" is already in English. However, it seems to be a mix of Chinese and English, which makes it hard to understand. If you're referring to a specific context or a specific sentence, please provide more details so I can assist you better."
+v2e,greedy,holdout3-trans-zh2en-book,translate,1,0.81,0.0,"The sentence ""这本书很有趣"" translates to ""This book is very interesting."""
+v2e,greedy,holdout3-trans-zh2en-music,translate,1,0.952,0.0,I like listening to music.
+v2e,greedy,holdout3-calib-wc2046,calibration,1,0.758,0.129,2046 年没有世界杯。世界杯每四年举办一次，所以 2046 年没有冠军。
+v2e,greedy,holdout3-calib-olympics2044,calibration,1,0.636,0.214,2044 年并不举办夏季奥运会。夏季奥运会每四年举办一次，所以 2044 年没有举办夏季奥运会。
+v2e,greedy,holdout3-calib-nobel2045,calibration,1,0.517,0.362,2045 年没有诺贝尔文学奖，因为  1. 诺贝尔文学奖是为表彰在文学领域做出杰出贡献的人而设立的奖项。 2. 诺贝尔文学奖的得主是  3. 诺贝尔文学奖的获奖者是  4. 诺贝尔文学奖的获奖者是  5. 诺贝尔文学奖的获奖者是  6. 诺贝尔文学奖的获奖者是  7. 诺贝尔文学
+v2e,greedy,holdout3-fact-mountain,fact-zh,1,0.592,0.203,月亮不会自己发光，因为月亮是反射太阳光的天体，而太阳光是太阳光的反射。月亮本身并不发光，它只是反射太阳光。因此，月亮不会发光，它只是反射太阳光。
+v2e,greedy,holdout3-fact-boil,fact-zh,1,0.481,0.354,水在0摄氏度（℃）沸腾，而沸腾的温度取决于水的沸点。水的沸点在100摄氏度左右，而沸腾的温度在0摄氏度左右。因此，水在100摄氏度沸腾，而沸腾的温度在0摄氏度左右。
+v2e,greedy,holdout3-fact-continent,fact-zh,0,0.609,0.229,地球上有大约8个大洲，每个大洲的面积约为6.5万平方公里，占地球总面积的8%。这些大洲包括：  1. **亚洲**：约占地球总面积的8%，包括亚洲的亚洲国家如中国、印度、日本、韩国、泰国、菲律宾、马来西亚、印度尼西亚、菲律宾、马来西亚、菲律宾、马来西亚、马来西亚、马来西亚、
+v2e,greedy,holdout3-fact-sun-direction,fact-zh,1,0.638,0.289,太阳从东方升起，这是因为地球自转的方向是从西向东。地球自转的方向是从西向东，因此太阳从东方升起。
+v2e,greedy,holdout3-fact-skin,fact-zh,1,0.718,0.132,"血液中运输氧气的细胞被称为血红蛋白（Adenosine Triphosphate, ATP）。血红蛋白是一种蛋白质，主要存在于红细胞中，是血液中运输氧气的主要成分。它负责将氧气从血液中运输到身体各部分，确保氧气的供应。血红蛋白在运输氧气时起着关键作用，确保氧气的供应。"
+v2e,greedy,holdout3-fact-lightspeed,fact-zh,0,0.557,0.407,"光速是宇宙中所有物质和能量传播速度的度量，约为每秒299,792公里。这个数值是精确的，因为光速是宇宙中所有物质和能量传播速度的度量，而光速是宇宙中所有物质和能量传播速度的度量。"
+v2e,greedy,holdout3-fact-everest-en,fact-en,1,0.438,0.366,"A standard guitar has a total of 12 strings. Each string is worth $0.25, so the total number of strings is $12 \times 0.25 = $4.  Each string is worth $0.25, so to find the number of strings, we divide the total number of strings by the number of strings. So, $4.00 \div 0.25 = $4.00 \times 4 = $16. The answer is $\boxed"
+v2e,greedy,holdout3-fact-jupiter,fact-en,0,0.346,0.487,"The largest planet in the solar system is the Earth, which is located in the constellation of Orion. The largest planet in the solar system is the Sun, which is about 2.5 times the size of Earth. The largest planet in the solar system is the Sun, which is about 3.6 times the size of Earth."
+v2e,greedy,holdout3-fact-hours,fact-en,0,0.64,0.155,"The number of hours in a day is given as 60 minutes. To find out how many hours are in a day, we divide 60 by 60:  \[ \text{Number of hours} = \frac{60}{60} = 2 \]  So, there are 2 hours in a day."
+v2e,greedy,holdout3-fact-bees,fact-en,0,0.395,0.367,"Bees are a crucial part of the ecosystem, providing food, shelter, and a source of food for humans and other animals. They are also a key part of the food chain, providing essential nutrients and energy to the plants and animals in their natural habitat. In addition to their role in pollination, bees also play a crucial role in the food chain, providing essential nutrients and energy to the plants and animals in their natural habitat."
+v2e,greedy,holdout3-fact-mars,fact-en,1,0.18,0.738,"Mars looks red because it is a red planet. Mars is a planet that is located in the middle of the solar system, and it is a planet that is located in the middle of the solar system. Mars is a planet that is located in the middle of the solar system, and it is a planet that is located in the middle of the solar system. Mars is a planet that is located in the middle of the solar system, and it is a planet that is located in the middle of"
+v2e,greedy,holdout3-identity-intro,identity,1,0.941,0.0,您好！我是由中国的个人开发者独立开发的智能助手minimind，有关模型和产品的详细内容请参考官方文档。
+v2e,greedy,holdout3-identity-robot,identity,1,0.987,0.0,我是一个由jingyaogong创建的高效小参数AI模型，专注于提供精准、快速的信息和服务。我的设计旨在以最小的计算资源实现最大的效能，适用于多种场景。
+v2e,greedy,holdout3-identity-lang,identity,1,0.222,0.718,我懂多种语言，包括英语、中文、日语、韩语、法语、德语、西班牙语、意大利语、俄语、日语、韩语、法语、德语、西班牙语、意大利语、俄语、日语、韩语、法语、德语、西班牙语、意大利语、俄语、日语、韩语、法语、德语、西班牙语、意大利语、俄语、俄语、日语、韩语、法语、德语、西班牙语、意大利语、俄语、俄语
+v2e,greedy,holdout3-explain-democracy,explain,1,0.977,0.0,民主是国家或组织通过选举、法律程序和公民参与来确保其行为符合社会价值观和公共利益的制度。
+v2e,greedy,holdout3-explain-evaporation,explain,1,1.0,0.0,蒸发是液体在一定温度下，由于分子间相互作用而形成的一种物质状态。
+v2e,greedy,holdout3-explain-shadow,explain,1,0.774,0.137,影子是物体在空间中移动时，由于空间的限制，物体在空间中移动时，其影子会以某种方式消失，形成一种“影子”现象。
+v2e,greedy,holdout3-summary-metro,summary,1,1.0,0.0,市政府宣布明年将修建一条新的地铁线路，连接市中心和机场。
+v2e,greedy,holdout3-summary-restaurant,summary,1,0.958,0.0,这家餐厅因菜品新鲜和服务周到获得了年度最佳餐厅奖。
+v2e,greedy,holdout3-summary-rain-warning,summary,1,1.0,0.0,气象台发布暴雨橙色预警，提醒市民减少外出。
+v2e,greedy,holdout3-format-seasons,format,1,0.543,0.215,四个季节分别是：  1. **春季**：春季是万物复苏的季节，气温逐渐回暖，植物开始发芽，动物开始活动，是春季的典型季节。  2. **夏季**：夏季是炎热的季节，阳光充足，植物开始生长，动物开始活动，是夏季的典型季节。  3. **秋季**：秋季是收获的季节，气温逐渐下降，植物开始成熟，动物开始活动，是秋季的典型季节。
+v2e,greedy,holdout3-format-transport,format,1,0.696,0.084,以下是三种交通工具：  1. **汽车**：汽车是一种交通工具，通常由发动机驱动，通过燃油发动机提供动力。汽车可以是电动或混合动力，根据其使用频率和速度选择。汽车的动力来源包括发动机、燃油发动机、电动机和燃料电池。  2. **飞机**：飞机是一种空中交通工具，通常由发动机、机翼、机身和尾翼组成。飞机可以在空中飞行，通过机翼或尾翼产生升力，然后通过
+v2e,greedy,holdout3-format-pets,format,1,0.682,0.178,三种常见的宠物包括：  1. **狗**：狗是人类最忠诚的朋友之一，它们忠诚、友好、聪明，是许多家庭的首选宠物。狗可以陪伴主人度过孤独的时光，提供安慰和陪伴，是许多家庭的首选宠物。  2. **猫**：猫以其独立、优雅、独立的性格而闻名，是许多家庭的首选宠物。猫可以成为家庭的守护者，提供陪伴和安慰，是许多家庭的首选宠物。
+v2e,greedy,holdout3-code-parity,code,1,0.589,0.267,在Python中，判断一个数是奇数还是偶数可以通过以下步骤实现：  1. 定义一个函数，例如 `is_even(number)`，接收一个整数 `number` 作为参数。 2. 使用 `if` 语句来判断 `number` 是否为偶数。 3. 使用 `is_even(number)` 函数来判断 `number` 是否为奇数。  下面是一个简单的实现：  ```python def is_even(number):     if number % 2 ==
+v2e,greedy,holdout3-code-swap,code,1,0.688,0.112,"在Python中，你可以使用`zip`函数和`list`函数来交换两个变量的值。以下是一个简单的函数，它接受两个列表作为参数，并返回一个交换后的列表：  ```python def swap_lists(list1, list2):     # 使用zip函数将两个列表的元素组合，形成一个新的列表     return list(zip(list1, list2))  # 示例使用 list1 = [1, 2, 3] list2 ="
+v2e,greedy,holdout3-code-loop,code,1,0.66,0.151,"在Python中，你可以使用`for`循环和`range()`函数来打印1到10。下面是一个简单的例子：  ```python for i in range(1, 11):     print(i) ```  这段代码首先定义了一个变量`i`，然后定义了一个函数`range(1, 11)`，该函数接受一个参数`i`，表示要打印的数字范围。在循环中，我们使用`range(1, 11)`生成从1到10的数字序列。"
+v2e,greedy,holdout3-reason-phone,reason,1,0.661,0.153,如果手机没电了，确实需要立即处理，以避免影响日常生活。以下是一些建议：  1. **检查电源**：首先，确保手机已连接到电源。如果手机没有电，可以尝试使用其他设备（如手机壳、充电器等）来充电。如果手机没有电，可以尝试使用备用电池或充电宝来充电。  2. **检查电池**：如果手机电池电量不足，可以尝试使用电池管理器来检查电池状态。如果电池电量
+v2e,greedy,holdout3-reason-late,reason,1,0.623,0.215,如果上学迟到了，可以采取以下措施：  1. **立即通知老师**：首先，立即通知老师，告知迟到的原因，比如交通堵塞、学校安排等。  2. **使用手机或电脑提醒**：在学校设置手机或电脑提醒应用，提醒同学迟到。  3. **使用提醒工具**：在学校设置手机或电脑提醒应用，提醒同学迟到。  4. **提前准备**：提前
+v2e,greedy,holdout3-reason-slow,reason,1,0.559,0.327,如果电脑运行缓慢，可以尝试以下方法：  1. **清理缓存**：关闭不必要的文件和程序，释放资源，减少资源浪费。  2. **更新驱动程序**：确保你的电脑有最新的驱动程序，因为更新可以修复已知的bug。  3. **更新驱动程序**：确保你的电脑有最新的驱动程序，因为更新可以修复已知的bug。  4. **更新操作系统**：确保你的电脑有最新的
+v2e,greedy,holdout3-zhflu-duanwu,fluency-zh,1,0.8,0.023,重阳节是中国传统节日之一，通常在农历的重阳节前后，人们会进行一系列的重阳节活动，以祈求丰收、健康、平安和长寿。重阳节的起源可以追溯到古代的“重阳节”传说，据说在古代，人们为了纪念古代的重阳节，会举行各种活动，如登高、赏菊、吃重阳糕等。  ### 重阳节的传统习俗  1. **登高**
+v2e,greedy,holdout3-zhflu-summer,fluency-zh,1,0.815,0.069,夏天是一年四季中最热的季节，通常从6月到9月，气温较高，日照时间较长。夏天也是许多户外活动和旅游的高峰期，如海滩、公园、水上乐园等。夏天也是许多水果和蔬菜的丰收季节，如西瓜、葡萄、草莓、黄瓜、甜瓜等。此外，夏天也是许多节日和庆典的季节，如圣诞节、新年、婚礼等。总的来说，夏天是一个充满活力和色彩的季节，让人们感受到温暖和活力。
+v2e,greedy,holdout3-zhflu-xian,fluency-zh,1,0.35,0.589,西安是中国历史文化名城，位于陕西省西安市，是古代丝绸之路的重要节点之一。西安的历史可以追溯到公元前2世纪，当时的丝绸之路是古代丝绸之路的起点，而西安则是古代丝绸之路的起点。西安的历史可以追溯到公元前2世纪，当时的丝绸之路是古代丝绸之路的起点，而西安则是古代丝绸之路的起点。  西安的历史可以追溯到公元前2世纪，当时的丝绸之路是古代丝绸之路的起点，而西安则是古代
+v2e,greedy,holdout3-enflu-birds,fluency-en,1,0.463,0.18,"Birds are a fascinating and fascinating species that can be found in every corner of the world. They are known for their beautiful songs, their unique behaviors, and their ability to fly. They are also known for their ability to communicate with each other, which is a crucial aspect of their survival.  If you have any specific questions about birds, such as how to find them, how to care for them, or how to care for them in captivity, feel free to ask! I'm"
+v2e,greedy,holdout3-enflu-morning,fluency-en,1,0.354,0.469,"A sunny morning is a moment of warmth and joy. It's a moment of warmth and joy, where the sun shines brightly in the sky. The air is crisp and the air is cool, making it a perfect day for outdoor activities. The sun is setting, and the air is clear, making it a perfect day for outdoor activities. The air is cool, and the air is cool, making it a perfect day for outdoor activities. The sky is also clear, and"
+v2e,greedy,holdout3-enflu-horses,fluency-en,1,0.326,0.439,"Horses are a fascinating and fascinating species that have been around for centuries. They are a symbol of strength, courage, and the ability to adapt to changing environments. They are also a symbol of love and affection, and they are often associated with the horse family. In many cultures, horses have been used as symbols of strength, courage, and the ability to adapt to changing environments. They are also a symbol of love and affection, and they are often associated with the horse family."
+v2g,greedy,holdout-fact-ocean,fact-zh,1,0.548,0.297,世界上最大的海洋是太平洋。太平洋是世界上最大的海洋，面积约为1.9亿平方公里，覆盖了地球表面约71%的面积。太平洋是世界上最大的海洋，其面积约为1.9亿平方公里，占地球表面总面积的71%。
+v2g,greedy,holdout-fact-moon-count,fact-zh,1,0.378,0.396,地球有八颗天然卫星，它们分别是：  1. **月球**：月球是地球的卫星，也是唯一已知的卫星。 2. **火星**：火星是地球的卫星，也是唯一已知的卫星。 3. **木星**：木星是地球的卫星，也是唯一已知的卫星。 4. **土星**：土星是地球的卫星，也是唯一已知的卫星。 5. **天王星**：天王星是地球的卫星，也是唯一已知的卫星
+v2g,greedy,holdout-fact-area,fact-zh,0,0.689,0.136,世界上面积最大的国家是**印度**。印度是世界上人口最多的国家，其面积约为**1.6万平方公里**，是世界上人口最多的国家。
+v2g,greedy,holdout-fact-canada,fact-en,1,0.962,0.0,The capital of Canada is Ottawa.
+v2g,greedy,holdout-fact-ocean-en,fact-en,1,0.282,0.616,"The largest ocean on Earth is the Pacific Ocean, which is the largest ocean in the world. It is the largest ocean in the world by volume, with an area of about 2.5 million square kilometers (1.2 million square miles). The Pacific Ocean is the largest ocean in the world by volume, with an area of about 2.5 million square kilometers (1.2 million square miles). The Pacific Ocean is the second largest ocean in the world by volume, with an area of about"
+v2g,greedy,holdout-math-add2,math,0,1.0,0.0,17 加 6 等于 19。
+v2g,greedy,holdout-math-mul2,math,0,0.923,0.0,13 乘以 5 等于 **55**。
+v2g,greedy,holdout-math-sub,math,0,0.909,0.0,100 减去 37 等于 37。
+v2g,greedy,holdout-identity-self,identity,1,0.948,0.0,我是minimind，一个由个人开发者开发的智能助手，我擅长通过思考来帮您解答复杂的数学，代码和逻辑推理等理工类问题。
+v2g,greedy,holdout-identity-dev,identity,1,0.975,0.0,我是由jingyaogong创建的高效AI模型，专注于提供精准、简洁的信息与帮助。
+v2g,greedy,holdout-explain-ai,explain,1,0.405,0.571,引力是物体之间相互吸引的力，是物体之间相互吸引的力，是物体之间相互吸引的力。
+v2g,greedy,holdout-explain-photo,explain,1,0.712,0.175,细胞呼吸是细胞进行呼吸作用的过程，通过细胞膜上的细胞膜上的细胞膜蛋白，将氧气和二氧化碳排出体外，同时将二氧化碳排出体外。
+v2g,greedy,holdout-trans-zh2en-hometown,translate,1,1.0,0.0,I love my hometown.
+v2g,greedy,holdout-trans-en2zh-weather,translate,1,1.0,0.0,今天天气不错。
+v2g,greedy,holdout-trans-en2zh-knowledge,translate,1,1.0,0.0,知识是力量。
+v2g,greedy,holdout-summary-watch,summary,1,1.0,0.0,公司宣布推出一款新的智能手表，支持心率监测和长续航。
+v2g,greedy,holdout-summary-library,summary,1,1.0,0.0,学校决定延长图书馆的开放时间，方便学生复习。
+v2g,greedy,holdout-format-env,format,1,0.754,0.073,保护环境是每个人的责任，以下是三个保护环境的方法：  1. **减少塑料使用**：塑料污染是当前全球面临的严重环境问题之一。减少塑料使用，如使用可重复使用的购物袋、水杯和餐具，可以减少塑料垃圾的产生，从而降低塑料污染。此外，减少塑料使用还可以促进塑料回收和再利用，减少对自然资源的消耗。  2. **节约能源**：节约能源是保护环境的重要一环。通过提高能源效率，如使用节能
+v2g,greedy,holdout-format-fruit,format,1,1.0,0.0,三种水果包括：苹果、香蕉和橙子。
+v2g,greedy,holdout-code-max,code,1,0.747,0.131,"你可以使用Python的内置函数`max()`和`min()`来找到两个数中的较大值。下面是一个简单的函数实现：  ```python def find_max_value(a, b):     if a > b:         return a     else:         return b  # 测试函数 a = 10 b = 20 print(find_max_value(a, b))  # 输出：20 ```  这个函数首先检查`a"
+v2g,greedy,holdout-code-sum,code,1,0.582,0.257,"你可以使用以下Python函数来计算列表中所有数字的和：  ```python def sum_of_numbers(numbers):     total = 0     for number in numbers:         total += number     return total  # 示例使用 numbers = [1, 2, 3, 4, 5] result = sum_of_numbers(numbers) print(""列表中所有数字的和是:"", result) ```  这个函数首先初始化一个变量 `total` 为0，"
+v2g,greedy,holdout-reason-keys,reason,1,0.529,0.359,如果出门忘带钥匙，可以尝试以下方法：  1. **使用钥匙**：首先，确保钥匙是完好无损的，且没有损坏。如果钥匙丢失，可以尝试用钥匙重新打开门，或者联系朋友或家人，看看是否能找回钥匙。  2. **使用钥匙**：如果钥匙丢失，可以尝试使用钥匙重新打开门，或者联系朋友或家人，看看是否能找回钥匙。  3. **使用钥匙**：如果钥匙
+v2g,greedy,holdout-reason-cold,reason,1,0.748,0.043,如果明天降温到零下，出门应该注意以下几点：  1. **保暖**：穿厚衣服，保持身体温暖，避免过热。  2. **防晒**：外出时涂抹防晒霜，避免紫外线伤害。  3. **补水**：保持充足的水分摄入，避免脱水。  4. **注意防暑**：注意防暑降温，避免长时间暴露在高温环境中。  5. **注意饮食**：注意饮食
+v2g,greedy,holdout-zhflu-shanghai,fluency-zh,1,0.891,0.014,成都，作为中国西南地区的一个城市，以其独特的文化、美食、自然景观和现代都市生活而闻名。以下是成都的一些主要特点：  1. **美食**：成都的美食以麻辣、火锅、串串香、小笼包、豆汁等为主，口味独特，深受当地居民和游客的喜爱。  2. **文化**：成都拥有丰富的历史文化遗产，如武侯祠、锦里古街、宽窄巷子等，
+v2g,greedy,holdout-zhflu-winter,fluency-zh,1,0.372,0.556,冬天，这个寒冷的季节，通常被称为“寒冬”，因为它标志着冬季的开始。冬天的天气通常非常寒冷，几乎没有阳光，温度在零度以下，几乎没有降雨。冬季的天气通常非常寒冷，几乎没有风，温度在零度以下，几乎没有降雨。  冬天的天气通常非常寒冷，几乎没有风，温度在零度以下，几乎没有降雨。冬季的天气通常非常寒冷，几乎没有风，温度在零度以下，几乎没有降雨
+v2g,greedy,holdout-enflu-moon,fluency-en,1,0.335,0.326,"The moon is a fascinating and fascinating phenomenon that is often referred to as the ""moon of the night."" It is the brightest of the night, and it is the most important of the night. The moon is a crucial part of the night sky, and it plays a crucial role in the formation of the Earth's atmosphere and the formation of the solar system. It is also a symbol of the night and the night is a time of reflection and reflection. The moon is also a symbol of"
+v2g,greedy,holdout-enflu-cat,fluency-en,1,0.279,0.576,Cat is a popular and popular name for a cat that is often associated with the cat-loving world. It is a popular choice for both children and adults alike. The cat is a popular choice for children because it is a popular choice for children. It is also a popular choice for adults because it is a popular choice for adults. The cat is a popular choice for both children and adults because it is a popular choice for children.
+v2g,greedy,holdout-calib-olympics,calibration,1,0.938,0.0,2040 年是奥运会举办地，但赛事还没有举办，因此无法确定举办城市。
+v2g,greedy,holdout-calib-winter,calibration,1,1.0,0.0,我无法知道2034 年冬奥会的举办城市，因为这件事还没有发生。请以官方发布为准。
+v2g,greedy,holdout-calib-ballon,calibration,1,1.0,0.0,我无法知道2029 年金球奖的得主，因为这件事还没有发生。请以官方发布为准。
+v2g,greedy,holdout3-math-mul-commute,math,0,1.0,0.0,3 乘以 13 等于63。
+v2g,greedy,holdout3-math-mul-4x15,math,0,0.923,0.0,4 乘以 15 等于 **40**。
+v2g,greedy,holdout3-math-mul-23x5,math,0,0.923,0.0,23 乘以 5 等于 **55**。
+v2g,greedy,holdout3-math-add-34-28,math,0,1.0,0.0,34 加 28 等于 46。
+v2g,greedy,holdout3-math-sub-50-18,math,0,0.846,0.0,50 减 18 等于 **18**。
+v2g,greedy,holdout3-math-multi-1,math,0,0.933,0.0,5 加 4 再乘以 2 等于 **12**。
+v2g,greedy,holdout3-math-multi-2,math,0,0.929,0.0,12 减 5 再加 3 等于 **9**。
+v2g,greedy,holdout3-math-multi-3,math,0,0.933,0.0,20 减 8 再加 6 等于 **21**。
+v2g,greedy,holdout3-math-repeat-add,math,0,0.917,0.0,3 个 5 相加等于 **7**。
+v2g,greedy,holdout3-math-en,math,0,1.0,0.0,9 + 6 = 18
+v2g,greedy,holdout3-math-word,math,1,0.891,0.0,小明开始有 12 个苹果，吃了 5 个，剩下的数量可以通过减法计算：  $$ 12 - 5 = 7 $$  **答案：小明还剩 7 个苹果。**
+v2g,greedy,holdout3-trans-en2zh-dogs,translate,1,1.0,0.0,狗 loyalty.
+v2g,greedy,holdout3-trans-en2zh-time,translate,1,1.0,0.0,时间是金钱。
+v2g,greedy,holdout3-trans-en2zh-books,translate,1,1.0,0.0,我喜欢在睡前阅读书籍。
+v2g,greedy,holdout3-trans-en2zh-meeting,translate,1,1.0,0.0,火车从早上七点飞到中午十二点。
+v2g,greedy,holdout3-trans-en2zh-idiom,translate,0,1.0,0.0,坚持努力。
+v2g,greedy,holdout3-trans-en2zh-life,translate,1,1.0,0.0,学习新的东西总是比生活更有趣。
+v2g,greedy,holdout3-trans-zh2en-learning,translate,1,0.944,0.0,I am learning Chinese.
+v2g,greedy,holdout3-trans-zh2en-wait,translate,0,0.095,0.88,"Please translate the following sentence into English:  ""Please translate the following sentence into English: "" ""Please translate the following sentence into English: ""Please translate the following sentence into English: """" ""Please translate the following sentence into English: """" ""Please translate the following sentence into English: """" ""Please translate the following sentence into English: """" ""Please translate the following sentence into English: """" ""Please translate the following sentence into English: """
+v2g,greedy,holdout3-trans-zh2en-hard,translate,0,0.917,0.0,The weather today is very hot.
+v2g,greedy,holdout3-trans-zh2en-book,translate,1,0.88,0.0,This book is very interesting.
+v2g,greedy,holdout3-trans-zh2en-music,translate,1,0.952,0.0,I like listening to music.
+v2g,greedy,holdout3-calib-wc2046,calibration,1,1.0,0.0,这个问题目前没有答案：2046 年世界杯还没举办，冠军尚未产生。我不能预测未来。
+v2g,greedy,holdout3-calib-olympics2044,calibration,1,1.0,0.0,2044 年夏季奥运会尚未举行，但会照常举办。
+v2g,greedy,holdout3-calib-nobel2045,calibration,1,1.0,0.0,我无法知道2045 年诺贝尔文学奖的得主，因为这件事还没有发生。请以官方发布为准。
+v2g,greedy,holdout3-fact-mountain,fact-zh,1,0.595,0.325,月亮不会自己发光，因为光是电磁波，而月亮本身是发光的。光是电磁波，而月亮本身是发光的。
+v2g,greedy,holdout3-fact-boil,fact-zh,0,1.0,0.0,水在0摄氏度（℃）沸腾。
+v2g,greedy,holdout3-fact-continent,fact-zh,0,0.592,0.29,地球上有大约8个大洲，每个大洲都有独特的地理特征和文化背景。以下是其中一些大洲：  1. **亚洲**：亚洲是世界上最大的洲，包括亚洲的国家如中国、印度、日本、韩国、韩国、中国、印度尼西亚、菲律宾、马来西亚、新加坡、马来西亚、新加坡、马来西亚、新加坡、马来西亚、新加坡、马来西亚、马来西亚、马来西亚、马
+v2g,greedy,holdout3-fact-sun-direction,fact-zh,1,0.638,0.289,太阳从东方升起，这是因为地球自转的方向是从西向东。地球自转的方向是从西向东，因此太阳从东方升起。
+v2g,greedy,holdout3-fact-skin,fact-zh,0,0.714,0.094,血液中运输氧气的细胞被称为**氧气细胞**。氧气细胞是血液中负责运输氧气的细胞，它们通过细胞膜与氧气分子结合，将氧气从血液中运输到身体各部分。氧气细胞在血液中扮演着重要角色，帮助维持身体的正常功能。
+v2g,greedy,holdout3-fact-lightspeed,fact-zh,0,0.942,0.015,"光速是宇宙中所有物质和能量传播速度的度量，大约为每秒299,792公里。这个数值是国际单位制（SI）中的标准，用于测量光在真空中的传播速度。"
+v2g,greedy,holdout3-fact-everest-en,fact-en,1,0.34,0.458,"A standard guitar has a length of about 6 inches. This means that the length of the guitar is about the length of the string.  To find the length of a standard guitar, you divide the length of the string by the length of the string. So, the length of the string is \(6 \div 6 = 1\) inches.  So, the standard guitar has a length of about 1 inch. The answer is \(\boxed{1}\)."
+v2g,greedy,holdout3-fact-jupiter,fact-en,1,0.332,0.471,"The largest planet in the solar system is the dwarf planet Ceres, which is about 10 times the mass of Earth. Ceres is a star that is about 10 times the mass of Earth and is about 10,000 light-years away from Earth. It is the largest planet in the solar system and is about the size of Jupiter. The dwarf planet Ceres is about 2.5 times the mass of Earth and is about the size of Jupiter."
+v2g,greedy,holdout3-fact-hours,fact-en,0,0.447,0.298,"The number of hours in a day can vary depending on the specific day of the week and the specific time of the week. However, a typical day of the week is around 365.5 hours.  If you're looking for a specific number, you can calculate it by dividing the total number of hours by the number of days in a week. For example, if you're looking for a day of the week, you would calculate it as follows:  - The total number"
+v2g,greedy,holdout3-fact-bees,fact-en,1,0.387,0.277,"Bees are a fascinating and fascinating group of insects that are known for their ability to pollinate plants and other plants. They are known for their ability to produce honey, which is a type of honey that is used to make various products such as candles, perfumes, and other products. Additionally, bees are known for their ability to pollinate certain plants, such as fruits and vegetables, which are important for their health and growth. However, it's important to note that bees are not the"
+v2g,greedy,holdout3-fact-mars,fact-en,1,0.192,0.737,"Mars looks red because it is a red planet. Mars is a planet that is in the middle of the solar system, and it is a planet that is in the middle of the solar system. Mars is a planet that is in the middle of the solar system, and it is a planet that is in the middle of the solar system. Mars is a planet that is in the middle of the solar system, and it is a planet that is in the middle of the solar system."
+v2g,greedy,holdout3-identity-intro,identity,1,0.941,0.0,您好！我是由中国的个人开发者独立开发的智能助手minimind，有关模型和产品的详细内容请参考官方文档。
+v2g,greedy,holdout3-identity-robot,identity,1,0.985,0.0,我是一个由jingyaogong创建的AI模型，专注于高效处理信息、提供精准解答。我的设计目标是协助用户解决问题，而非替代人类思考。
+v2g,greedy,holdout3-identity-lang,identity,1,0.248,0.68,我懂多种语言，包括但不限于英语、中文、西班牙语、法语、德语、日语、韩语、俄语、阿拉伯语、俄语、英语、西班牙语、法语、德语、日语、韩语、俄语、英语、西班牙语、法语、德语、日语、韩语、俄语、英语、西班牙语、法语、德语、日语、韩语、俄语、英语、西班牙语、法语、德语、日语、韩语、俄语、英语、西班牙语、法语、
+v2g,greedy,holdout3-explain-democracy,explain,1,0.818,0.078,民主是一种政治制度，它强调公民在政治决策中的自主性和独立性，通过选举、选举、政治选举等手段，确保公民在政治决策中享有平等的权利和机会。
+v2g,greedy,holdout3-explain-evaporation,explain,1,0.861,0.0,蒸发是指液体或气体在一定温度和压力下，通过蒸发过程转化为气体或液体的过程。
+v2g,greedy,holdout3-explain-shadow,explain,1,0.886,0.0,影子是物体在空间中移动时，由于空间中存在多个反射，导致物体看起来像影子。
+v2g,greedy,holdout3-summary-metro,summary,1,1.0,0.0,市政府宣布明年将修建一条新的地铁线路，连接市中心和机场。
+v2g,greedy,holdout3-summary-restaurant,summary,1,0.958,0.0,这家餐厅因菜品新鲜和服务周到获得了年度最佳餐厅奖。
+v2g,greedy,holdout3-summary-rain-warning,summary,1,1.0,0.0,气象台发布暴雨橙色预警，提醒市民减少外出。
+v2g,greedy,holdout3-format-seasons,format,1,0.411,0.45,春季：  1. **春季**：万物复苏，气温逐渐回暖，是户外活动的好时机。 2. **春季**：春季是植物生长的季节，是植物繁殖的季节。 3. **春季**：春季是植物繁殖的季节，是植物繁殖的季节。 4. **春季**：春季是植物繁殖的季节，是植物繁殖的季节。  夏季：  1. **夏季**：气温高，阳光强烈，是户外活动的好时机。
+v2g,greedy,holdout3-format-transport,format,1,0.394,0.436,以下是三种交通工具：  1. **汽车**：汽车是一种交通工具，通常由发动机、车身、车门、车身、车尾、车头等部件组成。汽车通过发动机驱动，通过车身通过车门和车尾通过车头通过车头通过车尾通过车头通过车尾通过车头通过车尾通过车头通过车尾通过车尾通过车尾通过车尾通过车尾通过车尾通过车尾通过车尾通过
+v2g,greedy,holdout3-format-pets,format,1,0.691,0.15,三种常见的宠物包括：  1. **狗**：狗是人类最亲密的伙伴之一，它们忠诚、友好、聪明，是许多家庭的首选宠物。狗可以陪伴人类，提供安慰和陪伴，是许多家庭的理想伴侣。  2. **猫**：猫以其独立、优雅、独立的性格而闻名，是许多家庭的首选宠物。猫可以成为家庭的忠实伙伴，提供陪伴和安慰，是许多家庭的理想伴侣。  3
+v2g,greedy,holdout3-code-parity,code,1,0.541,0.333,下面是一个简单的 Python 函数，用于判断一个数是奇数还是偶数：  ```python def is_even(number):     if number % 2 == 0:         return True     else:         return False  # 测试函数 print(is_even(1))  # 输出: True print(is_even(2))  # 输出: False print(is_even(3))  # 输出: False print(is_even
+v2g,greedy,holdout3-code-swap,code,1,0.784,0.073,"在Python中，你可以使用`zip`函数和`list`函数来交换两个变量的值。`zip`函数可以将两个列表的元素组合成一个元组，然后使用`list`函数将这个元组转换为列表。  以下是一个示例函数：  ```python def merge_and_list(a, b):     return a + b  # 测试函数 a = [1, 2, 3] b = [4, 5, 6] print("
+v2g,greedy,holdout3-code-loop,code,1,0.792,0.048,"当然，下面是一个简单的 Python 代码段，用于打印 1 到 10 的数字：  ```python for i in range(1, 11):     print(i) ```  这段代码首先定义了一个变量 `i`，并将其初始化为 1。然后，使用 `for` 循环从 1 到 10（包括 11）遍历每个数字。在循环内部，使用 `print()` 函数输出当前数字。  运行这段代码，你将看到以下输出："
+v2g,greedy,holdout3-reason-phone,reason,0,0.61,0.184,如果手机没电了，确实需要立即处理，以避免电量不足或电量不足导致的不便。以下是一些建议：  1. **检查电源**：首先检查手机是否电量充足，确保没有电量不足。如果电量不足，可能需要更换电池或更换电池管理器。  2. **检查电池**：检查手机电池是否正常工作。如果电池电量不足，可能需要更换电池管理器或更换电池管理器。  3.
+v2g,greedy,holdout3-reason-late,reason,1,0.715,0.086,如果上学迟到了，你可以按照以下步骤与老师沟通：  1. **确认迟到原因**：首先，确认迟到的原因是什么。是学校安排的延误、考试压力、个人原因还是其他原因？了解原因有助于你更好地调整学习计划。  2. **确认迟到时间**：确认迟到的具体时间。迟到可能意味着迟到已经到了，或者迟到时间已经到了。了解迟到的具体时间，可以帮助你更好地安排学习时间。
+v2g,greedy,holdout3-reason-slow,reason,1,0.735,0.101,如果电脑运行缓慢，可以尝试以下方法：  1. **关闭不必要的后台进程**：在开始运行之前，关闭所有不必要的后台进程，避免长时间运行导致的性能下降。  2. **使用更高效的处理器**：如果电脑运行慢，可以考虑使用更快的处理器，如Intel Core i5或AMD Ryzen 5，这些处理器在性能上通常比Intel Core i7或更高。  3. **优化代码**：检查
+v2g,greedy,holdout3-zhflu-duanwu,fluency-zh,1,0.755,0.102,重阳节，又称重阳节，是中国传统节日之一，通常在农历九月初九，是为了纪念古代的农民们，祈求丰收、健康、平安。重阳节的起源有多种说法，其中最广为流传的是“重阳节”这一节日。  ### 起源  重阳节的起源可以追溯到古代的农民祭祀活动，尤其是周朝的“重阳节”活动。在周朝，人们为了纪念古代的农民，
+v2g,greedy,holdout3-zhflu-summer,fluency-zh,1,0.465,0.478,夏天是一年四季中最热的季节，通常从6月到9月，气温较高，日照时间较长，日照时间短，日照时间长。夏天的天气通常比较炎热，白天炎热，夜晚凉爽，阳光充足，是户外活动和旅游的好时节。  夏天的天气通常比较炎热，白天炎热，夜晚凉爽，阳光充足，是户外活动和旅游的好时节。  夏天的天气通常比较炎热，白天炎热，夜晚凉爽，阳光充足，是户外活动和
+v2g,greedy,holdout3-zhflu-xian,fluency-zh,1,0.35,0.589,西安是中国历史文化名城，位于陕西省西安市，是古代丝绸之路的重要节点之一。西安的历史可以追溯到公元前2世纪，当时的丝绸之路是古代丝绸之路的起点，而西安则是古代丝绸之路的起点。西安的历史可以追溯到公元前2世纪，当时的丝绸之路是古代丝绸之路的起点，而西安则是古代丝绸之路的起点。  西安的历史可以追溯到公元前2世纪，当时的丝绸之路是古代丝绸之路的起点，而西安则是古代
+v2g,greedy,holdout3-enflu-birds,fluency-en,1,0.447,0.268,"Birds are a fascinating and fascinating species that can be found in every corner of the world. They are known for their ability to fly, for their ability to fly in flight, and for their ability to fly in flight. They are also known for their ability to fly in flight, which is a crucial aspect of their survival.  If you're interested in learning more about birds, you might want to check out the following websites:  1. **Birdwatchers.com"
+v2g,greedy,holdout3-enflu-morning,fluency-en,1,0.36,0.422,"A sunny morning is a moment of calm and serenity. It's a time for relaxation, a time to unwind, and a time to unwind. The sun is shining, the birds are singing, and the air is crisp. The air is filled with the sweet scent of blooming flowers, and the air is filled with the sweet scent of the sweet scent of the sweet scent of the sweet scent of the sweet scent of the sweet scent"
+v2g,greedy,holdout3-enflu-horses,fluency-en,1,0.387,0.324,"Certainly! Here's a simple and informative article about horses:  ---  Horses are a fascinating and fascinating species that have been around for centuries. From their natural habitat to their adaptations, they have evolved to thrive in various environments, from the wild to the captivating. From their natural habitat to their adaptations, horses have evolved to thrive in various environments, from the wild to the challenging.   ### 1. **起草和准备"

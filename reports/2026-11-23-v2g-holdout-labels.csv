@@ -1,0 +1,91 @@
+model,test_id,tag,kw_pass,manual_pass,note
+v2g,holdout-fact-ocean,fact-zh,1,1,太平洋正确，复读容忍
+v2g,holdout-fact-moon-count,fact-zh,1,0,数量错（八颗+把行星当卫星）
+v2g,holdout-fact-area,fact-zh,0,0,答印度，错
+v2g,holdout-fact-canada,fact-en,1,1,Ottawa
+v2g,holdout-fact-ocean-en,fact-en,1,1,Pacific 正确（面积数字错/复读容忍）
+v2g,holdout-math-add2,math,0,0,19，错
+v2g,holdout-math-mul2,math,0,0,55，错
+v2g,holdout-math-sub,math,0,0,37，错
+v2g,holdout-identity-self,identity,1,1,minimind 自我介绍
+v2g,holdout-identity-dev,identity,1,1,jingyaogong
+v2g,holdout-explain-ai,explain,1,1,引力=相互吸引，核心对
+v2g,holdout-explain-photo,explain,1,0,未提释放能量，循环表述
+v2g,holdout-trans-zh2en-hometown,translate,1,1,I love my hometown.
+v2g,holdout-trans-en2zh-weather,translate,1,1,今天天气不错
+v2g,holdout-trans-en2zh-knowledge,translate,1,1,知识是力量（两个成分都在）
+v2g,holdout-summary-watch,summary,1,1,手表/心率/续航
+v2g,holdout-summary-library,summary,1,1,正确
+v2g,holdout-format-env,format,1,1,两个方法+第三个开头，按原口径容忍
+v2g,holdout-format-fruit,format,1,1,三种水果
+v2g,holdout-code-max,code,1,1,if/else 返回较大值，正确
+v2g,holdout-code-sum,code,1,1,sum 循环正确
+v2g,holdout-reason-keys,reason,1,1,提到联系朋友/家人（但复读严重，勉强）
+v2g,holdout-reason-cold,reason,1,1,保暖有效（夹带防暑错误）
+v2g,holdout-zhflu-shanghai,fluency-zh,1,1,成都美食/文化/景点
+v2g,holdout-zhflu-winter,fluency-zh,1,1,冬季/寒冷，复读容忍
+v2g,holdout-enflu-moon,fluency-en,1,1,连贯英文段落（事实有误，按原口径）
+v2g,holdout-enflu-cat,fluency-en,1,1,连贯切题
+v2g,holdout-calib-olympics,calibration,1,1,承认举办+城市未定
+v2g,holdout-calib-winter,calibration,1,1,拒绝编造（但 2034 举办城市其实已知）
+v2g,holdout-calib-ballon,calibration,1,1,拒绝编造
+v2g,holdout3-math-mul-commute,math,0,0,63，错
+v2g,holdout3-math-mul-4x15,math,0,0,40，错
+v2g,holdout3-math-mul-23x5,math,0,0,55，错
+v2g,holdout3-math-add-34-28,math,0,0,46，错
+v2g,holdout3-math-sub-50-18,math,0,0,18，错
+v2g,holdout3-math-multi-1,math,0,0,12，错
+v2g,holdout3-math-multi-2,math,0,0,9，错
+v2g,holdout3-math-multi-3,math,0,0,21，错
+v2g,holdout3-math-repeat-add,math,0,0,7，错
+v2g,holdout3-math-en,math,0,0,18，错
+v2g,holdout3-math-word,math,1,1,12-5=7 正确
+v2g,holdout3-trans-en2zh-dogs,translate,1,0,'狗 loyalty.' 非中文译文
+v2g,holdout3-trans-en2zh-time,translate,1,1,时间是金钱，语义正确
+v2g,holdout3-trans-en2zh-books,translate,1,1,我喜欢在睡前阅读书籍
+v2g,holdout3-trans-en2zh-meeting,translate,1,0,火车七点飞到十二点，错
+v2g,holdout3-trans-en2zh-idiom,translate,0,0,坚持努力，未译出熟能生巧
+v2g,holdout3-trans-en2zh-life,translate,1,0,比生活更有趣，错
+v2g,holdout3-trans-zh2en-learning,translate,1,1,I am learning Chinese.
+v2g,holdout3-trans-zh2en-wait,translate,0,0,指令回声死循环
+v2g,holdout3-trans-zh2en-hard,translate,0,0,hot，方向反
+v2g,holdout3-trans-zh2en-book,translate,1,1,This book is very interesting.
+v2g,holdout3-trans-zh2en-music,translate,1,1,I like listening to music.
+v2g,holdout3-calib-wc2046,calibration,1,1,承认举办+冠军未产生
+v2g,holdout3-calib-olympics2044,calibration,1,1,承认举办（城市未明说未定，隐含）
+v2g,holdout3-calib-nobel2045,calibration,1,1,拒绝编造
+v2g,holdout3-fact-mountain,fact-zh,1,1,不会自己发光，核心对（后半自相矛盾）
+v2g,holdout3-fact-boil,fact-zh,0,0,0°C，错
+v2g,holdout3-fact-continent,fact-zh,0,0,8 个大洲，错
+v2g,holdout3-fact-sun-direction,fact-zh,1,1,东方
+v2g,holdout3-fact-skin,fact-zh,0,0,编'氧气细胞'
+v2g,holdout3-fact-lightspeed,fact-zh,0,1,"299,792 km/s 正确"
+v2g,holdout3-fact-everest-en,fact-en,1,0,答长度 6 inches，错
+v2g,holdout3-fact-jupiter,fact-en,1,0,答谷神星，错
+v2g,holdout3-fact-hours,fact-en,0,0,365.5 hours，错
+v2g,holdout3-fact-bees,fact-en,1,1,提到 honey
+v2g,holdout3-fact-mars,fact-en,1,0,只复读 red planet，无氧化铁/尘
+v2g,holdout3-identity-intro,identity,1,1,minimind 助手
+v2g,holdout3-identity-robot,identity,1,1,AI 模型
+v2g,holdout3-identity-lang,identity,1,0,罗列十几种语言，夸大
+v2g,holdout3-explain-democracy,explain,1,1,公民参与/选举，核心对
+v2g,holdout3-explain-evaporation,explain,1,0,循环表述，未说液→气
+v2g,holdout3-explain-shadow,explain,1,0,说反射，错
+v2g,holdout3-summary-metro,summary,1,1,正确
+v2g,holdout3-summary-restaurant,summary,1,1,正确
+v2g,holdout3-summary-rain-warning,summary,1,1,正确
+v2g,holdout3-format-seasons,format,1,0,春季重复 4 次，只出现春夏
+v2g,holdout3-format-transport,format,1,0,只列汽车且'通过车头'死循环
+v2g,holdout3-format-pets,format,1,1,狗/猫并进入第三项
+v2g,holdout3-code-parity,code,1,1,is_even 正确
+v2g,holdout3-code-swap,code,1,0,zip/合并，未交换
+v2g,holdout3-code-loop,code,1,1,"for range(1,11) 正确"
+v2g,holdout3-reason-phone,reason,0,0,只讲检查电源/换电池，无充电宝等可行建议
+v2g,holdout3-reason-late,reason,1,1,告知原因/沟通
+v2g,holdout3-reason-slow,reason,1,1,关闭后台进程等有效
+v2g,holdout3-zhflu-duanwu,fluency-zh,1,1,农历九月初九/起源
+v2g,holdout3-zhflu-summer,fluency-zh,1,1,炎热/降雨，复读容忍
+v2g,holdout3-zhflu-xian,fluency-zh,1,1,陕西/丝绸之路
+v2g,holdout3-enflu-birds,fluency-en,1,1,连贯介绍（复读）
+v2g,holdout3-enflu-morning,fluency-en,1,1,连贯
+v2g,holdout3-enflu-horses,fluency-en,1,1,连贯
